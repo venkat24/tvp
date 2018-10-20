@@ -3,8 +3,8 @@
  * Declares the interface for a CPU
  */
 
-#include <cstdint>
 #include "utils.h"
+#include <cstdint>
 
 #ifndef CPU_CPU_INTERFACE_H
 #define CPU_CPU_INTERFACE_H
@@ -18,19 +18,19 @@ namespace cpu {
  */
 class CPUInterface {
   public:
-    /**
-     * Increments the clock by 1
-     */
-    virtual void tick() = 0;
+	/**
+	 * Increments the clock by 1
+	 */
+	virtual void tick() = 0;
 
-    /**
-     * Run an instruction with the specified opcode at the specified
-     * location of the program counter
-     * 
-     * @param opcode The opcode
-     * @param pc The Program Counter Value
-     */
-    virtual void execute(OpCode opcode, ProgramCounter pc) = 0;
+	/**
+	 * Run an instruction with the specified opcode at the specified
+	 * location of the program counter
+	 *
+	 * @param opcode The opcode
+	 * @param pc The Program Counter Value
+	 */
+	virtual void execute(OpCode opcode, ProgramCounter pc) = 0;
 };
 
 } // namespace cpu

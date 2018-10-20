@@ -1,17 +1,17 @@
-#include <iostream>
 #include <fstream>
+#include <iomanip>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iomanip>
 
 void print_byte_array(std::vector<uint8_t> byte_array) {
 	auto line_count = 0;
 	auto should_insert_space = false;
 
-	for (auto& byte_char : byte_array) {
+	for (auto &byte_char : byte_array) {
 
 		std::cout << std::hex << std::setfill('0') << std::setw(2)
-			<< static_cast<int>(byte_char);
+		          << static_cast<int>(byte_char);
 
 		if (should_insert_space)
 			std::cout << " ";
@@ -25,9 +25,10 @@ void print_byte_array(std::vector<uint8_t> byte_array) {
 	}
 }
 
-auto read_rom(std::string rom_path)  {
+auto read_rom(std::string rom_path) {
 	// Open the file
-	auto rom_file = std::ifstream(rom_path, std::ifstream::in | std::ios::binary);
+	auto rom_file =
+	    std::ifstream(rom_path, std::ifstream::in | std::ios::binary);
 	auto result = std::vector<uint8_t>();
 
 	// Compute file size
@@ -42,7 +43,7 @@ auto read_rom(std::string rom_path)  {
 	return std::vector<uint8_t>(byte_input.begin(), byte_input.end());
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
 	if (argc < 2) {
 		std::cerr << "Please provide the name of a ROM file." << std::endl;
 		exit(1);

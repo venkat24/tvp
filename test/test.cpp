@@ -2,7 +2,7 @@
 
 using namespace std;
 
-TEST(Test, TestingTest) { EXPECT_EQ(1+1, 2); }
+TEST(Test, TestingTest) { EXPECT_EQ(1 + 1, 2); }
 
 int main(int argc, char *argv[]) {
 	testing::InitGoogleTest(&argc, argv);

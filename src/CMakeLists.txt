@@ -6,6 +6,7 @@ set(SOURCE_FILES
 	main/main.cpp
 
 	# CPU
+	cpu/cpu.cpp
 	cpu/register/register.cpp
 )
 
