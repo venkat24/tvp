@@ -4,6 +4,9 @@ project(main)
 set(SOURCE_FILES
 	# Main
 	main/main.cpp
+
+	# CPU
+	cpu/register/register.cpp
 )
 
 add_executable(tvp ${SOURCE_FILES})
