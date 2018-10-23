@@ -3,8 +3,8 @@
  * Defines the CPU class
  */
 
-#include "cpu.h"
-#include "register/register.h"
+#include "cpu/cpu.h"
+#include "cpu/register/register.h"
 
 namespace cpu {
 

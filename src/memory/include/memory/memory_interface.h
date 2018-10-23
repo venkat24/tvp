@@ -3,7 +3,7 @@
  * Declares the interface for accessing main memory
  */
 
-#include "utils.h"
+#include "memory/utils.h"
 #include <cstdint>
 
 #ifndef MEMORY_MEMORY_INTERFACE_H

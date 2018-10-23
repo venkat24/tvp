@@ -3,7 +3,7 @@
  * Declares the interface for a CPU
  */
 
-#include "utils.h"
+#include "cpu/utils.h"
 #include <cstdint>
 
 #ifndef CPU_CPU_INTERFACE_H

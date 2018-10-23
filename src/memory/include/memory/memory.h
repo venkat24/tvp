@@ -2,7 +2,7 @@
  * @file memory.h
  * Declares the memory class
  */
-#include "memory_interface.h"
+#include "memory/memory_interface.h"
 
 #include <array>
 #include <cstdint>

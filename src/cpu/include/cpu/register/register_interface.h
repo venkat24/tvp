@@ -3,7 +3,7 @@
  * Declares the Register Classes
  */
 
-#include "../utils.h"
+#include "cpu/utils.h"
 
 #include <cstdint>
 

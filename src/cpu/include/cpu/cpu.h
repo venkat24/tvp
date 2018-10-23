@@ -1,16 +1,19 @@
+
+
 /**
  * @file cpu.h
  * Declares the CPU Class
  */
 
-#include "cpu_interface.h"
-#include "register/register_interface.h"
-#include "utils.h"
+#include "cpu/cpu_interface.h"
+#include "cpu/register/register_interface.h"
+#include "cpu/utils.h"
+#include "memory/memory_interface.h"
 
 #include <cstdint>
 #include <functional>
-#include <map>
 #include <memory>
+#include <vector>
 
 #ifndef CPU_CPU_H
 #define CPU_CPU_H
@@ -41,6 +44,23 @@ class CPU : public CPUInterface {
 	 * These are the SP (Stack Pointer) and PC (Program Counter) registers
 	 */
 	std::unique_ptr<DoubleRegisterInterface> sp, pc;
+
+	/**
+	 * A map between the opcodes and the corresponding operation to do.
+	 * Maps each of 256 possible 8-bit opcodes to action functions.
+	 */
+	std::vector<std::function<void()>> opcode_map;
+
+	/**
+	 * Similar to the opcode map, but for the 0xcb prefixed opcodes. These
+	 * extend the instruction set to enable more bit manipulation instructions
+	 */
+	std::vector<std::function<void()>> cb_opcode_map;
+
+	/**
+	 * Memory instance, for performing all reads and writes to main memory
+	 */
+	memory::MemoryInterface *memory;
 
   public:
 	/**

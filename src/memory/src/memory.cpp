@@ -3,7 +3,7 @@
  * Defines the Memory class
  */
 
-#include "memory.h"
+#include "memory/memory.h"
 
 namespace memory {
 
