@@ -21,8 +21,8 @@ CPU::CPU()
       sp(std::make_unique<DoubleRegister>()),
       pc(std::make_unique<DoubleRegister>()) {}
 
-void CPU::tick() { return; }
+ClockCycles CPU::tick() { return 0; }
 
-void CPU::execute(uint8_t opcode, uint16_t pc) { return; }
+ClockCycles CPU::execute(uint8_t opcode, uint16_t pc) { return 0; }
 
 } // namespace cpu

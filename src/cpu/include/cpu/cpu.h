@@ -1,5 +1,3 @@
-
-
 /**
  * @file cpu.h
  * Declares the CPU Class
@@ -62,6 +60,15 @@ class CPU : public CPUInterface {
 	 */
 	memory::MemoryInterface *memory;
 
+	/**
+	 * Run an instruction with the specified opcode at the specified
+	 * location of the program counter
+	 *
+	 * @param opcode The opcode
+	 * @param pc The Program Counter Value
+	 */
+	ClockCycles execute(OpCode opcode, uint16_t pc);
+
   public:
 	/**
 	 * Default constructor
@@ -71,12 +78,7 @@ class CPU : public CPUInterface {
 	/**
 	 * @see CPUInterface#tick
 	 */
-	void tick() override;
-
-	/**
-	 * @see CPUInterface#execute
-	 */
-	void execute(OpCode opcode, ProgramCounter pc) override;
+	ClockCycles tick() override;
 };
 
 } // namespace cpu

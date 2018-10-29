@@ -3,8 +3,8 @@
  * Declares the Register Classes
  */
 
-#include "cpu/utils.h"
 #include "cpu/register/register_interface.h"
+#include "cpu/utils.h"
 
 #include <cstdint>
 

@@ -21,16 +21,7 @@ class CPUInterface {
 	/**
 	 * Increments the clock by 1
 	 */
-	virtual void tick() = 0;
-
-	/**
-	 * Run an instruction with the specified opcode at the specified
-	 * location of the program counter
-	 *
-	 * @param opcode The opcode
-	 * @param pc The Program Counter Value
-	 */
-	virtual void execute(OpCode opcode, ProgramCounter pc) = 0;
+	virtual ClockCycles tick() = 0;
 };
 
 } // namespace cpu
