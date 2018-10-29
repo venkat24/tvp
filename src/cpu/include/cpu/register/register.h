@@ -177,11 +177,18 @@ class PairRegister : public DoubleRegisterInterface {
 	void operator--(int) override;
 };
 
-enum class FlagBits : uint8_t {
-	ZERO = 7,
-	SUBTRACT = 6,
-	HALFCARRY = 5,
-	CARRY = 4
+/**
+ * Flag Register bits reference:
+ * FLAG_ZERO      -> Set when the result of the previous transaction was zero
+ * FLAG_SUBTRACT  -> Set when the previous operation was a subract operation
+ * FLAG_HALFCARRY -> Set when the previous operation carried from bit 4
+ * FLAG_CARRY     -> Set when the previous operation carries from bit 8
+ */
+enum FlagBits : uint8_t {
+	FLAG_ZERO = 7,
+	FLAG_SUBTRACT = 6,
+	FLAG_HALFCARRY = 5,
+	FLAG_CARRY = 4
 };
 
 } // namespace cpu
