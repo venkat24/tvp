@@ -3,6 +3,7 @@ project(cpu)
 
 set(SOURCE_FILES
     src/cpu.cpp
+    src/opcodes.cpp
     src/register/register.cpp
 )
 
