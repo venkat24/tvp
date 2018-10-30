@@ -589,4 +589,80 @@ void CPU::op_res(Address addr, uint8_t bit) {
 	memory->write(addr, value);
 }
 
+/// Jump
+
+void CPU::op_jp(Address addr) {
+	// Jump to the given instruction location
+	pc->set(addr);
+}
+
+void CPU::op_jr(int8_t offset) {
+	// Displace the PC by the given value
+	auto curr_pc = pc->get();
+	curr_pc += offset;
+	pc->set(curr_pc);
+}
+
+void CPU::op_jr(bool flag, int8_t offset) {
+	// This is a conditional jump. Change the PC only if given bit of the flag
+	// register is set. Else, do nothing
+	if (flag) {
+		op_jr(offset);
+	}
+}
+
+/// Calls
+
+void CPU::op_call(Address addr) {
+	// Call subroutine
+	// Push the current value of the Program Counter onto the stack, and set it
+	// to the new value. Update the stack pointer accordingly
+	auto curr_stack_pointer = sp->get();
+
+	// Push PC, high bute first
+	memory->write(--curr_stack_pointer, pc->get_high());
+	memory->write(--curr_stack_pointer, pc->get_low());
+
+	// Set new PC value
+	pc->set(addr);
+
+	// Set new SP value
+	sp->set(curr_stack_pointer);
+}
+
+void CPU::op_call(bool flag, Address addr) {
+	// Conditional call, only if given bit is set
+	if (flag) {
+		op_call(addr);
+	}
+}
+
+/// Returns
+
+void CPU::op_ret() {
+	// Pop the value from the stack back into the program counter
+	op_pop(pc.get());
+}
+
+void CPU::op_ret(bool flag) {
+	// Pop stack to PC only if the bit is set
+	if (flag) {
+		op_pop(pc.get());
+	}
+}
+
+void CPU::op_reti() {
+	op_pop(pc.get());
+	op_ei();
+}
+
+/// Restart
+
+void CPU::op_rst(uint8_t val) {
+	// Push PC onto the stack, and reset value of PC to the given value
+	op_push(pc.get());
+
+	pc->set(static_cast<uint16_t>(val));
+}
+
 } // namespace cpu

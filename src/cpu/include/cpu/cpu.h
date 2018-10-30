@@ -163,6 +163,23 @@ class CPU : public CPUInterface {
 	void op_res(RegisterInterface *reg, uint8_t bit);
 	void op_res(Address addr, uint8_t bit);
 
+	/// Jump
+	void op_jp(Address addr);
+	void op_jr(int8_t offset);
+	void op_jr(bool flag, int8_t offset);
+
+	/// Calls
+	void op_call(Address addr);
+	void op_call(bool flag, Address addr);
+
+	/// Returns
+	void op_ret();
+	void op_ret(bool flag);
+	void op_reti();
+
+	/// Restart
+	void op_rst(uint8_t val);
+
   public:
 	/**
 	 * Default constructor
