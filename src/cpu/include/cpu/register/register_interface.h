@@ -97,6 +97,16 @@ class DoubleRegisterInterface {
 	virtual bool get_bit(uint8_t bit) const = 0;
 
 	/**
+	 * Get the higher bytes of the double width register
+	 */
+	virtual uint8_t get_high() const = 0;
+
+	/**
+	 * Get the lower bytes of the double width register
+	 */
+	virtual uint8_t get_low() const = 0;
+
+	/**
 	 * @see RegisterInterface#operator++
 	 */
 	virtual void operator++() = 0;

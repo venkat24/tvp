@@ -50,6 +50,14 @@ bool DoubleRegister::get_bit(uint8_t bit) const {
 	return static_cast<bool>(_value & (1 << bit));
 }
 
+uint8_t DoubleRegister::get_high() const {
+	return static_cast<uint8_t>((_value & 0xFF00) >> 8);
+}
+
+uint8_t DoubleRegister::get_low() const {
+	return static_cast<uint8_t>(_value & 0xFF);
+}
+
 void DoubleRegister::operator++() { _value++; }
 
 void DoubleRegister::operator++(int) { _value++; }
@@ -105,6 +113,10 @@ bool PairRegister::get_bit(uint8_t bit) const {
 		return static_cast<bool>(_first->get() & (1 << (bit - 8)));
 	}
 }
+
+uint8_t PairRegister::get_high() const { return _first->get(); }
+
+uint8_t PairRegister::get_low() const { return _second->get(); }
 
 void PairRegister::operator++() { this->set(this->get() + 1); }
 

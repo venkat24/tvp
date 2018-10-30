@@ -103,6 +103,16 @@ class DoubleRegister : public DoubleRegisterInterface {
 	bool get_bit(uint8_t bit) const override;
 
 	/**
+	 * @see DoubleRegisterInterface#get_high
+	 */
+	uint8_t get_high() const override;
+
+	/**
+	 * @see DoubleRegisterInterface#get_low
+	 */
+	uint8_t get_low() const override;
+
+	/**
 	 * @see DoubleRegisterInterface#operator++
 	 */
 	void operator++() override;
@@ -155,6 +165,16 @@ class PairRegister : public DoubleRegisterInterface {
 	 * @see DoubleRegisterInterface#get_bit
 	 */
 	bool get_bit(uint8_t bit) const override;
+
+	/**
+	 * @see DoubleRegisterInterface#get_high
+	 */
+	uint8_t get_high() const override;
+
+	/**
+	 * @see DoubleRegisterInterface#get_low
+	 */
+	uint8_t get_low() const override;
 
 	/**
 	 * @see DoubleRegisterInterface#operator++
