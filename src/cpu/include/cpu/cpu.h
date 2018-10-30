@@ -112,6 +112,12 @@ class CPU : public CPUInterface {
 	void op_dec(RegisterInterface *reg);
 	void op_dec(Address addr);
 
+	/// 16-bit Arithmetic
+	void op_add_hl(uint16_t val);
+	void op_add_sp(int8_t val);
+	void op_inc_dbl(DoubleRegisterInterface *reg);
+	void op_dec_dbl(DoubleRegisterInterface *reg);
+
   public:
 	/**
 	 * Default constructor

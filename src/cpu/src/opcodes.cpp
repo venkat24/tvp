@@ -176,4 +176,55 @@ void CPU::op_dec(Address addr) {
 	f->set_bit(FLAG_HALFCARRY, halfcarry);
 }
 
+/// 16-bit Arithmetic
+
+void CPU::op_add_hl(uint16_t val) {
+	// Add the value to HL
+	auto result = hl->get() + val;
+	hl->set(static_cast<uint16_t>(result));
+
+	// Set the flags
+	f->set_bit(FLAG_ZERO, hl->get() == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+
+	auto halfcarry = (0xfff & val) + (0xfff & hl->get()) > 0xfff;
+	f->set_bit(FLAG_HALFCARRY, halfcarry);
+
+	auto carry = (result & 0x10000) != 0;
+	f->set_bit(FLAG_CARRY, carry);
+}
+
+void CPU::op_add_sp(int8_t val) {
+	// Note that the value added to the stack pointer is a SIGNED 8-BIT value.
+	// This is instruction is used to displace the Stack Pointer up or down by a
+	// number of bytes.
+
+	// Add the value to SP
+	auto result = sp->get() + val;
+	sp->set(static_cast<uint16_t>(result));
+
+	// Set the flags
+	// Note that FLAG_ZERO is always set to 0 for this instruction
+	f->set_bit(FLAG_ZERO, 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+
+	auto halfcarry = (0xfff & val) + (0xfff & sp->get()) > 0xfff;
+	f->set_bit(FLAG_HALFCARRY, halfcarry);
+
+	auto carry = (result & 0x10000) != 0;
+	f->set_bit(FLAG_CARRY, carry);
+}
+
+void CPU::op_inc_dbl(DoubleRegisterInterface *reg) {
+	(*reg)++;
+
+	// This instruction sets no flags
+}
+
+void CPU::op_dec_dbl(DoubleRegisterInterface *reg) {
+	(*reg)--;
+
+	// This instruction sets no flags
+}
+
 } // namespace cpu
