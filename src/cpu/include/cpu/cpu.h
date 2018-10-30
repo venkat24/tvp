@@ -135,6 +135,34 @@ class CPU : public CPUInterface {
 	void op_push(DoubleRegisterInterface *reg);
 	void op_pop(DoubleRegisterInterface *reg);
 
+	/// Rotates and Shifts
+	void op_rlc_a();
+	void op_rlc(RegisterInterface *reg);
+	void op_rlc(Address addr);
+	void op_rrc_a();
+	void op_rrc(RegisterInterface *reg);
+	void op_rrc(Address addr);
+	void op_rl_a();
+	void op_rl(RegisterInterface *reg);
+	void op_rl(Address address);
+	void op_rr_a();
+	void op_rr(RegisterInterface *reg);
+	void op_rr(Address address);
+	void op_sla(RegisterInterface *reg);
+	void op_sla(Address address);
+	void op_srl(RegisterInterface *reg);
+	void op_srl(Address address);
+	void op_sra(RegisterInterface *reg);
+	void op_sra(Address address);
+
+	/// Bit Manipulation
+	void op_bit(RegisterInterface *reg, uint8_t bit);
+	void op_bit(uint8_t val, uint8_t bit);
+	void op_set(RegisterInterface *reg, uint8_t bit);
+	void op_set(Address addr, uint8_t bit);
+	void op_res(RegisterInterface *reg, uint8_t bit);
+	void op_res(Address addr, uint8_t bit);
+
   public:
 	/**
 	 * Default constructor

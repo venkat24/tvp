@@ -336,4 +336,257 @@ void CPU::op_pop(DoubleRegisterInterface *reg) {
 	sp->set(curr_stack_pointer);
 }
 
+/// Rotates and Shifts
+
+void CPU::op_rlc(RegisterInterface *reg) {
+	auto value = reg->get();
+	auto msb = static_cast<bool>(value >> 7);
+
+	value = static_cast<uint8_t>((value << 1) | msb);
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, msb);
+
+	reg->set(value);
+}
+
+void CPU::op_rlc(Address addr) {
+	auto value = memory->read(addr);
+	auto msb = static_cast<bool>(value >> 7);
+
+	value = static_cast<uint8_t>((value << 1) | msb);
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, msb);
+
+	memory->write(addr, value);
+}
+
+void CPU::op_rlc_a() {
+	op_rlc(a.get());
+	f->set_bit(FLAG_ZERO, 0);
+}
+
+void CPU::op_rrc(RegisterInterface *reg) {
+	auto value = reg->get();
+	auto lsb = static_cast<bool>(value & 0x01);
+
+	value = static_cast<uint8_t>((value >> 1) | (lsb << 7));
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, lsb);
+
+	reg->set(value);
+}
+
+void CPU::op_rrc(Address addr) {
+	auto value = memory->read(addr);
+	auto lsb = static_cast<bool>(value & 0x01);
+
+	value = static_cast<uint8_t>((value >> 1) | (lsb << 7));
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, lsb);
+
+	memory->write(addr, value);
+}
+
+void CPU::op_rrc_a() {
+	op_rrc(a.get());
+	f->set_bit(FLAG_ZERO, 0);
+}
+
+void CPU::op_rl(RegisterInterface *reg) {
+	auto value = reg->get();
+	auto msb = static_cast<bool>(value >> 7);
+	auto carry_flag = f->get_bit(FLAG_CARRY);
+
+	value = static_cast<uint8_t>((value << 1) | carry_flag);
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, msb);
+
+	reg->set(value);
+}
+
+void CPU::op_rl(Address addr) {
+	auto value = memory->read(addr);
+	auto msb = static_cast<bool>(value >> 7);
+	auto carry_flag = f->get_bit(FLAG_CARRY);
+
+	value = static_cast<uint8_t>((value << 1) | carry_flag);
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, msb);
+
+	memory->write(addr, value);
+}
+
+void CPU::op_rl_a() {
+	op_rl(a.get());
+	f->set_bit(FLAG_ZERO, 0);
+}
+
+void CPU::op_rr(RegisterInterface *reg) {
+	auto value = reg->get();
+	auto lsb = static_cast<bool>(value & 0x01);
+	auto carry_flag = f->get_bit(FLAG_CARRY);
+
+	value = static_cast<uint8_t>((value >> 1) | (lsb << 7));
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, lsb);
+
+	reg->set(value);
+}
+
+void CPU::op_rr(Address addr) {
+	auto value = memory->read(addr);
+	auto lsb = static_cast<bool>(value & 0x01);
+	auto carry_flag = f->get_bit(FLAG_CARRY);
+
+	value = static_cast<uint8_t>((value >> 1) | (lsb << 7));
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, lsb);
+
+	memory->write(addr, value);
+}
+
+void CPU::op_rr_a() {
+	op_rr(a.get());
+	f->set_bit(FLAG_ZERO, 0);
+}
+
+void CPU::op_sla(RegisterInterface *reg) {
+	auto value = reg->get();
+	auto msb = static_cast<bool>(value >> 7);
+
+	value = static_cast<uint8_t>(value << 1);
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, msb);
+
+	reg->set(value);
+}
+
+void CPU::op_sla(Address addr) {
+	auto value = memory->read(addr);
+	auto msb = static_cast<bool>(value >> 7);
+
+	value = static_cast<uint8_t>(value << 1);
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, msb);
+
+	memory->write(addr, value);
+}
+
+void CPU::op_srl(RegisterInterface *reg) {
+	auto value = reg->get();
+	auto lsb = static_cast<bool>(value & 0x01);
+
+	value = static_cast<uint8_t>(value >> 1);
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, lsb);
+
+	reg->set(value);
+}
+
+void CPU::op_srl(Address addr) {
+	auto value = memory->read(addr);
+	auto lsb = static_cast<bool>(value & 0x01);
+
+	value = static_cast<uint8_t>(value >> 1);
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, lsb);
+
+	memory->write(addr, value);
+}
+
+void CPU::op_sra(RegisterInterface *reg) {
+	auto value = reg->get();
+	auto lsb = static_cast<bool>(value & 0x01);
+	auto msb = static_cast<bool>(value >> 7);
+
+	value = static_cast<uint8_t>((value >> 1) | (msb << 7));
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, lsb);
+
+	reg->set(value);
+}
+
+void CPU::op_sra(Address addr) {
+	auto value = memory->read(addr);
+	auto lsb = static_cast<bool>(value & 0x01);
+	auto msb = static_cast<bool>(value >> 7);
+
+	value = static_cast<uint8_t>((value >> 1) | (msb << 7));
+
+	f->set_bit(FLAG_ZERO, value == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, lsb);
+
+	memory->write(addr, value);
+}
+
+/// Bit Manipulation
+
+void CPU::op_bit(RegisterInterface *reg, uint8_t bit) {
+	auto val = reg->get_bit(bit);
+	f->set_bit(FLAG_ZERO, val);
+}
+
+void CPU::op_bit(uint8_t val, uint8_t bit) { f->set_bit(FLAG_ZERO, val); }
+
+void CPU::op_set(RegisterInterface *reg, uint8_t bit) {
+	reg->set_bit(bit, true);
+}
+
+void CPU::op_set(Address addr, uint8_t bit) {
+	auto value = memory->read(addr);
+	value = (value | (1 << bit));
+	memory->write(addr, value);
+}
+
+void CPU::op_res(RegisterInterface *reg, uint8_t bit) {
+	reg->set_bit(bit, false);
+}
+
+void CPU::op_res(Address addr, uint8_t bit) {
+	auto value = memory->read(addr);
+	value = (value & ~(1 << bit));
+	memory->write(addr, value);
+}
+
 } // namespace cpu
