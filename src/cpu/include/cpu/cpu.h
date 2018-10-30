@@ -79,6 +79,39 @@ class CPU : public CPUInterface {
 	 */
 	uint16_t get_inst_dbl() const;
 
+	/// Opcode Helpers
+	///
+	/// Each of these methods perform an operation with the given parameters and
+	/// in some cases one other register (usually A, sometimes HL). Each action
+	/// function in the opcode map calls one of these functions to perform the
+	/// opcode. The implementations are located in opcodes.cpp
+	///
+	/// Additionally, some of these opcodes also make changes to the 4 flags of
+	/// the F register. For a complete reference on operations and flags, refer
+	/// to an opcode reference manual such as the one below :
+	/// http://www.devrs.com/gb/files/opcodes.html
+
+	/// Some naming conventions :
+	/// The opcode function names are op_<mnemonic>[_<register>], where register
+	/// is is the result register for the particular opcode. If it's a generic
+	/// 8-bit register or memory location, the final part is omitted. If it's a
+	/// 16-bit register, we use _dbl to indicate it is double width. I'm writing
+	/// this down so that I remember :)
+
+	/// 8-bit Arithmetic
+	void op_add(uint8_t val);
+	void op_adc(uint8_t val);
+	void op_sub(uint8_t val);
+	void op_sbc(uint8_t val);
+	void op_and(uint8_t val);
+	void op_or(uint8_t val);
+	void op_xor(uint8_t val);
+	void op_cp(uint8_t val);
+	void op_inc(RegisterInterface *reg);
+	void op_inc(Address addr);
+	void op_dec(RegisterInterface *reg);
+	void op_dec(Address addr);
+
   public:
 	/**
 	 * Default constructor
