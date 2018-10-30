@@ -25,4 +25,20 @@ ClockCycles CPU::tick() { return 0; }
 
 ClockCycles CPU::execute(uint8_t opcode, uint16_t pc) { return 0; }
 
+uint8_t CPU::get_inst_byte() const {
+	auto byte = memory->read(pc->get());
+	(*pc)++;
+	return byte;
+};
+
+uint16_t CPU::get_inst_dbl() const {
+	auto lower = memory->read(pc->get());
+	(*pc)++;
+	auto upper = memory->read(pc->get());
+	(*pc)++;
+
+	auto result = static_cast<uint16_t>((upper << 8) | lower);
+	return result;
+};
+
 } // namespace cpu

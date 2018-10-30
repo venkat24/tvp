@@ -69,6 +69,16 @@ class CPU : public CPUInterface {
 	 */
 	ClockCycles execute(OpCode opcode, uint16_t pc);
 
+	/**
+	 * Get another byte of instructions and incremrnt the program counter
+	 */
+	uint8_t get_inst_byte() const;
+
+	/**
+	 * Get two bytes of instructions and increment the program counter by 2
+	 */
+	uint16_t get_inst_dbl() const;
+
   public:
 	/**
 	 * Default constructor
