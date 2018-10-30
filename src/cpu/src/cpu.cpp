@@ -9,7 +9,7 @@
 namespace cpu {
 
 // Make some registers!
-CPU::CPU()
+CPU::CPU(MemoryInterface *memory)
     : a(std::make_unique<Register>()), b(std::make_unique<Register>()),
       c(std::make_unique<Register>()), d(std::make_unique<Register>()),
       e(std::make_unique<Register>()), f(std::make_unique<Register>()),
@@ -19,7 +19,8 @@ CPU::CPU()
       de(std::make_unique<PairRegister>(d.get(), e.get())),
       hl(std::make_unique<PairRegister>(h.get(), l.get())),
       sp(std::make_unique<DoubleRegister>()),
-      pc(std::make_unique<DoubleRegister>()) {}
+      pc(std::make_unique<DoubleRegister>()), memory(memory), halted(false),
+      interrupt_enabled(true) {
 
 ClockCycles CPU::tick() { return 0; }
 

@@ -665,4 +665,95 @@ void CPU::op_rst(uint8_t val) {
 	pc->set(static_cast<uint16_t>(val));
 }
 
+// Miscellaneous
+
+void CPU::op_swap(RegisterInterface *reg) {
+	auto value = reg->get();
+	auto lower_nibble = 0x0F & value;
+	auto higher_nibble = (0xF0 & value) >> 4;
+
+	auto new_val = (lower_nibble << 4) | higher_nibble;
+	reg->set(new_val);
+
+	// Set flags
+	f->set_bit(FLAG_ZERO, new_val == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, 0);
+}
+
+void CPU::op_swap(Address addr) {
+	auto value = memory->read(addr);
+	auto lower_nibble = 0x0F & value;
+	auto higher_nibble = (0xF0 & value) >> 4;
+
+	auto new_val = (lower_nibble << 4) | higher_nibble;
+	memory->write(addr, new_val);
+
+	// Set flags
+	f->set_bit(FLAG_ZERO, new_val == 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(FLAG_CARRY, 0);
+}
+
+void CPU::op_daa(Address addr) {
+	/// TODO!
+}
+
+void CPU::op_cpl() {
+	// Complement A
+	auto value = a->get();
+	value = ~value;
+	a->set(value);
+
+	// Set flags
+	f->set_bit(FLAG_SUBTRACT, 1);
+	f->set_bit(FLAG_HALFCARRY, 1);
+}
+
+void CPU::op_ccf() {
+	// Complement Carry Flag
+	bool value = f->get_bit(FLAG_CARRY);
+	value = !value;
+	f->set_bit(FLAG_CARRY, value);
+
+	// Set flags
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+}
+
+void CPU::op_ccf() {
+	// Set Carry Flag
+	f->set_bit(FLAG_CARRY, 1);
+
+	// Set flags
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+}
+
+void CPU::op_nop() {
+	// Do nothing!
+}
+
+void CPU::op_halt() {
+	// Halt the CPU until there's an interrupt
+	halted = true;
+}
+
+void CPU::op_stop() {
+	// Halt the CPU indefinitely
+	halted = true;
+}
+
+void CPU::op_ei() {
+	// Enable interrupts
+	interrupt_enabled = true;
+}
+
+void CPU::op_di() {
+	// Disable interrupts
+	interrupt_enabled = false;
+}
+
 } // namespace cpu

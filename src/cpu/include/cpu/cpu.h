@@ -61,6 +61,16 @@ class CPU : public CPUInterface {
 	memory::MemoryInterface *memory;
 
 	/**
+	 * Specifies whether the CPU is currently in the halted state
+	 */
+	bool halted;
+
+	/**
+	 * Specifies whether interrupts are currently enabled
+	 */
+	bool interrupt_enabled;
+
+	/**
 	 * Run an instruction with the specified opcode at the specified
 	 * location of the program counter
 	 *
@@ -179,6 +189,19 @@ class CPU : public CPUInterface {
 
 	/// Restart
 	void op_rst(uint8_t val);
+
+	/// Miscellaneous
+	void op_swap(RegisterInterface *reg);
+	void op_swap(Address addr);
+	void op_daa();
+	void op_cpl();
+	void op_ccf();
+	void op_scf();
+	void op_nop();
+	void op_halt();
+	void op_stop();
+	void op_di();
+	void op_ei();
 
   public:
 	/**
