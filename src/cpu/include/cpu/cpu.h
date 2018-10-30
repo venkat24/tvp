@@ -118,6 +118,23 @@ class CPU : public CPUInterface {
 	void op_inc_dbl(DoubleRegisterInterface *reg);
 	void op_dec_dbl(DoubleRegisterInterface *reg);
 
+	/// 8-bit Load
+	void op_ld(RegisterInterface *reg, uint8_t val);
+	void op_ld(Address addr, uint8_t val);
+	void op_ldi_a(uint8_t val);
+	void op_ldi_addr(Address addr, uint8_t);
+	void op_ldd_a(uint8_t val);
+	void op_ldd_addr(Address addr, uint8_t);
+	void op_ldh_a(uint8_t val);
+	void op_ldh_addr(Address addr, uint8_t val);
+
+	/// 16-bit Load
+	void op_ld_dbl(DoubleRegisterInterface *reg, uint16_t val);
+	void op_ld_dbl(Address addr, uint16_t val);
+	void op_ld_hl_sp_offset(int8_t offset);
+	void op_push(DoubleRegisterInterface *reg);
+	void op_pop(DoubleRegisterInterface *reg);
+
   public:
 	/**
 	 * Default constructor

@@ -227,4 +227,113 @@ void CPU::op_dec_dbl(DoubleRegisterInterface *reg) {
 	// This instruction sets no flags
 }
 
+/// 8-bit Load
+
+void CPU::op_ld(RegisterInterface *reg, uint8_t val) {
+	// Load the val into the register
+	reg->set(val);
+}
+
+void CPU::op_ld(Address addr, uint8_t val) {
+	// Store the val into the memory location
+	memory->write(addr, val);
+}
+
+void CPU::op_ldi_a(uint8_t val) {
+	// Store value in A and increment HL
+	a->set(val);
+	(*hl)++;
+}
+
+void CPU::op_ldi_addr(Address addr, uint8_t val) {
+	// Store value in memory and increment HL
+	memory->write(addr, val);
+	(*hl)++;
+}
+
+void CPU::op_ldd_a(uint8_t val) {
+	// Store value in A and decrement HL
+	a->set(val);
+	(*hl)--;
+}
+
+void CPU::op_ldd_addr(Address addr, uint8_t val) {
+	// Store value in memory and decrement HL
+	memory->write(addr, val);
+	(*hl)--;
+}
+
+void CPU::op_ldh_a(uint8_t val) {
+	// Store value in A
+	a->set(val);
+}
+
+void CPU::op_ldh_addr(Address addr, uint8_t val) {
+	// Store value in memory
+	memory->write(addr, val);
+}
+
+/// 16-bit Load
+
+void CPU::op_ld_dbl(DoubleRegisterInterface *reg, uint16_t val) {
+	// Store value in register
+	reg->set(val);
+}
+
+void CPU::op_ld_dbl(Address addr, uint16_t val) {
+	// Store value in memory
+	memory->write(addr, val);
+}
+
+void CPU::op_ld_hl_sp_offset(int8_t offset) {
+	// This is the special case of the [LD HL,(SP+offset)] opcode
+	// Since there is an implicit addition involved, the flags will be affected
+
+	// Read the value from the stack pointer, and add the offset to it
+	auto stack_val = memory->read(sp->get());
+	auto result = stack_val + offset;
+
+	// Set flag bits
+	f->set_bit(FLAG_ZERO, 0);
+	f->set_bit(FLAG_SUBTRACT, 0);
+
+	auto halfcarry = (0xf & stack_val) + (0xf & result) > 0xf;
+	f->set_bit(FLAG_HALFCARRY, halfcarry);
+	auto carry = (result & 0x100) != 0;
+	f->set_bit(FLAG_CARRY, carry);
+}
+
+void CPU::op_push(DoubleRegisterInterface *reg) {
+	// We need to push the source register value onto the stack
+	// Now, the stack grows downwards, so we push the higher byte onto the
+	// stack, and then the lower byte. We decrement the SP twice in the process
+	auto value = reg->get();
+	auto curr_stack_pointer = sp->get();
+
+	auto high_byte = reg->get_high();
+	auto low_byte = reg->get_low();
+
+	memory->write(--curr_stack_pointer, high_byte);
+	memory->write(--curr_stack_pointer, low_byte);
+
+	// Set the double decremented stack pointer back into the SP reg
+	sp->set(curr_stack_pointer);
+}
+
+void CPU::op_pop(DoubleRegisterInterface *reg) {
+	// We need to pop the stack value onto the destination register
+	// Now, the stack grows downwards, so first pop the low byte and then the
+	// high byte. We increment the SP twice in the process
+	auto curr_stack_pointer = sp->get();
+
+	auto low_byte = memory->read(curr_stack_pointer++);
+	auto high_byte = memory->read(curr_stack_pointer++);
+
+	auto value = (high_byte << 8) + low_byte;
+	reg->set(value);
+
+	// Set the double incremented stack pointer back into the SP reg
+	sp->set(curr_stack_pointer);
+}
+
 } // namespace cpu
