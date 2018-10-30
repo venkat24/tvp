@@ -207,7 +207,7 @@ class CPU : public CPUInterface {
 	/**
 	 * Default constructor
 	 */
-	CPU();
+	CPU(memory::MemoryInterface *memory);
 
 	/**
 	 * @see CPUInterface#tick

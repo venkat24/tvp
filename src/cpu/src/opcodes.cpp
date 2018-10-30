@@ -697,7 +697,7 @@ void CPU::op_swap(Address addr) {
 	f->set_bit(FLAG_CARRY, 0);
 }
 
-void CPU::op_daa(Address addr) {
+void CPU::op_daa() {
 	/// TODO!
 }
 
@@ -717,15 +717,6 @@ void CPU::op_ccf() {
 	bool value = f->get_bit(FLAG_CARRY);
 	value = !value;
 	f->set_bit(FLAG_CARRY, value);
-
-	// Set flags
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-}
-
-void CPU::op_ccf() {
-	// Set Carry Flag
-	f->set_bit(FLAG_CARRY, 1);
 
 	// Set flags
 	f->set_bit(FLAG_SUBTRACT, 0);
