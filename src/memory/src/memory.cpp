@@ -21,10 +21,4 @@ void Memory::write(Address address, uint8_t data) {
 	memory[address] = data;
 }
 
-uint8_t &Memory::operator[](Address address) {
-	// Naive implementation
-	// TODO: Switch case this based on device memory mapping
-	return memory[address];
-}
-
 } // namespace memory

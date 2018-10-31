@@ -28,12 +28,6 @@ class MemoryInterface {
 	 * @param data Value of the byte
 	 */
 	virtual void write(Address address, uint8_t data) = 0;
-
-	/**
-	 * Overload the [] operator, to read and write to the memory in array
-	 * style
-	 */
-	virtual uint8_t &operator[](Address address) = 0;
 };
 
 } // namespace memory

@@ -51,11 +51,6 @@ class Memory : public MemoryInterface {
 	 */
 	void write(Address address, uint8_t data) override;
 
-	/**
-	 * @see MemoryInterface#operator[]
-	 */
-	uint8_t &operator[](Address address) override;
-
   private:
 	/**
 	 * Main memory array - the GameBoy can address 65536 total bytes of memory
