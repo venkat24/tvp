@@ -11,18 +11,23 @@
 namespace cpu {
 
 // Make some registers!
-CPU::CPU(memory::MemoryInterface *memory)
-    : a(std::make_unique<Register>()), b(std::make_unique<Register>()),
-      c(std::make_unique<Register>()), d(std::make_unique<Register>()),
-      e(std::make_unique<Register>()), f(std::make_unique<Register>()),
-      h(std::make_unique<Register>()), l(std::make_unique<Register>()),
-      af(std::make_unique<PairRegister>(a.get(), f.get())),
-      bc(std::make_unique<PairRegister>(b.get(), c.get())),
-      de(std::make_unique<PairRegister>(d.get(), e.get())),
-      hl(std::make_unique<PairRegister>(h.get(), l.get())),
-      sp(std::make_unique<DoubleRegister>()),
-      pc(std::make_unique<DoubleRegister>()), memory(memory), halted(false),
-      interrupt_enabled(true), branch_taken(false),
+CPU::CPU(
+    std::unique_ptr<RegisterInterface> a, std::unique_ptr<RegisterInterface> b,
+    std::unique_ptr<RegisterInterface> c, std::unique_ptr<RegisterInterface> d,
+    std::unique_ptr<RegisterInterface> e, std::unique_ptr<RegisterInterface> h,
+    std::unique_ptr<RegisterInterface> l, std::unique_ptr<RegisterInterface> f,
+    std::unique_ptr<DoubleRegisterInterface> af,
+    std::unique_ptr<DoubleRegisterInterface> bc,
+    std::unique_ptr<DoubleRegisterInterface> de,
+    std::unique_ptr<DoubleRegisterInterface> hl,
+    std::unique_ptr<DoubleRegisterInterface> pc,
+    std::unique_ptr<DoubleRegisterInterface> sp,
+    memory::MemoryInterface *memory)
+    : a(std::move(a)), b(std::move(b)), c(std::move(c)), d(std::move(d)),
+      e(std::move(e)), f(std::move(f)), h(std::move(h)), l(std::move(l)),
+      af(std::move(af)), bc(std::move(bc)), de(std::move(de)),
+      hl(std::move(hl)), sp(std::move(sp)), pc(std::move(pc)), memory(memory),
+      halted(false), interrupt_enabled(true), branch_taken(false),
 
       // Initialize the opcode map
       opcode_map({

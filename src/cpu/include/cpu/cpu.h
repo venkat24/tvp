@@ -232,7 +232,21 @@ class CPU : public CPUInterface {
 	/**
 	 * Default constructor
 	 */
-	CPU(memory::MemoryInterface *memory);
+	CPU(std::unique_ptr<RegisterInterface> a,
+	    std::unique_ptr<RegisterInterface> b,
+	    std::unique_ptr<RegisterInterface> c,
+	    std::unique_ptr<RegisterInterface> d,
+	    std::unique_ptr<RegisterInterface> e,
+	    std::unique_ptr<RegisterInterface> f,
+	    std::unique_ptr<RegisterInterface> h,
+	    std::unique_ptr<RegisterInterface> l,
+	    std::unique_ptr<DoubleRegisterInterface> af,
+	    std::unique_ptr<DoubleRegisterInterface> bc,
+	    std::unique_ptr<DoubleRegisterInterface> de,
+	    std::unique_ptr<DoubleRegisterInterface> hl,
+	    std::unique_ptr<DoubleRegisterInterface> sp,
+	    std::unique_ptr<DoubleRegisterInterface> pc,
+	    memory::MemoryInterface *memory);
 
 	/**
 	 * @see CPUInterface#tick
