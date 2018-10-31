@@ -16,29 +16,29 @@ void CPU::op_add(uint8_t val) {
 	a->set(static_cast<uint8_t>(result));
 
 	// Set flag bits
-	f->set_bit(FLAG_ZERO, a->get() == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(flag::ZERO, a->get() == 0);
+	f->set_bit(flag::SUBTRACT, 0);
 
 	auto halfcarry = (0xf & val) + (0xf & a->get()) > 0xf;
-	f->set_bit(FLAG_HALFCARRY, halfcarry);
+	f->set_bit(flag::HALFCARRY, halfcarry);
 	auto carry = (result & 0x100) != 0;
-	f->set_bit(FLAG_CARRY, carry);
+	f->set_bit(flag::CARRY, carry);
 }
 
 void CPU::op_adc(uint8_t val) {
 	// Add the value and current carry to A
-	auto carry_to_add = f->get_bit(FLAG_CARRY);
+	auto carry_to_add = f->get_bit(flag::CARRY);
 	auto result = static_cast<int16_t>(a->get() + val + carry_to_add);
 	a->set(result);
 
 	// Set flag bits
-	f->set_bit(FLAG_ZERO, a->get() == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(flag::ZERO, a->get() == 0);
+	f->set_bit(flag::SUBTRACT, 0);
 
 	auto halfcarry = (0xf & val) + (0xf & a->get()) > 0xf;
-	f->set_bit(FLAG_HALFCARRY, halfcarry);
+	f->set_bit(flag::HALFCARRY, halfcarry);
 	auto carry = (result & 0x100) != 0;
-	f->set_bit(FLAG_CARRY, carry);
+	f->set_bit(flag::CARRY, carry);
 }
 
 void CPU::op_and(uint8_t val) {
@@ -47,10 +47,10 @@ void CPU::op_and(uint8_t val) {
 	a->set(static_cast<uint8_t>(result));
 
 	// Set the flags
-	f->set_bit(FLAG_ZERO, a->get() == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 1);
-	f->set_bit(FLAG_CARRY, 0);
+	f->set_bit(flag::ZERO, a->get() == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 1);
+	f->set_bit(flag::CARRY, 0);
 }
 
 void CPU::op_or(uint8_t val) {
@@ -59,10 +59,10 @@ void CPU::op_or(uint8_t val) {
 	a->set(static_cast<uint8_t>(result));
 
 	// Set the flags
-	f->set_bit(FLAG_ZERO, a->get() == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, 0);
+	f->set_bit(flag::ZERO, a->get() == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, 0);
 }
 
 void CPU::op_xor(uint8_t val) {
@@ -71,10 +71,10 @@ void CPU::op_xor(uint8_t val) {
 	a->set(static_cast<uint8_t>(result));
 
 	// Set the flags
-	f->set_bit(FLAG_ZERO, a->get() == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, 0);
+	f->set_bit(flag::ZERO, a->get() == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, 0);
 }
 
 void CPU::op_cp(uint8_t val) {
@@ -82,13 +82,13 @@ void CPU::op_cp(uint8_t val) {
 	auto result = static_cast<int16_t>(a->get() - val);
 
 	// Set flag bits
-	f->set_bit(FLAG_ZERO, a->get() == 0);
-	f->set_bit(FLAG_SUBTRACT, 1);
+	f->set_bit(flag::ZERO, a->get() == 0);
+	f->set_bit(flag::SUBTRACT, 1);
 
 	auto halfcarry = (0xf & val) - (0xf & a->get()) > 0xf;
-	f->set_bit(FLAG_HALFCARRY, halfcarry);
+	f->set_bit(flag::HALFCARRY, halfcarry);
 	auto carry = result < 0;
-	f->set_bit(FLAG_CARRY, carry);
+	f->set_bit(flag::CARRY, carry);
 }
 
 void CPU::op_sub(uint8_t val) {
@@ -97,29 +97,29 @@ void CPU::op_sub(uint8_t val) {
 	a->set(static_cast<uint8_t>(result));
 
 	// Set flag bits
-	f->set_bit(FLAG_ZERO, a->get() == 0);
-	f->set_bit(FLAG_SUBTRACT, 1);
+	f->set_bit(flag::ZERO, a->get() == 0);
+	f->set_bit(flag::SUBTRACT, 1);
 
 	auto halfcarry = (0xf & val) - (0xf & a->get()) > 0xf;
-	f->set_bit(FLAG_HALFCARRY, halfcarry);
+	f->set_bit(flag::HALFCARRY, halfcarry);
 	auto carry = result < 0;
-	f->set_bit(FLAG_CARRY, carry);
+	f->set_bit(flag::CARRY, carry);
 }
 
 void CPU::op_sbc(uint8_t val) {
 	// Subtract the value and current carry from A
-	auto carry_to_sub = f->get_bit(FLAG_CARRY);
+	auto carry_to_sub = f->get_bit(flag::CARRY);
 	auto result = static_cast<int16_t>(a->get() - val - carry_to_sub);
 	a->set(result);
 
 	// Set flag bits
-	f->set_bit(FLAG_ZERO, a->get() == 0);
-	f->set_bit(FLAG_SUBTRACT, 1);
+	f->set_bit(flag::ZERO, a->get() == 0);
+	f->set_bit(flag::SUBTRACT, 1);
 
 	auto halfcarry = (0xf & val) - (0xf & a->get()) > 0xf;
-	f->set_bit(FLAG_HALFCARRY, halfcarry);
+	f->set_bit(flag::HALFCARRY, halfcarry);
 	auto carry = result < 0;
-	f->set_bit(FLAG_CARRY, carry);
+	f->set_bit(flag::CARRY, carry);
 }
 
 void CPU::op_inc(RegisterInterface *reg) {
@@ -127,8 +127,8 @@ void CPU::op_inc(RegisterInterface *reg) {
 	(*reg)++;
 
 	// Set flag bits
-	f->set_bit(FLAG_ZERO, reg->get() == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(flag::ZERO, reg->get() == 0);
+	f->set_bit(flag::SUBTRACT, 0);
 
 	// If the last 4 bits are all 0, then there was a halfcarry
 	auto halfcarry = (reg->get() & 0x0F) == 0;
@@ -141,8 +141,8 @@ void CPU::op_inc(Address addr) {
 	memory->write(addr, value);
 
 	// Set flag bits
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
 
 	// If the last 4 bits are all 0, then there was a halfcarry
 	auto halfcarry = (value & 0x0F) == 0;
@@ -153,12 +153,12 @@ void CPU::op_dec(RegisterInterface *reg) {
 	(*reg)--;
 
 	// Set flag bits
-	f->set_bit(FLAG_ZERO, reg->get() == 0);
-	f->set_bit(FLAG_SUBTRACT, 1);
+	f->set_bit(flag::ZERO, reg->get() == 0);
+	f->set_bit(flag::SUBTRACT, 1);
 
 	// If the last 4 bits are all 0, then there was a halfcarry
 	auto halfcarry = (reg->get() & 0x0F) == 0;
-	f->set_bit(FLAG_HALFCARRY, halfcarry);
+	f->set_bit(flag::HALFCARRY, halfcarry);
 }
 
 void CPU::op_dec(Address addr) {
@@ -168,12 +168,12 @@ void CPU::op_dec(Address addr) {
 	memory->write(addr, value);
 
 	// Set flag bits
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 1);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 1);
 
 	// If the last 4 bits are all 0, then there was a halfcarry
 	auto halfcarry = (value & 0x0F) == 0;
-	f->set_bit(FLAG_HALFCARRY, halfcarry);
+	f->set_bit(flag::HALFCARRY, halfcarry);
 }
 
 /// 16-bit Arithmetic
@@ -184,14 +184,14 @@ void CPU::op_add_hl(uint16_t val) {
 	hl->set(static_cast<uint16_t>(result));
 
 	// Set the flags
-	f->set_bit(FLAG_ZERO, hl->get() == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(flag::ZERO, hl->get() == 0);
+	f->set_bit(flag::SUBTRACT, 0);
 
 	auto halfcarry = (0xfff & val) + (0xfff & hl->get()) > 0xfff;
-	f->set_bit(FLAG_HALFCARRY, halfcarry);
+	f->set_bit(flag::HALFCARRY, halfcarry);
 
 	auto carry = (result & 0x10000) != 0;
-	f->set_bit(FLAG_CARRY, carry);
+	f->set_bit(flag::CARRY, carry);
 }
 
 void CPU::op_add_sp(int8_t val) {
@@ -204,15 +204,15 @@ void CPU::op_add_sp(int8_t val) {
 	sp->set(static_cast<uint16_t>(result));
 
 	// Set the flags
-	// Note that FLAG_ZERO is always set to 0 for this instruction
-	f->set_bit(FLAG_ZERO, 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
+	// Note that flag::ZERO is always set to 0 for this instruction
+	f->set_bit(flag::ZERO, 0);
+	f->set_bit(flag::SUBTRACT, 0);
 
 	auto halfcarry = (0xfff & val) + (0xfff & sp->get()) > 0xfff;
-	f->set_bit(FLAG_HALFCARRY, halfcarry);
+	f->set_bit(flag::HALFCARRY, halfcarry);
 
 	auto carry = (result & 0x10000) != 0;
-	f->set_bit(FLAG_CARRY, carry);
+	f->set_bit(flag::CARRY, carry);
 }
 
 void CPU::op_inc_dbl(DoubleRegisterInterface *reg) {
@@ -294,13 +294,13 @@ void CPU::op_ld_hl_sp_offset(int8_t offset) {
 	auto result = stack_val + offset;
 
 	// Set flag bits
-	f->set_bit(FLAG_ZERO, 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(flag::ZERO, 0);
+	f->set_bit(flag::SUBTRACT, 0);
 
 	auto halfcarry = (0xf & stack_val) + (0xf & result) > 0xf;
-	f->set_bit(FLAG_HALFCARRY, halfcarry);
+	f->set_bit(flag::HALFCARRY, halfcarry);
 	auto carry = (result & 0x100) != 0;
-	f->set_bit(FLAG_CARRY, carry);
+	f->set_bit(flag::CARRY, carry);
 }
 
 void CPU::op_push(DoubleRegisterInterface *reg) {
@@ -344,10 +344,10 @@ void CPU::op_rlc(RegisterInterface *reg) {
 
 	value = static_cast<uint8_t>((value << 1) | msb);
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, msb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, msb);
 
 	reg->set(value);
 }
@@ -358,17 +358,17 @@ void CPU::op_rlc(Address addr) {
 
 	value = static_cast<uint8_t>((value << 1) | msb);
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, msb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, msb);
 
 	memory->write(addr, value);
 }
 
 void CPU::op_rlc_a() {
 	op_rlc(a.get());
-	f->set_bit(FLAG_ZERO, 0);
+	f->set_bit(flag::ZERO, 0);
 }
 
 void CPU::op_rrc(RegisterInterface *reg) {
@@ -377,10 +377,10 @@ void CPU::op_rrc(RegisterInterface *reg) {
 
 	value = static_cast<uint8_t>((value >> 1) | (lsb << 7));
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, lsb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, lsb);
 
 	reg->set(value);
 }
@@ -391,30 +391,30 @@ void CPU::op_rrc(Address addr) {
 
 	value = static_cast<uint8_t>((value >> 1) | (lsb << 7));
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, lsb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, lsb);
 
 	memory->write(addr, value);
 }
 
 void CPU::op_rrc_a() {
 	op_rrc(a.get());
-	f->set_bit(FLAG_ZERO, 0);
+	f->set_bit(flag::ZERO, 0);
 }
 
 void CPU::op_rl(RegisterInterface *reg) {
 	auto value = reg->get();
 	auto msb = static_cast<bool>(value >> 7);
-	auto carry_flag = f->get_bit(FLAG_CARRY);
+	auto carry_flag = f->get_bit(flag::CARRY);
 
 	value = static_cast<uint8_t>((value << 1) | carry_flag);
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, msb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, msb);
 
 	reg->set(value);
 }
@@ -422,34 +422,34 @@ void CPU::op_rl(RegisterInterface *reg) {
 void CPU::op_rl(Address addr) {
 	auto value = memory->read(addr);
 	auto msb = static_cast<bool>(value >> 7);
-	auto carry_flag = f->get_bit(FLAG_CARRY);
+	auto carry_flag = f->get_bit(flag::CARRY);
 
 	value = static_cast<uint8_t>((value << 1) | carry_flag);
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, msb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, msb);
 
 	memory->write(addr, value);
 }
 
 void CPU::op_rl_a() {
 	op_rl(a.get());
-	f->set_bit(FLAG_ZERO, 0);
+	f->set_bit(flag::ZERO, 0);
 }
 
 void CPU::op_rr(RegisterInterface *reg) {
 	auto value = reg->get();
 	auto lsb = static_cast<bool>(value & 0x01);
-	auto carry_flag = f->get_bit(FLAG_CARRY);
+	auto carry_flag = f->get_bit(flag::CARRY);
 
 	value = static_cast<uint8_t>((value >> 1) | (lsb << 7));
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, lsb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, lsb);
 
 	reg->set(value);
 }
@@ -457,21 +457,21 @@ void CPU::op_rr(RegisterInterface *reg) {
 void CPU::op_rr(Address addr) {
 	auto value = memory->read(addr);
 	auto lsb = static_cast<bool>(value & 0x01);
-	auto carry_flag = f->get_bit(FLAG_CARRY);
+	auto carry_flag = f->get_bit(flag::CARRY);
 
 	value = static_cast<uint8_t>((value >> 1) | (lsb << 7));
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, lsb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, lsb);
 
 	memory->write(addr, value);
 }
 
 void CPU::op_rr_a() {
 	op_rr(a.get());
-	f->set_bit(FLAG_ZERO, 0);
+	f->set_bit(flag::ZERO, 0);
 }
 
 void CPU::op_sla(RegisterInterface *reg) {
@@ -480,10 +480,10 @@ void CPU::op_sla(RegisterInterface *reg) {
 
 	value = static_cast<uint8_t>(value << 1);
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, msb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, msb);
 
 	reg->set(value);
 }
@@ -494,10 +494,10 @@ void CPU::op_sla(Address addr) {
 
 	value = static_cast<uint8_t>(value << 1);
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, msb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, msb);
 
 	memory->write(addr, value);
 }
@@ -508,10 +508,10 @@ void CPU::op_srl(RegisterInterface *reg) {
 
 	value = static_cast<uint8_t>(value >> 1);
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, lsb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, lsb);
 
 	reg->set(value);
 }
@@ -522,10 +522,10 @@ void CPU::op_srl(Address addr) {
 
 	value = static_cast<uint8_t>(value >> 1);
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, lsb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, lsb);
 
 	memory->write(addr, value);
 }
@@ -537,10 +537,10 @@ void CPU::op_sra(RegisterInterface *reg) {
 
 	value = static_cast<uint8_t>((value >> 1) | (msb << 7));
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, lsb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, lsb);
 
 	reg->set(value);
 }
@@ -552,10 +552,10 @@ void CPU::op_sra(Address addr) {
 
 	value = static_cast<uint8_t>((value >> 1) | (msb << 7));
 
-	f->set_bit(FLAG_ZERO, value == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, lsb);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, lsb);
 
 	memory->write(addr, value);
 }
@@ -564,10 +564,10 @@ void CPU::op_sra(Address addr) {
 
 void CPU::op_bit(RegisterInterface *reg, uint8_t bit) {
 	auto val = reg->get_bit(bit);
-	f->set_bit(FLAG_ZERO, val);
+	f->set_bit(flag::ZERO, val);
 }
 
-void CPU::op_bit(uint8_t val, uint8_t bit) { f->set_bit(FLAG_ZERO, val); }
+void CPU::op_bit(uint8_t val, uint8_t bit) { f->set_bit(flag::ZERO, val); }
 
 void CPU::op_set(RegisterInterface *reg, uint8_t bit) {
 	reg->set_bit(bit, true);
@@ -676,10 +676,10 @@ void CPU::op_swap(RegisterInterface *reg) {
 	reg->set(new_val);
 
 	// Set flags
-	f->set_bit(FLAG_ZERO, new_val == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, 0);
+	f->set_bit(flag::ZERO, new_val == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, 0);
 }
 
 void CPU::op_swap(Address addr) {
@@ -691,10 +691,10 @@ void CPU::op_swap(Address addr) {
 	memory->write(addr, new_val);
 
 	// Set flags
-	f->set_bit(FLAG_ZERO, new_val == 0);
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
-	f->set_bit(FLAG_CARRY, 0);
+	f->set_bit(flag::ZERO, new_val == 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
+	f->set_bit(flag::CARRY, 0);
 }
 
 void CPU::op_daa() {
@@ -708,28 +708,28 @@ void CPU::op_cpl() {
 	a->set(value);
 
 	// Set flags
-	f->set_bit(FLAG_SUBTRACT, 1);
-	f->set_bit(FLAG_HALFCARRY, 1);
+	f->set_bit(flag::SUBTRACT, 1);
+	f->set_bit(flag::HALFCARRY, 1);
 }
 
 void CPU::op_ccf() {
 	// Complement Carry Flag
-	bool value = f->get_bit(FLAG_CARRY);
+	bool value = f->get_bit(flag::CARRY);
 	value = !value;
-	f->set_bit(FLAG_CARRY, value);
+	f->set_bit(flag::CARRY, value);
 
 	// Set flags
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
 }
 
 void CPU::op_scf() {
 	// Set Carry Flag
-	f->set_bit(FLAG_CARRY, 1);
+	f->set_bit(flag::CARRY, 1);
 
 	// Set flags
-	f->set_bit(FLAG_SUBTRACT, 0);
-	f->set_bit(FLAG_HALFCARRY, 0);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 0);
 }
 
 void CPU::op_nop() {

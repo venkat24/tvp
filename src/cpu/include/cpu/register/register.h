@@ -199,17 +199,20 @@ class PairRegister : public DoubleRegisterInterface {
 
 /**
  * Flag Register bits reference:
- * FLAG_ZERO      -> Set when the result of the previous transaction was zero
- * FLAG_SUBTRACT  -> Set when the previous operation was a subract operation
- * FLAG_HALFCARRY -> Set when the previous operation carried from bit 4
- * FLAG_CARRY     -> Set when the previous operation carries from bit 8
+ * ZERO      -> Set when the result of the previous transaction was zero
+ * SUBTRACT  -> Set when the previous operation was a subract operation
+ * HALFCARRY -> Set when the previous operation carried from bit 4
+ * CARRY     -> Set when the previous operation carries from bit 8
  */
+namespace flag {
 enum FlagBits : uint8_t {
-	FLAG_ZERO = 7,
-	FLAG_SUBTRACT = 6,
-	FLAG_HALFCARRY = 5,
-	FLAG_CARRY = 4
+	// Number corresponds to the bit number of the Flag register
+	ZERO = 7,
+	SUBTRACT = 6,
+	HALFCARRY = 5,
+	CARRY = 4
 };
+} // namespace flag
 
 } // namespace cpu
 
