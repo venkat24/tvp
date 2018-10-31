@@ -19,6 +19,11 @@ namespace cpu {
 class CPUInterface {
   public:
 	/**
+	 * Virtual Destructor
+	 */
+	virtual ~CPUInterface(){};
+
+	/**
 	 * Increments the clock by 1
 	 */
 	virtual ClockCycles tick() = 0;

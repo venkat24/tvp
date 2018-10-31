@@ -14,6 +14,11 @@ namespace memory {
 class MemoryInterface {
   public:
 	/**
+	 * Virtual Destructor
+	 */
+	virtual ~MemoryInterface(){};
+
+	/**
 	 * Read a byte from the specified location
 	 *
 	 * @param address Location to read byte from

@@ -17,9 +17,13 @@ class RegisterMock : public RegisterInterface {
 	MOCK_CONST_METHOD1(get_bit, bool(uint8_t));
 	MOCK_METHOD0(operator_increment, void());
 	MOCK_METHOD0(operator_decrement, void());
-	virtual void operator++(int i) { operator_increment(); }
+	virtual void operator++(__attribute__((unused)) int i) {
+		operator_increment();
+	}
 	virtual void operator++() { operator_increment(); }
-	virtual void operator--(int i) { operator_decrement(); }
+	virtual void operator--(__attribute__((unused)) int i) {
+		operator_decrement();
+	}
 	virtual void operator--() { operator_decrement(); }
 };
 
@@ -33,9 +37,13 @@ class DoubleRegisterMock : public DoubleRegisterInterface {
 	MOCK_CONST_METHOD1(get_bit, bool(uint8_t));
 	MOCK_METHOD0(operator_increment, void());
 	MOCK_METHOD0(operator_decrement, void());
-	virtual void operator++(int i) { operator_increment(); }
+	virtual void operator++(__attribute__((unused)) int i) {
+		operator_increment();
+	}
 	virtual void operator++() { operator_increment(); }
-	virtual void operator--(int i) { operator_decrement(); }
+	virtual void operator--(__attribute__((unused)) int i) {
+		operator_decrement();
+	}
 	virtual void operator--() { operator_decrement(); }
 };
 

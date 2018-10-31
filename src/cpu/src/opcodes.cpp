@@ -132,6 +132,7 @@ void CPU::op_inc(RegisterInterface *reg) {
 
 	// If the last 4 bits are all 0, then there was a halfcarry
 	auto halfcarry = (reg->get() & 0x0F) == 0;
+	f->set_bit(flag::HALFCARRY, halfcarry);
 }
 
 void CPU::op_inc(Address addr) {
@@ -146,6 +147,7 @@ void CPU::op_inc(Address addr) {
 
 	// If the last 4 bits are all 0, then there was a halfcarry
 	auto halfcarry = (value & 0x0F) == 0;
+	f->set_bit(flag::HALFCARRY, halfcarry);
 }
 
 void CPU::op_dec(RegisterInterface *reg) {
@@ -307,7 +309,6 @@ void CPU::op_push(DoubleRegisterInterface *reg) {
 	// We need to push the source register value onto the stack
 	// Now, the stack grows downwards, so we push the higher byte onto the
 	// stack, and then the lower byte. We decrement the SP twice in the process
-	auto value = reg->get();
 	auto curr_stack_pointer = sp->get();
 
 	auto high_byte = reg->get_high();
@@ -444,7 +445,7 @@ void CPU::op_rr(RegisterInterface *reg) {
 	auto lsb = static_cast<bool>(value & 0x01);
 	auto carry_flag = f->get_bit(flag::CARRY);
 
-	value = static_cast<uint8_t>((value >> 1) | (lsb << 7));
+	value = static_cast<uint8_t>((value >> 1) | (carry_flag << 7));
 
 	f->set_bit(flag::ZERO, value == 0);
 	f->set_bit(flag::SUBTRACT, 0);
@@ -459,7 +460,7 @@ void CPU::op_rr(Address addr) {
 	auto lsb = static_cast<bool>(value & 0x01);
 	auto carry_flag = f->get_bit(flag::CARRY);
 
-	value = static_cast<uint8_t>((value >> 1) | (lsb << 7));
+	value = static_cast<uint8_t>((value >> 1) | (carry_flag << 7));
 
 	f->set_bit(flag::ZERO, value == 0);
 	f->set_bit(flag::SUBTRACT, 0);

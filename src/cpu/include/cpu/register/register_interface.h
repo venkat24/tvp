@@ -18,6 +18,11 @@ namespace cpu {
 class RegisterInterface {
   public:
 	/**
+	 * Virtual Destructor
+	 */
+	virtual ~RegisterInterface(){};
+
+	/**
 	 * Set the register to a particular value
 	 *
 	 * @param value The 8-bit value to set to
@@ -72,6 +77,11 @@ class RegisterInterface {
  */
 class DoubleRegisterInterface {
   public:
+	/**
+	 * Virtual Destructor
+	 */
+	virtual ~DoubleRegisterInterface(){};
+
 	/**
 	 * Set the register to a particular value
 	 *
