@@ -44,17 +44,17 @@ class Memory : public MemoryInterface {
 	/**
 	 * @see MemoryInterface#read
 	 */
-	uint8_t read(Address address) const;
+	uint8_t read(Address address) const override;
 
 	/**
 	 * @see MemoryInterface#write
 	 */
-	void write(Address address, uint8_t data);
+	void write(Address address, uint8_t data) override;
 
 	/**
 	 * @see MemoryInterface#operator[]
 	 */
-	uint8_t &operator[](Address address);
+	uint8_t &operator[](Address address) override;
 
   private:
 	/**

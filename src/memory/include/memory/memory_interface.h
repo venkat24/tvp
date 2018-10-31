@@ -33,7 +33,7 @@ class MemoryInterface {
 	 * Overload the [] operator, to read and write to the memory in array
 	 * style
 	 */
-	virtual uint8_t &operator[](int index) = 0;
+	virtual uint8_t &operator[](Address address) = 0;
 };
 
 } // namespace memory
