@@ -723,6 +723,15 @@ void CPU::op_ccf() {
 	f->set_bit(FLAG_HALFCARRY, 0);
 }
 
+void CPU::op_scf() {
+	// Set Carry Flag
+	f->set_bit(FLAG_CARRY, 1);
+
+	// Set flags
+	f->set_bit(FLAG_SUBTRACT, 0);
+	f->set_bit(FLAG_HALFCARRY, 0);
+}
+
 void CPU::op_nop() {
 	// Do nothing!
 }
