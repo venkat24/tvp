@@ -3,11 +3,14 @@ project(test)
 
 include(GoogleTest)
 
+include_directories(.)
+
 set(SOURCE_FILES
 	test.cpp
 
 	# CPU
 	cpu/register_test.cpp
+	cpu/arithmetic_opcode_test.cpp
 )
 
 add_executable(test ${SOURCE_FILES})

@@ -612,8 +612,6 @@ CPU::CPU(
 // clang-format on
 {}
 
-}
-
 ClockCycles CPU::execute(uint8_t opcode, uint16_t pc) { return 0; }
 
 uint8_t CPU::get_inst_byte() const {
