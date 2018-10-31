@@ -71,6 +71,13 @@ class CPU : public CPUInterface {
 	bool interrupt_enabled;
 
 	/**
+	 * Specifies whether the previous condition checked branch, jumped or not.
+	 * This is used to calculate CPU cycles for jump instructions, which have
+	 * varying cycle lengths based on the condition
+	 */
+	bool branch_taken;
+
+	/**
 	 * Run an instruction with the specified opcode at the specified
 	 * location of the program counter
 	 *

@@ -22,7 +22,7 @@ CPU::CPU(memory::MemoryInterface *memory)
       hl(std::make_unique<PairRegister>(h.get(), l.get())),
       sp(std::make_unique<DoubleRegister>()),
       pc(std::make_unique<DoubleRegister>()), memory(memory), halted(false),
-      interrupt_enabled(true),
+      interrupt_enabled(true), branch_taken(false),
       // Initialize the opcode map
       opcode_map({
           // clang-format off

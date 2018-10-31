@@ -607,7 +607,10 @@ void CPU::op_jr(bool flag, int8_t offset) {
 	// This is a conditional jump. Change the PC only if given bit of the flag
 	// register is set. Else, do nothing
 	if (flag) {
+		branch_taken = true;
 		op_jr(offset);
+	} else {
+		branch_taken = false;
 	}
 }
 
@@ -634,6 +637,9 @@ void CPU::op_call(bool flag, Address addr) {
 	// Conditional call, only if given bit is set
 	if (flag) {
 		op_call(addr);
+		branch_taken = true;
+	} else {
+		branch_taken = false;
 	}
 }
 
@@ -648,6 +654,9 @@ void CPU::op_ret(bool flag) {
 	// Pop stack to PC only if the bit is set
 	if (flag) {
 		op_pop(pc.get());
+		branch_taken = true;
+	} else {
+		branch_taken = false;
 	}
 }
 
