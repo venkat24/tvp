@@ -56,6 +56,24 @@ class CPU : public CPUInterface {
 	std::vector<std::function<void()>> cb_opcode_map;
 
 	/**
+	 * Contains the number of CPU cycles taken to execute each instruction,
+	 * indexed by opcode
+	 */
+	std::vector<ClockCycles> cycles;
+
+	/**
+	 * Contains the number of CPU cycles taken to execute each instruction,
+	 * given that the branch was taken. Changes only for JP, JR, RET, CALL
+	 */
+	std::vector<ClockCycles> cycles_branched;
+
+	/**
+	 * Contains the number of CPU cycles taken to execute each instruction,
+	 * for all CB prefixed instruction opcodes
+	 */
+	std::vector<ClockCycles> cycles_cb;
+
+	/**
 	 * Memory instance, for performing all reads and writes to main memory
 	 */
 	memory::MemoryInterface *memory;
