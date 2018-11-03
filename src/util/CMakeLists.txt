@@ -3,6 +3,7 @@ project(util)
 
 set(SOURCE_FILES
     src/log.cpp
+    src/helpers.cpp
 )
 
 set(INCLUDE_PATH include)
