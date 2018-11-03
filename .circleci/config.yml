@@ -1,0 +1,77 @@
+version: 2
+jobs:
+  build-gcc:
+    docker:
+      - image: buildpack-deps:xenial
+        environment:
+          CMAKE_BUILD_TYPE: "Debug"
+    steps:
+      - checkout
+      - run:
+          name: Environment
+          command: |
+            git submodule sync --recursive
+            git submodule update --recursive --init
+            apt update
+            apt install -y --no-install-recommends build-essential clang-format
+            wget "https://cmake.org/files/v3.11/cmake-3.11.1-Linux-x86_64.tar.gz" --no-check-certificate
+            tar xf cmake-3.11.1-Linux-x86_64.tar.gz
+            cp -r cmake-3.11.1-Linux-x86_64/bin/* /usr/local/bin
+            cp -r cmake-3.11.1-Linux-x86_64/share/* /usr/local/share
+            mkdir tvp build
+      - run:
+          name: Run CMake
+          working_directory: /root/project/build
+          command: |
+            cmake .. -DCMAKE_INSTALL_PREFIX=/root/project/tvp
+      - run:
+          name: Run Make
+          working_directory: /root/project/build
+          command: |
+            make install -j
+      - run:
+          name: Run Tests
+          working_directory: /root/project/tvp/bin
+          command: ./test
+
+  build-clang:
+    docker:
+      - image: buildpack-deps:xenial
+        environment:
+          CXX: "clang++"
+          CMAKE_BUILD_TYPE: "Debug"
+    steps:
+      - checkout
+      - run:
+          name: Environment
+          command: |
+            git submodule sync --recursive
+            git submodule update --recursive --init
+            apt update
+            apt install -y --no-install-recommends build-essential clang clang-format
+            wget "https://cmake.org/files/v3.11/cmake-3.11.1-Linux-x86_64.tar.gz" --no-check-certificate
+            tar xf cmake-3.11.1-Linux-x86_64.tar.gz
+            cp -r cmake-3.11.1-Linux-x86_64/bin/* /usr/local/bin
+            cp -r cmake-3.11.1-Linux-x86_64/share/* /usr/local/share
+            mkdir tvp build
+      - run:
+          name: Run CMake
+          working_directory: /root/project/build
+          command: |
+            cmake .. -DCMAKE_INSTALL_PREFIX=/root/project/tvp
+      - run:
+          name: Run Make
+          working_directory: /root/project/build
+          command: |
+            make install -j
+      - run:
+          name: Run Tests
+          working_directory: /root/project/tvp/bin
+          command: ./test
+
+workflows:
+  version: 2
+  build-all:
+    jobs:
+      - build-gcc
+      - build-clang
