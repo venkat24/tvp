@@ -1,0 +1,33 @@
+/**
+ * @file log.h
+ * Declares the Log Class
+ */
+
+#include <string>
+
+#ifndef UTIL_INCLUDE_UTIL_LOG_H
+#define UTIL_INCLUDE_UTIL_LOG_H
+
+/**
+ * List of the different possible logging levels
+ */
+enum class LogLevel { INFO, WARN, ERROR, FATAL };
+
+/**
+ * Static class to just dump stuff to std::out with pretty output
+ */
+class Log {
+  public:
+	Log() = delete;
+
+	/// Log something. Defaults to LogLevel::INFO if no level given
+	static void log(std::string message, LogLevel log_level = LogLevel::INFO);
+
+	/// These classes just call log() with some log level
+	static void info(std::string message);
+	static void warn(std::string message);
+	static void error(std::string message);
+	static void fatal(std::string message);
+};
+
+#endif
