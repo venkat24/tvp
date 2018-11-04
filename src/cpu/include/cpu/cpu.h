@@ -245,6 +245,9 @@ class CPU : public CPUInterface {
 	void op_di();
 	void op_ei();
 
+	/// Helpers
+	void log_registers();
+
   public:
 	/**
 	 * Default constructor

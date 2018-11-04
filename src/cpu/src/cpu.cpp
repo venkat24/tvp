@@ -5,6 +5,8 @@
 
 #include "cpu/cpu.h"
 #include "cpu/register/register.h"
+#include "util/helpers.h"
+#include "util/log.h"
 
 #include <functional>
 
@@ -612,6 +614,29 @@ CPU::CPU(
 // clang-format on
 {}
 
+ClockCycles CPU::tick() {
+	log_registers();
+	auto opcode = get_inst_byte();
+	Log::info("Program Counter : " + num_to_hex(pc->get()));
+	auto current_cycles = ClockCycles{0};
+	if (opcode != 0xCB) {
+		Log::info("Current Opcode  : " + num_to_hex(opcode) + " -> " +
+		          get_mnemonic(opcode));
+		opcode_map[opcode]();
+		current_cycles = cycles[opcode];
+	} else {
+		opcode = get_inst_byte();
+		Log::info("Current Opcode  : " + num_to_hex(opcode) + " -> " +
+		          get_cb_mnemonic(opcode));
+		cb_opcode_map[opcode]();
+		current_cycles = cycles_cb[opcode];
+	}
+	Log::info("Inst " + num_to_hex(opcode) + " done, took " +
+	          std::to_string(current_cycles) + " cycles...");
+
+	return current_cycles;
+}
+
 ClockCycles CPU::execute(uint8_t opcode, uint16_t pc) { return 0; }
 
 uint8_t CPU::get_inst_byte() const {
@@ -621,13 +646,24 @@ uint8_t CPU::get_inst_byte() const {
 };
 
 uint16_t CPU::get_inst_dbl() const {
-	auto lower = memory->read(pc->get());
-	(*pc)++;
-	auto upper = memory->read(pc->get());
-	(*pc)++;
+	auto lower = get_inst_byte();
+	auto upper = get_inst_byte();
 
 	auto result = static_cast<uint16_t>((upper << 8) | lower);
 	return result;
 };
+
+void CPU::log_registers() {
+	Log::info("A  -> " + num_to_hex(a->get()) + " | F  -> " +
+	          num_to_hex(f->get()));
+	Log::info("B  -> " + num_to_hex(b->get()) + " | C  -> " +
+	          num_to_hex(c->get()));
+	Log::info("D  -> " + num_to_hex(d->get()) + " | E  -> " +
+	          num_to_hex(e->get()));
+	Log::info("H  -> " + num_to_hex(h->get()) + " | L  -> " +
+	          num_to_hex(l->get()));
+	Log::info("PC -> " + num_to_hex(pc->get()));
+	Log::info("SP -> " + num_to_hex(sp->get()));
+}
 
 } // namespace cpu

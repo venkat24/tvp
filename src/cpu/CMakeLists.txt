@@ -10,7 +10,7 @@ set(SOURCE_FILES
 set(INCLUDE_PATH include)
 
 add_library(cpu STATIC ${SOURCE_FILES})
-target_link_libraries(cpu memory)
+target_link_libraries(cpu util memory)
 
 target_include_directories(cpu PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${INCLUDE_PATH}>
