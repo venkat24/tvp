@@ -1,7 +1,6 @@
 # Creates additional target to perform clang-format run, requires clang-format
 
 # Find clang format
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR})
 find_package(ClangFormat)
 
 if(CLANG_FORMAT_FOUND)

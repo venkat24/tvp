@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.11.1)
 project(tvp)
 
+# Add the CMake folder to the module search path
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
 # Force C++17 Standard
 set(CMAKE_CXX_STANDARD 17)
 
@@ -48,7 +51,7 @@ target_link_libraries(tvp ${MODULES})
 # If this is not the release build, compile unit tests
 # TODO: This is should be triggered by some other flag, not CMAKE_BUILD_TYPE
 if((NOT CMAKE_BUILD_TYPE STREQUAL "Release"))
-	include(clang-format.cmake)
+	include(cmake/clang-format.cmake)
 	add_subdirectory(ext/googletest)
 	add_subdirectory(test)
 endif()
