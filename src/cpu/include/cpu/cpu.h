@@ -261,8 +261,8 @@ class CPU : public CPUInterface {
 	    std::unique_ptr<DoubleRegisterInterface> bc,
 	    std::unique_ptr<DoubleRegisterInterface> de,
 	    std::unique_ptr<DoubleRegisterInterface> hl,
-	    std::unique_ptr<DoubleRegisterInterface> sp,
 	    std::unique_ptr<DoubleRegisterInterface> pc,
+	    std::unique_ptr<DoubleRegisterInterface> sp,
 	    memory::MemoryInterface *memory);
 
 	/**
