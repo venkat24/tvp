@@ -79,10 +79,10 @@ void CPU::op_xor(uint8_t val) {
 
 void CPU::op_cp(uint8_t val) {
 	// Compare. Essentially performs subtract without setting result
-	auto result = static_cast<int16_t>(a->get() - val);
+	auto result = static_cast<uint8_t>(a->get() - val);
 
 	// Set flag bits
-	f->set_bit(flag::ZERO, a->get() == 0);
+	f->set_bit(flag::ZERO, result == 0);
 	f->set_bit(flag::SUBTRACT, 1);
 
 	auto halfcarry = (0xf & val) - (0xf & a->get()) > 0xf;
@@ -564,11 +564,18 @@ void CPU::op_sra(Address addr) {
 /// Bit Manipulation
 
 void CPU::op_bit(RegisterInterface *reg, uint8_t bit) {
-	auto val = reg->get_bit(bit);
-	f->set_bit(flag::ZERO, val);
+	auto check = reg->get_bit(bit);
+	f->set_bit(flag::ZERO, !check);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 1);
 }
 
-void CPU::op_bit(uint8_t val, uint8_t bit) { f->set_bit(flag::ZERO, val); }
+void CPU::op_bit(uint8_t val, uint8_t bit) {
+	auto check = static_cast<bool>(val & (1 << bit));
+	f->set_bit(flag::ZERO, !check);
+	f->set_bit(flag::SUBTRACT, 0);
+	f->set_bit(flag::HALFCARRY, 1);
+}
 
 void CPU::op_set(RegisterInterface *reg, uint8_t bit) {
 	reg->set_bit(bit, true);
