@@ -16,9 +16,26 @@ namespace cpu {
 using OpCode = uint8_t;
 
 /**
- * Represents the number of cycles run during one stage of CPU execution
+ * Type alias to represent clock cycles
  */
-using ClockCycles = uint8_t;
+using ClockCycles = uint64_t;
+
+/**
+ * Flag Register bits reference:
+ * ZERO      -> Set when the result of the previous transaction was zero
+ * SUBTRACT  -> Set when the previous operation was a subract operation
+ * HALFCARRY -> Set when the previous operation carried from bit 4
+ * CARRY     -> Set when the previous operation carries from bit 8
+ */
+namespace flag {
+enum FlagBits : uint8_t {
+	// Number corresponds to the bit number of the Flag register
+	ZERO = 7,
+	SUBTRACT = 6,
+	HALFCARRY = 5,
+	CARRY = 4
+};
+} // namespace flag
 
 } // namespace cpu
 
