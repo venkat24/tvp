@@ -37,6 +37,18 @@ enum FlagBits : uint8_t {
 };
 } // namespace flag
 
+/**
+ * Describes the different user-toggleable interrupts that can trigger the CPU
+ * The enum number corresponds to the bit number in the interrupt registers
+ */
+enum class Interrupt {
+	VBLANK = 0,
+	LCD_STAT = 1,
+	TIMER = 2,
+	SERIAL = 3,
+	JOYPAD = 4
+};
+
 } // namespace cpu
 
 #endif

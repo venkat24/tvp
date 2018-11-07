@@ -3,6 +3,7 @@
  * Declares the interface for a CPU
  */
 
+#include "cpu/register/register_interface.h"
 #include "cpu/utils.h"
 #include <cstdint>
 
@@ -27,6 +28,16 @@ class CPUInterface {
 	 * Increments the clock by 1
 	 */
 	virtual ClockCycles tick() = 0;
+
+	/**
+	 * Getter for the Interrupt Enable register
+	 */
+	virtual RegisterInterface *get_interrupt_enable() = 0;
+
+	/**
+	 * Getter for the Interrupt Flag Register
+	 */
+	virtual RegisterInterface *get_interrupt_flag() = 0;
 };
 
 } // namespace cpu

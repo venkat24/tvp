@@ -637,6 +637,12 @@ ClockCycles CPU::tick() {
 	return current_cycles;
 }
 
+RegisterInterface *CPU::get_interrupt_enable() {
+	return interrupt_enable.get();
+}
+
+RegisterInterface *CPU::get_interrupt_flag() { return interrupt_flag.get(); }
+
 ClockCycles CPU::execute(uint8_t opcode, uint16_t pc) { return 0; }
 
 uint8_t CPU::get_inst_byte() const {

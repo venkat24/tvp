@@ -89,6 +89,18 @@ class CPU : public CPUInterface {
 	bool interrupt_enabled;
 
 	/**
+	 * Interrupt Enable register, which controls which interrupts are active.
+	 * Mapped to memory location 0xFFFF
+	 */
+	std::unique_ptr<RegisterInterface> interrupt_enable;
+
+	/**
+	 * Interrupt Flag register, which details which interrupts have currently
+	 * been fired. Mapped to memory location 0xFF0F
+	 */
+	std::unique_ptr<RegisterInterface> interrupt_flag;
+
+	/**
 	 * Specifies whether the previous condition checked branch, jumped or not.
 	 * This is used to calculate CPU cycles for jump instructions, which have
 	 * varying cycle lengths based on the condition
@@ -250,6 +262,16 @@ class CPU : public CPUInterface {
 	    std::unique_ptr<DoubleRegisterInterface> pc,
 	    std::unique_ptr<DoubleRegisterInterface> sp,
 	    memory::MemoryInterface *memory);
+
+	/**
+	 * Getter for the Interrupt Enable register
+	 */
+	RegisterInterface *get_interrupt_enable() override;
+
+	/**
+	 * Getter for the Interrupt Flag Register
+	 */
+	RegisterInterface *get_interrupt_flag() override;
 
 	/**
 	 * @see CPUInterface#tick
