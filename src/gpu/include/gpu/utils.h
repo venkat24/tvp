@@ -102,6 +102,27 @@ enum LCDStatFlagBits : uint8_t {
 };
 } // namespace stat_flag
 
+namespace oam_flag {
+enum OAMFlagBits : uint8_t {
+	BG_PRIORITY = 7,
+	FLIP_Y = 6,
+	FLIP_X = 5,
+	PALETTE = 4
+};
+}
+
+const uint8_t TILE_HEIGHT = 8;
+const uint8_t TILE_WIDTH = 8;
+
+// Multiply by 2 to account for double height sprites
+constexpr uint8_t TILE_SIZE = TILE_WIDTH * (2 * TILE_HEIGHT);
+
+const Address TILE_SET_ADDRS[] = {0x8000, 0x8800};
+const Address TILE_MAP_ADDRS[] = {0x9800, 0x9C00};
+
+const uint8_t OAM_ENTRY_SIZE = 4;
+const Address OAM_START_ADDR = 0xFE00;
+
 } // namespace gpu
 
 #endif

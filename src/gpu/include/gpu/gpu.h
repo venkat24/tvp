@@ -19,6 +19,62 @@
 namespace gpu {
 
 /**
+ * Represents one sprite's entry in the OAM (Sprite Attribute Table)
+ */
+struct OAMEntry {
+	/**
+	 * Position Y
+	 */
+	uint8_t pos_y;
+
+	/**
+	 * Position X
+	 */
+	uint8_t pos_x;
+
+	/**
+	 * Tile number in the tile map. This value selects a tile from memory at
+	 * 8000h-8FFFh. In 8x16 mode, the lower bit of the tile number is ignored.
+	 */
+	uint8_t tile_number;
+
+	/**
+	 * Draw priority. (0 = Sprite Above BG, 1 = Sprite Behind BG color 1-3)
+	 */
+	bool priority;
+
+	/**
+	 * If set, the sprite is flipped along X
+	 */
+	bool flip_x;
+
+	/**
+	 * If set, the sprite is flipped along Y
+	 */
+	bool flip_y;
+
+	/**
+	 * Selects which palette register (obj0 or obj1) to use
+	 */
+	bool palette;
+};
+
+/**
+ * Represents a single tile in VRAM, contains pixel data
+ */
+struct Tile {
+	/**
+	 * Data contained in this tile
+	 */
+	std::array<Pixel, TILE_SIZE> data;
+
+	/**
+	 * Helper to get the pixel at a particular X,Y
+	 */
+	Pixel &get_pixel_at(uint8_t x, uint8_t y);
+};
+
+/**
  * The GPU class, which controls pixel display to the screen
  */
 class GPU : public GPUInterface {
@@ -160,6 +216,16 @@ class GPU : public GPUInterface {
 	 * interrupt flag register
 	 */
 	void fire_interrupt(cpu::Interrupt interrupt);
+
+	/**
+	 * Get's the Sprite details from the OAM, given the start address
+	 */
+	OAMEntry get_oam_from_memory(Address address);
+
+	/**
+	 * Get tile data from memory, given the tile number
+	 */
+	Tile get_tile_from_memory(uint8_t tile_number, bool sprite = false);
 
 	/**
 	 * Write the current scanline of pixels into the video buffer
