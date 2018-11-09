@@ -274,7 +274,7 @@ CPU::CPU(
           /* 0xed */ [&] { /* UNDEFINED */ },
           /* 0xee */ [&] { op_xor(get_inst_byte()); },
           /* 0xef */ [&] { op_rst(0x28); },
-          /* 0xf0 */ [&] { op_ldh_a(0xFF00 + get_inst_byte()); },
+          /* 0xf0 */ [&] { op_ldh_a(this->memory->read(0xFF00 + get_inst_byte())); },
           /* 0xf1 */ [&] { op_pop(this->af.get()); },
           /* 0xf2 */ [&] { op_ld(this->a.get(), this->memory->read(0xFF00 + this->c->get())); },
           /* 0xf3 */ [&] { op_di(); },
