@@ -11,6 +11,10 @@ using namespace std;
 
 void Log::log(string message, LogLevel log_level) {
 	switch (log_level) {
+	case LogLevel::VERBOSE:
+		cout << "\033[1;37m [VERB] \033[0m";
+		break;
+
 	case LogLevel::INFO:
 		cout << "\033[1;34m [INFO] \033[0m";
 		break;
@@ -33,6 +37,8 @@ void Log::log(string message, LogLevel log_level) {
 	if (log_level == LogLevel::FATAL)
 		exit(1);
 }
+
+void Log::verbose(string message) { log(message, LogLevel::VERBOSE); }
 
 void Log::info(string message) { log(message, LogLevel::INFO); }
 

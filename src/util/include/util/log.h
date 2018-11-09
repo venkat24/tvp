@@ -11,7 +11,7 @@
 /**
  * List of the different possible logging levels
  */
-enum class LogLevel { INFO, WARN, ERROR, FATAL };
+enum class LogLevel { VERBOSE, INFO, WARN, ERROR, FATAL };
 
 /**
  * Static class to just dump stuff to std::out with pretty output
@@ -24,6 +24,7 @@ class Log {
 	static void log(std::string message, LogLevel log_level = LogLevel::INFO);
 
 	/// These classes just call log() with some log level
+	static void verbose(std::string message);
 	static void info(std::string message);
 	static void warn(std::string message);
 	static void error(std::string message);
