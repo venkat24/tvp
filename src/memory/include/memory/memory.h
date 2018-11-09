@@ -2,6 +2,8 @@
  * @file memory.h
  * Declares the memory class
  */
+#include "cpu/cpu_interface.h"
+#include "gpu/gpu_interface.h"
 #include "memory/memory_interface.h"
 
 #include <array>
@@ -51,11 +53,32 @@ class Memory : public MemoryInterface {
 	 */
 	void write(Address address, uint8_t data) override;
 
+	/**
+	 * Set the CPU Object pointer for this class
+	 */
+	void set_cpu(cpu::CPUInterface *cpu) override;
+
+	/**
+	 * Set the GPU Object pointer for this class
+	 */
+	void set_gpu(gpu::GPUInterface *gpu) override;
+
   private:
 	/**
 	 * Main memory array - the GameBoy can address 65536 total bytes of memory
+	 * Not all of these wll be used, as most will be mapped to other devices
 	 */
 	std::array<uint8_t, 0x10000> memory;
+
+	/**
+	 * Pointer to CPU instance
+	 */
+	cpu::CPUInterface *cpu;
+
+	/**
+	 * Pointer to GPU instance
+	 */
+	gpu::GPUInterface *gpu;
 };
 
 } // namespace memory

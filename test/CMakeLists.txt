@@ -3,7 +3,13 @@ project(test)
 
 include(GoogleTest)
 
-include_directories(.)
+include_directories(
+	.
+	${CMAKE_SOURCE_DIR}/src/cpu/include
+	${CMAKE_SOURCE_DIR}/src/gpu/include
+	${CMAKE_SOURCE_DIR}/src/memory/include
+	${CMAKE_SOURCE_DIR}/src/util/include
+)
 
 set(SOURCE_FILES
 	test.cpp
