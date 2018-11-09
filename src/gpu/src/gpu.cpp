@@ -180,6 +180,47 @@ void GPU::fire_interrupt(cpu::Interrupt interrupt) {
 	cpu->get_interrupt_flag()->set_bit(bit_number, 1);
 }
 
+OAMEntry GPU::get_oam_from_memory(Address address) {
+	auto entry = OAMEntry{};
+	// Read the first three bytes
+	entry.pos_y = memory->read(address);
+	entry.pos_x = memory->read(address + 1);
+	entry.tile_number = memory->read(address + 2);
+
+	// use fourth byte to set flags
+	auto flags = memory->read(address + 3);
+	entry.priority = flags & (1 << oam_flag::BG_PRIORITY);
+	entry.flip_x = flags & (1 << oam_flag::FLIP_X);
+	entry.flip_y = flags & (1 << oam_flag::FLIP_Y);
+	entry.palette = flags & (1 << oam_flag::PALETTE);
+
+	return entry;
+}
+
+Tile GPU::get_tile_from_memory(uint8_t tile_number, bool sprite) {
+	// Check for double height sprites if a sprite is requested
+	auto size_multiplier = 1;
+	if (sprite && lcdc->get_bit(lcdc_flag::SPRITE_SIZE)) {
+		size_multiplier = 2;
+	}
+
+	// Determine the start address of this tile
+	auto tile_set_num = lcdc->get_bit(lcdc_flag::BG_TILE_DATA_SELECT);
+	auto tile_set_addr = TILE_SET_ADDRS[tile_set_num];
+	auto tile_size = TILE_SIZE * size_multiplier;
+	auto tile_offset = tile_size * tile_number;
+	auto tile_start = static_cast<uint8_t>(tile_set_addr + tile_offset);
+
+	// Read tile data
+	auto new_tile = Tile{};
+	for (auto i = uint16_t{0x00}; i < tile_size; ++i) {
+		auto cell_data = memory->read(tile_start + i);
+		new_tile.data[i] = Pixel{cell_data};
+	}
+
+	return new_tile;
+}
+
 /// Getters
 cpu::RegisterInterface *GPU::get_lcdc() { return lcdc.get(); }
 cpu::RegisterInterface *GPU::get_stat() { return stat.get(); }
