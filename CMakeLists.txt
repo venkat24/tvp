@@ -36,6 +36,7 @@ set(MODULES
   util
   memory
   cpu
+  gpu
 )
 
 foreach(MODULE ${MODULES})
