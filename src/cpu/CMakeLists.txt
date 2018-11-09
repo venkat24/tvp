@@ -7,11 +7,14 @@ set(SOURCE_FILES
     src/register/register.cpp
 )
 
-set(INCLUDE_PATH include)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/src/util/include
+    ${CMAKE_SOURCE_DIR}/src/gpu/include
+    ${CMAKE_SOURCE_DIR}/src/memory/include
+)
 
 add_library(cpu STATIC ${SOURCE_FILES})
-target_link_libraries(cpu util memory)
 
 target_include_directories(cpu PUBLIC
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${INCLUDE_PATH}>
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
