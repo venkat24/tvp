@@ -16,11 +16,11 @@ set(SOURCE_FILES
 
 	# CPU
 	cpu/register_test.cpp
-	cpu/arithmetic_opcode_test.cpp
+	#cpu/arithmetic_opcode_test.cpp
 )
 
 add_executable(test ${SOURCE_FILES})
-target_link_libraries(test cpu memory gtest gmock)
+target_link_libraries(test cpu memory gpu gtest gmock)
 gtest_add_tests(test "" AUTO)
 
 install(TARGETS test

@@ -15,6 +15,8 @@ include_directories(
 
 add_library(cpu STATIC ${SOURCE_FILES})
 
+target_link_libraries(cpu util)
+
 target_include_directories(cpu PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
