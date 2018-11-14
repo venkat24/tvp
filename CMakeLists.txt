@@ -37,6 +37,7 @@ set(MODULES
   memory
   cpu
   gpu
+  cartridge
 )
 
 foreach(MODULE ${MODULES})
