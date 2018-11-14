@@ -9,6 +9,7 @@
 #include "gpu/gpu_interface.h"
 #include "gpu/utils.h"
 #include "memory/memory_interface.h"
+#include "video/video_interface.h"
 
 #include <cstdint>
 #include <memory>
@@ -183,6 +184,11 @@ class GPU : public GPUInterface {
 	cpu::CPUInterface *cpu;
 
 	/**
+	 * Video instance, for writing video buffer to output
+	 */
+	video::VideoInterface *video;
+
+	/**
 	 * The current mode that the GPU is in
 	 */
 	GPUMode mode;
@@ -249,7 +255,8 @@ class GPU : public GPUInterface {
 	    std::unique_ptr<Reg> wy, std::unique_ptr<Reg> wx,
 	    std::unique_ptr<Reg> bgp, std::unique_ptr<Reg> obp0,
 	    std::unique_ptr<Reg> obp1, std::unique_ptr<Reg> dma,
-	    memory::MemoryInterface *memory, cpu::CPUInterface *cpu);
+	    memory::MemoryInterface *memory, cpu::CPUInterface *cpu,
+	    video::VideoInterface *video);
 
 	/**
 	 * @see GPUInterface#tick

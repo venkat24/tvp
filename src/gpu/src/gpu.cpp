@@ -24,13 +24,14 @@ GPU::GPU(std::unique_ptr<cpu::RegisterInterface> lcdc,
          std::unique_ptr<cpu::RegisterInterface> obp0,
          std::unique_ptr<cpu::RegisterInterface> obp1,
          std::unique_ptr<cpu::RegisterInterface> dma,
-         memory::MemoryInterface *memory, cpu::CPUInterface *cpu)
+         memory::MemoryInterface *memory, cpu::CPUInterface *cpu,
+         video::VideoInterface *video)
     : lcdc(std::move(lcdc)), stat(std::move(stat)), scy(std::move(scy)),
       scx(std::move(scx)), ly(std::move(ly)), lyc(std::move(lyc)),
       wy(std::move(wy)), wx(std::move(wx)), bgp(std::move(bgp)),
       obp0(std::move(obp0)), obp1(std::move(obp1)), dma(std::move(dma)),
-      memory(memory), cpu(cpu), mode(GPUMode::OAM), current_cycles(0),
-      v_buffer({}) {}
+      memory(memory), cpu(cpu), video(video), mode(GPUMode::OAM),
+      current_cycles(0), v_buffer({}) {}
 
 void GPU::tick(cpu::ClockCycles cycles_elapsed) {
 	// Increment local cycle count
@@ -115,8 +116,8 @@ void GPU::tick(cpu::ClockCycles cycles_elapsed) {
 			(*ly)++;
 
 			if (ly->get() == 154) {
+				video->paint(v_buffer);
 				// TODO: Write Sprites
-				// TODO: Draw and clear buffer
 				ly->set(0);
 				change_mode(GPUMode::OAM);
 			}
