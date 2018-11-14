@@ -9,7 +9,8 @@
 
 namespace memory {
 
-Memory::Memory() : memory(std::array<uint8_t, 0x10000>()) {}
+Memory::Memory(std::unique_ptr<cartridge::Cartridge> cartridge)
+    : memory(std::array<uint8_t, 0x10000>()), cartridge(std::move(cartridge)) {}
 
 bool address_in_range(Address addr, Address start, Address end) {
 	if ((addr >= start && addr <= end) || (addr >= end && addr <= start)) {
@@ -114,19 +115,14 @@ uint8_t Memory::read(Address address) const {
 
 	// Cartridge Data
 	if (address_in_range(address, 0x7FFF, 0x0100)) {
-		Log::warn("Tried to access Cartridge Data from " + num_to_hex(address));
-		return 0xFFFF;
-		// TODO: Return Cartridge Data
+		return cartridge->read(address);
 	}
 
 	// Interrupt Vectors and Boot Rom
 	if (address_in_range(address, 0x00FF, 0x0000)) {
 		// If 0xFF50 is set, Boot ROM is disabled
 		if (memory[0xFF50]) {
-			// TODO: Return Cartridge Data
-			Log::warn("Tried to access Cartridge Data from " +
-			          num_to_hex(address));
-			return 0xFFFF;
+			return cartridge->read(address);
 		} else {
 			return boot[address];
 		}
@@ -252,15 +248,13 @@ void Memory::write(Address address, uint8_t data) {
 
 	// Cartridge Data
 	if (address_in_range(address, 0x7FFF, 0x0100)) {
-		// TODO: Return Cartridge Data
-		Log::warn("Tried to write to Cart Data from " + num_to_hex(address));
+		cartridge->write(address, data);
 		return;
 	}
 
 	// Interrupt Vectors
 	if (address_in_range(address, 0x00FF, 0x0000)) {
-		// TODO: Return Cartridge Data
-		Log::warn("Tried to write to Cart RAM from " + num_to_hex(address));
+		cartridge->write(address, data);
 		return;
 	}
 

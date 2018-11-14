@@ -2,12 +2,14 @@
  * @file memory.h
  * Declares the memory class
  */
+#include "cartridge/cartridge.h"
 #include "cpu/cpu_interface.h"
 #include "gpu/gpu_interface.h"
 #include "memory/memory_interface.h"
 
 #include <array>
 #include <cstdint>
+#include <memory>
 
 #ifndef MEMORY_MEMORY_H
 #define MEMORY_MEMORY_H
@@ -41,7 +43,7 @@ class Memory : public MemoryInterface {
 	/**
 	 * Default Constructor
 	 */
-	Memory();
+	Memory(std::unique_ptr<cartridge::Cartridge> cartridge);
 
 	/**
 	 * @see MemoryInterface#read
@@ -69,6 +71,11 @@ class Memory : public MemoryInterface {
 	 * Not all of these wll be used, as most will be mapped to other devices
 	 */
 	std::array<uint8_t, 0x10000> memory;
+
+	/**
+	 * Cartridge instance
+	 */
+	std::unique_ptr<cartridge::Cartridge> cartridge;
 
 	/**
 	 * Pointer to CPU instance
