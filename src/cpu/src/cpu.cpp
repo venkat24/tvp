@@ -620,23 +620,27 @@ CPU::CPU(
 
 ClockCycles CPU::tick() {
 	log_registers();
+
+	// Get the next opcode from the PC
 	auto opcode = get_inst_byte();
-	Log::info("Program Counter : " + num_to_hex(pc->get()));
+
 	auto current_cycles = ClockCycles{0};
 	if (opcode != 0xCB) {
-		Log::info("Current Opcode  : " + num_to_hex(opcode) + " -> " +
-		          get_mnemonic(opcode));
+		// This is a standard instruction. Call handler and get the cycle count
 		opcode_map[opcode]();
-		current_cycles = cycles[opcode];
+
+		// If the instruction branched, take the count from cycles_branched
+		if (!branch_taken) {
+			current_cycles = cycles[opcode];
+		} else {
+			current_cycles = cycles_branched[opcode];
+		}
 	} else {
+		// This is a 0xCB prefixed instruction. Call the CB handler
 		opcode = get_inst_byte();
-		Log::info("Current Opcode  : " + num_to_hex(opcode) + " -> " +
-		          get_cb_mnemonic(opcode));
 		cb_opcode_map[opcode]();
 		current_cycles = cycles_cb[opcode];
 	}
-	Log::info("Inst " + num_to_hex(opcode) + " done, took " +
-	          std::to_string(current_cycles) + " cycles...");
 
 	return current_cycles;
 }
@@ -646,8 +650,6 @@ RegisterInterface *CPU::get_interrupt_enable() {
 }
 
 RegisterInterface *CPU::get_interrupt_flag() { return interrupt_flag.get(); }
-
-ClockCycles CPU::execute(uint8_t opcode, uint16_t pc) { return 0; }
 
 uint8_t CPU::get_inst_byte() const {
 	auto byte = memory->read(pc->get());

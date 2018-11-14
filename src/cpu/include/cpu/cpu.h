@@ -108,15 +108,6 @@ class CPU : public CPUInterface {
 	bool branch_taken;
 
 	/**
-	 * Run an instruction with the specified opcode at the specified
-	 * location of the program counter
-	 *
-	 * @param opcode The opcode
-	 * @param pc The Program Counter Value
-	 */
-	ClockCycles execute(OpCode opcode, uint16_t pc);
-
-	/**
 	 * Get another byte of instructions and incremrnt the program counter
 	 */
 	uint8_t get_inst_byte() const;
