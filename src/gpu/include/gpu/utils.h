@@ -27,6 +27,12 @@ const uint8_t SCREEN_HEIGHT = 144;
 constexpr uint PIXEL_COUNT = SCREEN_WIDTH * SCREEN_HEIGHT;
 
 /**
+ * Constants representing the complete background map dimensions in pixels
+ */
+const int BG_WIDTH = 256;
+const int BG_HEIGHT = 256;
+
+/**
  * Type alias to represent a single frame of video
  */
 using VideoBuffer = std::array<Pixel, PIXEL_COUNT>;
@@ -111,14 +117,16 @@ enum OAMFlagBits : uint8_t {
 };
 }
 
+const uint8_t TILE_WIDTH_PX = 32;
+
 const uint8_t TILE_HEIGHT = 8;
 const uint8_t TILE_WIDTH = 8;
 
-// Multiply by 2 to account for double height sprites
-constexpr uint8_t TILE_SIZE = TILE_WIDTH * (2 * TILE_HEIGHT);
+// Tile size in bytes. 8 lines of two bytes each
+constexpr uint8_t TILE_SIZE = (2 * TILE_HEIGHT);
 
-const Address TILE_SET_ADDRS[] = {0x8000, 0x8800};
-const Address TILE_MAP_ADDRS[] = {0x9800, 0x9C00};
+const std::array<Address, 2> TILE_SET_ADDRS = {0x8800, 0x8000};
+const std::array<Address, 2> TILE_MAP_ADDRS = {0x9800, 0x9C00};
 
 const uint8_t OAM_ENTRY_SIZE = 4;
 const Address OAM_START_ADDR = 0xFE00;

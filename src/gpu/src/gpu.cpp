@@ -87,10 +87,10 @@ void GPU::tick(cpu::ClockCycles cycles_elapsed) {
 		if (current_cycles >= CLOCKS_HBLANK) {
 			current_cycles -= CLOCKS_HBLANK;
 
+			write_line();
+
 			// We've completed the HBLANK and this scanline. Increment line_y
 			(*ly)++;
-
-			write_line();
 
 			// There are 144 scanlines on the LCD, after which we break into
 			// VBLANK. Otherwise, we go back to OAM for the next line.
@@ -126,10 +126,72 @@ void GPU::tick(cpu::ClockCycles cycles_elapsed) {
 }
 
 void GPU::write_line() {
+	// Write background information to buffer
+	write_bg_line();
+}
+
+void GPU::write_bg_line() {
+	// Get the current line index
 	auto current_line = ly->get();
 
-	// Get tile data
-	// auto tile_data = get_tile_from_memory(Address{});
+	// Get start address of the tile maps and tile sets
+	auto tile_map_index = lcdc->get_bit(lcdc_flag::BG_TILE_MAP_DISPLAY_SELECT);
+	auto tile_set_index = lcdc->get_bit(lcdc_flag::BG_TILE_DATA_SELECT);
+
+	auto tile_map_addr = TILE_MAP_ADDRS[tile_map_index];
+	auto tile_set_addr = TILE_SET_ADDRS[tile_set_index];
+
+	// i represents the ith pixel of this scanline
+	for (int i = 0; i < SCREEN_WIDTH; ++i) {
+		// Let's find where this pixel is in the complete BG map
+		// Mod by BG dimensions to account for wrapping
+		auto bg_x = (scx->get() + i) % BG_WIDTH;
+		auto bg_y = (scy->get() + current_line) % BG_HEIGHT;
+
+		// Find which'th tile this pixel is in, and it's index inside that tile
+		// Also find the absolute index, since tile data is listed row-major,
+		// with 32 tiles per line
+		auto tile_x = bg_x / TILE_WIDTH;
+		auto tile_y = bg_y / TILE_HEIGHT;
+		auto tile_index_x = bg_x % TILE_WIDTH;
+		auto tile_index_y = bg_y % TILE_HEIGHT;
+		auto tile_index_abs = (tile_y * 32) + tile_x;
+
+		// Fetch the tile number from the tile map in memory
+		auto tile_addr = tile_map_addr + tile_index_abs;
+		auto tile_num = memory->read(tile_addr);
+
+		// If the tile set has been shifted to the second index, we need to
+		// shift the index from which we pull the tile's bytes as well
+		auto tile_shift = uint8_t{0};
+		if (tile_set_index == 0) {
+			tile_shift = 128;
+		}
+
+		// Find the addr of this tile and the specific line to be drawn
+		auto tile_offset = (tile_num + tile_shift) * TILE_SIZE;
+		auto tile_start_addr = tile_set_addr + tile_offset;
+		auto tile_line_index = tile_start_addr + (2 * tile_index_y);
+
+		auto pix_data_high =
+		    static_cast<uint16_t>(memory->read(tile_line_index));
+		auto pix_data_low =
+		    static_cast<uint16_t>(memory->read(tile_line_index + 1));
+
+		auto reverse_index_x = 7 - tile_index_x;
+		auto first = static_cast<bool>(pix_data_high & (1 << reverse_index_x));
+		auto second = static_cast<bool>(pix_data_low & (1 << reverse_index_x));
+
+		if (not first and not second) {
+			v_buffer[current_line * SCREEN_WIDTH + i] = Pixel::ZERO;
+		} else if (not first and second) {
+			v_buffer[current_line * SCREEN_WIDTH + i] = Pixel::ONE;
+		} else if (first and not second) {
+			v_buffer[current_line * SCREEN_WIDTH + i] = Pixel::TWO;
+		} else if (first and second) {
+			v_buffer[current_line * SCREEN_WIDTH + i] = Pixel::THREE;
+		}
+	}
 }
 
 void GPU::write_sprites() {

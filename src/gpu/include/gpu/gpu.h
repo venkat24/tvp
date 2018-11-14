@@ -233,6 +233,11 @@ class GPU : public GPUInterface {
 	void write_line();
 
 	/**
+	 * Write the current scanline's BG pixels into the video buffer
+	 */
+	void write_bg_line();
+
+	/**
 	 * Write all sprites for the current frame into the video buffer
 	 */
 	void write_sprites();
