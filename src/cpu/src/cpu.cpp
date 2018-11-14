@@ -24,11 +24,15 @@ CPU::CPU(
     std::unique_ptr<DoubleRegisterInterface> hl,
     std::unique_ptr<DoubleRegisterInterface> pc,
     std::unique_ptr<DoubleRegisterInterface> sp,
+    std::unique_ptr<RegisterInterface> interrupt_flag,
+    std::unique_ptr<RegisterInterface> interrupt_enable,
     memory::MemoryInterface *memory)
     : a(std::move(a)), b(std::move(b)), c(std::move(c)), d(std::move(d)),
       e(std::move(e)), f(std::move(f)), h(std::move(h)), l(std::move(l)),
       af(std::move(af)), bc(std::move(bc)), de(std::move(de)),
-      hl(std::move(hl)), pc(std::move(pc)), sp(std::move(sp)), memory(memory),
+      hl(std::move(hl)), pc(std::move(pc)), sp(std::move(sp)),
+      interrupt_flag(std::move(interrupt_flag)),
+      interrupt_enable(std::move(interrupt_enable)), memory(memory),
       halted(false), interrupt_enabled(true), branch_taken(false),
 
       // Initialize the opcode map
