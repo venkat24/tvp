@@ -30,6 +30,11 @@ uint8_t Memory::read(Address address) const {
 		return memory[address];
 	}
 
+	// Boot ROM disable switch
+	if (address == 0xFF50) {
+		return memory[address];
+	}
+
 	// GPU Registers
 	if (address_in_range(address, 0xFF4B, 0xFF40)) {
 		auto register_offset = static_cast<uint16_t>(address - 0xFF40);
@@ -65,7 +70,7 @@ uint8_t Memory::read(Address address) const {
 	// Sound Controller Registers
 	if (address_in_range(address, 0xFF26, 0xFF10)) {
 		// TODO: Sound Controller
-		Log::warn("Attempt to read from sound register" + num_to_hex(address));
+		Log::warn("Attempt to read from sound register " + num_to_hex(address));
 		return 0xFFFF;
 	}
 
@@ -74,10 +79,31 @@ uint8_t Memory::read(Address address) const {
 		return cpu->get_interrupt_flag()->get();
 	}
 
+	// Timer registers
+	if (address_in_range(address, 0xFF07, 0xFF04)) {
+		// TODO: System Timers
+		Log::warn("Attempt to read from timer register " + num_to_hex(address));
+		return memory[address];
+	}
+
+	// Serial data transfer registers
+	if (address_in_range(address, 0xFF02, 0xFF01)) {
+		// TODO: Serial Data Transfer
+		Log::warn("Attempt to read from SDT register " + num_to_hex(address));
+		return memory[address];
+	}
+
+	// Controller
+	if (address == 0xFF00) {
+		// TODO: Controller
+		Log::warn("Attempt to read from Joy register " + num_to_hex(address));
+		return memory[address];
+	}
+
 	// Restricted memory
 	if (address_in_range(address, 0xFEFF, 0xFEA0)) {
 		// Invalid Memory addresses!
-		Log::fatal("Tried to access location " + num_to_hex(address));
+		Log::error("Tried to access location " + num_to_hex(address));
 	}
 
 	// OAM
@@ -120,15 +146,15 @@ uint8_t Memory::read(Address address) const {
 
 	// Interrupt Vectors and Boot Rom
 	if (address_in_range(address, 0x00FF, 0x0000)) {
-		// If 0xFF50 is set, Boot ROM is disabled
-		if (memory[0xFF50]) {
+		// If 0xFF50 is set, Boot ROM is enabled
+		if (memory[0xFF50] == 0x1) {
 			return cartridge->read(address);
 		} else {
 			return boot[address];
 		}
 	}
 
-	Log::error("Default for location " + num_to_hex(address) + " returned!");
+	Log::fatal("Default for location " + num_to_hex(address) + " returned!");
 
 	return memory[address];
 }
@@ -142,6 +168,18 @@ void Memory::write(Address address, uint8_t data) {
 
 	// High RAM
 	if (address_in_range(address, 0xFFFE, 0xFF80)) {
+		memory[address] = data;
+		return;
+	}
+
+	// Unused memory that Tetris writes to
+	if (address_in_range(address, 0xFF7F, 0xFF51)) {
+		Log::warn("Attempt to write to invalid address " + num_to_hex(address));
+		return;
+	}
+
+	// Boot ROM disable switch
+	if (address == 0xFF50) {
 		memory[address] = data;
 		return;
 	}
@@ -202,10 +240,35 @@ void Memory::write(Address address, uint8_t data) {
 		return;
 	}
 
+	// Timer registers
+	if (address_in_range(address, 0xFF07, 0xFF04)) {
+		// TODO: System timers
+		Log::warn("Attempt to write to timer register " + num_to_hex(address));
+		memory[address] = data;
+		return;
+	}
+
+	// Serial data transfer registers
+	if (address_in_range(address, 0xFF02, 0xFF01)) {
+		// TODO: Serial Data Transfer
+		Log::warn("Attempt to write to SDT register " + num_to_hex(address));
+		memory[address] = data;
+		return;
+	}
+
+	// Controller
+	if (address == 0xFF00) {
+		// TODO: Controller
+		Log::warn("Attempt to write to Joy register " + num_to_hex(address));
+		memory[address] = data;
+		return;
+	}
+
 	// Restricted memory
 	if (address_in_range(address, 0xFEFF, 0xFEA0)) {
 		// Invalid Memory addresses!
-		Log::fatal("Tried to write to location " + num_to_hex(address));
+		Log::error("Tried to write to location " + num_to_hex(address));
+		return;
 	}
 
 	// OAM

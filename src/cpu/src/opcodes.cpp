@@ -6,6 +6,9 @@
 #include "cpu/cpu.h"
 #include "cpu/register/register.h"
 
+#include "util/helpers.h"
+#include "util/log.h"
+
 namespace cpu {
 
 /// 8-bit Arithmetic
@@ -716,6 +719,7 @@ void CPU::op_swap(Address addr) {
 
 void CPU::op_daa() {
 	/// TODO!
+	Log::fatal("Unimplemented DAA opcode called");
 }
 
 void CPU::op_cpl() {

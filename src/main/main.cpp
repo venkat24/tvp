@@ -81,9 +81,6 @@ int main(int argc, char *argv[]) {
 
 	long long int cycle_count = 0;
 	for (auto i = 0;; i++) {
-		Log::verbose("");
-		Log::verbose("Round " + to_string(i));
-		Log::verbose("Cycle " + to_string(cycle_count));
 		auto curr_count = cpu->tick();
 		cycle_count += curr_count;
 		gpu->tick(curr_count);
