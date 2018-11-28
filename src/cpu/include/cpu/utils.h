@@ -3,6 +3,8 @@
  * Declares helpers and utils for the CPU class
  */
 
+#include "memory/utils.h"
+
 #include <cstdint>
 
 #ifndef CPU_UTILS_H
@@ -47,6 +49,14 @@ enum class Interrupt {
 	TIMER = 2,
 	SERIAL = 3,
 	JOYPAD = 4
+};
+
+const std::array<Address, 5> interrupt_vector = {
+    0x0040, // VBLANK
+    0x0048, // LCD_STAT
+    0x0050, // TIMER
+    0x0058, // SERIAL
+    0x0060  // JOYPAD
 };
 
 } // namespace cpu

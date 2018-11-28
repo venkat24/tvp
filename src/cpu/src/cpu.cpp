@@ -619,7 +619,12 @@ CPU::CPU(
 {}
 
 ClockCycles CPU::tick() {
-	log_registers();
+
+	handle_interrupts();
+
+	if (this->halted) {
+		return 1;
+	}
 
 	// Get the next opcode from the PC
 	auto opcode = get_inst_byte();
@@ -643,6 +648,27 @@ ClockCycles CPU::tick() {
 	}
 
 	return current_cycles;
+}
+
+void CPU::handle_interrupts() {
+	if (this->interrupt_enabled) {
+		auto interrupts = interrupt_flag->get() & interrupt_enable->get();
+
+		// Interrupts are ordered 0..4 in order of priority
+		// If one of them is set, handle it and break
+		for (uint8_t i = 0; i <= 4; ++i) {
+			if (interrupts & (1 << i)) {
+				//  Clear the interrupt
+				interrupts &= (0 << i);
+				interrupt_enabled = false;
+
+				// Jump to the interrupt handling code
+				pc->set(interrupt_vector[i]);
+				Log::error("Interrupt lmao");
+				break;
+			}
+		}
+	}
 }
 
 RegisterInterface *CPU::get_interrupt_enable() {

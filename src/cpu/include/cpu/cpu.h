@@ -108,6 +108,11 @@ class CPU : public CPUInterface {
 	bool branch_taken;
 
 	/**
+	 * Handle interrupts that are currently set and fired
+	 */
+	void handle_interrupts();
+
+	/**
 	 * Get another byte of instructions and incremrnt the program counter
 	 */
 	uint8_t get_inst_byte() const;
