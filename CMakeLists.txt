@@ -39,6 +39,7 @@ set(MODULES
   gpu
   cartridge
   video
+  controller
 )
 
 foreach(MODULE ${MODULES})
