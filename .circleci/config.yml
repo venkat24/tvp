@@ -2,7 +2,7 @@ version: 2
 jobs:
   build-gcc:
     docker:
-      - image: buildpack-deps:xenial
+      - image: buildpack-deps:bionic
         environment:
           CMAKE_BUILD_TYPE: "Debug"
     steps:
@@ -13,7 +13,7 @@ jobs:
             git submodule sync --recursive
             git submodule update --recursive --init
             apt update
-            apt install -y --no-install-recommends build-essential clang-format
+            apt install -y --no-install-recommends build-essential clang-format libsfml-dev
             wget "https://cmake.org/files/v3.11/cmake-3.11.1-Linux-x86_64.tar.gz" --no-check-certificate
             tar xf cmake-3.11.1-Linux-x86_64.tar.gz
             cp -r cmake-3.11.1-Linux-x86_64/bin/* /usr/local/bin
@@ -36,9 +36,9 @@ jobs:
 
   build-clang:
     docker:
-      - image: buildpack-deps:xenial
+      - image: buildpack-deps:bionic
         environment:
-          CXX: "clang++"
+          CXX: "clang++-6.0"
           CMAKE_BUILD_TYPE: "Debug"
     steps:
       - checkout
@@ -47,8 +47,9 @@ jobs:
           command: |
             git submodule sync --recursive
             git submodule update --recursive --init
+            wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
             apt update
-            apt install -y --no-install-recommends build-essential clang clang-format
+            apt install -y --no-install-recommends build-essential clang-6.0 clang-format-6.0 libsfml-dev
             wget "https://cmake.org/files/v3.11/cmake-3.11.1-Linux-x86_64.tar.gz" --no-check-certificate
             tar xf cmake-3.11.1-Linux-x86_64.tar.gz
             cp -r cmake-3.11.1-Linux-x86_64/bin/* /usr/local/bin
