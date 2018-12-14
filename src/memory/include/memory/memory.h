@@ -3,6 +3,7 @@
  * Declares the memory class
  */
 #include "cartridge/cartridge.h"
+#include "controller/controller.h"
 #include "cpu/cpu_interface.h"
 #include "gpu/gpu_interface.h"
 #include "memory/memory_interface.h"
@@ -52,6 +53,11 @@ class Memory : public MemoryInterface {
 	std::unique_ptr<cartridge::Cartridge> cartridge;
 
 	/**
+	 * Pointer to controller instance
+	 */
+	controller::Controller *controller;
+
+	/**
 	 * Pointer to CPU instance
 	 */
 	cpu::CPUInterface *cpu;
@@ -65,7 +71,8 @@ class Memory : public MemoryInterface {
 	/**
 	 * Default Constructor
 	 */
-	Memory(std::unique_ptr<cartridge::Cartridge> cartridge);
+	Memory(std::unique_ptr<cartridge::Cartridge> cartridge,
+	       controller::Controller *controller);
 
 	/**
 	 * @see MemoryInterface#read

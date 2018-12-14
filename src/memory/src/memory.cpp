@@ -9,8 +9,10 @@
 
 namespace memory {
 
-Memory::Memory(std::unique_ptr<cartridge::Cartridge> cartridge)
-    : memory(std::array<uint8_t, 0x10000>()), cartridge(std::move(cartridge)) {}
+Memory::Memory(std::unique_ptr<cartridge::Cartridge> cartridge,
+               controller::Controller *controller)
+    : memory(std::array<uint8_t, 0x10000>()), cartridge(std::move(cartridge)),
+      controller(controller) {}
 
 bool address_in_range(Address addr, Address start, Address end) {
 	if ((addr >= start && addr <= end) || (addr >= end && addr <= start)) {
@@ -95,9 +97,7 @@ uint8_t Memory::read(Address address) const {
 
 	// Controller
 	if (address == 0xFF00) {
-		// TODO: Controller
-		Log::warn("Attempt to read from Joy register " + num_to_hex(address));
-		return memory[address];
+		return controller->get_value();
 	}
 
 	// Restricted memory
@@ -258,9 +258,7 @@ void Memory::write(Address address, uint8_t data) {
 
 	// Controller
 	if (address == 0xFF00) {
-		// TODO: Controller
-		Log::warn("Attempt to write to Joy register " + num_to_hex(address));
-		memory[address] = data;
+		controller->set_value(data);
 		return;
 	}
 
