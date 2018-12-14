@@ -46,31 +46,31 @@ class CPU : public CPUInterface {
 	 * A map between the opcodes and the corresponding operation to do.
 	 * Maps each of 256 possible 8-bit opcodes to action functions.
 	 */
-	std::vector<std::function<void()>> opcode_map;
+	std::array<std::function<void()>, 256> opcode_map;
 
 	/**
 	 * Similar to the opcode map, but for the 0xcb prefixed opcodes. These
 	 * extend the instruction set to enable more bit manipulation instructions
 	 */
-	std::vector<std::function<void()>> cb_opcode_map;
+	std::array<std::function<void()>, 256> cb_opcode_map;
 
 	/**
 	 * Contains the number of CPU cycles taken to execute each instruction,
 	 * indexed by opcode
 	 */
-	std::vector<ClockCycles> cycles;
+	std::array<ClockCycles, 256> cycles;
 
 	/**
 	 * Contains the number of CPU cycles taken to execute each instruction,
 	 * given that the branch was taken. Changes only for JP, JR, RET, CALL
 	 */
-	std::vector<ClockCycles> cycles_branched;
+	std::array<ClockCycles, 256> cycles_branched;
 
 	/**
 	 * Contains the number of CPU cycles taken to execute each instruction,
 	 * for all CB prefixed instruction opcodes
 	 */
-	std::vector<ClockCycles> cycles_cb;
+	std::array<ClockCycles, 256> cycles_cb;
 
 	/**
 	 * Memory instance, for performing all reads and writes to main memory
