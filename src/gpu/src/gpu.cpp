@@ -278,7 +278,7 @@ Tile GPU::get_tile_from_memory(uint8_t tile_number, bool sprite) {
 	auto new_tile = Tile{};
 	for (auto i = uint16_t{0x00}; i < tile_size; ++i) {
 		auto cell_data = memory->read(tile_start + i);
-		new_tile.data[i] = Pixel{cell_data};
+		new_tile.data[i] = static_cast<Pixel>(cell_data);
 	}
 
 	return new_tile;
