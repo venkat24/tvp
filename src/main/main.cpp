@@ -1,3 +1,4 @@
+#include "controller/controller.h"
 #include "cpu/cpu.h"
 #include "cpu/register/register.h"
 #include "gpu/gpu.h"
@@ -21,6 +22,7 @@ using namespace gpu;
 using namespace video;
 using namespace memory;
 using namespace cartridge;
+using namespace controller;
 
 int main(int argc, char *argv[]) {
 	if (argc < 2) {
@@ -31,7 +33,9 @@ int main(int argc, char *argv[]) {
 
 	auto cartridge = std::make_unique<Cartridge>(rom_path);
 
-	auto memory = make_unique<Memory>(std::move(cartridge));
+	auto controller = std::make_unique<Controller>();
+
+	auto memory = make_unique<Memory>(std::move(cartridge), controller.get());
 
 	auto a = make_unique<Register>();
 	auto b = make_unique<Register>();
@@ -68,7 +72,7 @@ int main(int argc, char *argv[]) {
 	auto obp1 = make_unique<cpu::Register>();
 	auto dma = make_unique<cpu::Register>();
 
-	auto video = make_unique<Video>();
+	auto video = make_unique<Video>(controller.get());
 
 	auto gpu = make_unique<GPU>(move(lcdc), move(stat), move(scy), move(scx),
 	                            move(ly), move(lyc), move(wy), move(wx),
