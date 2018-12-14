@@ -9,8 +9,7 @@
 #include <cstdint>
 #include <memory>
 
-#ifndef CONTROLLER_INCLUDE_CONTROLLER_CONTROLLER_H
-#define CONTROLLER_INCLUDE_CONTROLLER_CONTROLLER_H
+#pragma once
 
 namespace controller {
 
@@ -83,5 +82,3 @@ class Controller : public ControllerInterface {
 };
 
 } // namespace controller
-
-#endif

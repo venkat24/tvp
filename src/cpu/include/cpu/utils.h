@@ -7,8 +7,7 @@
 
 #include <cstdint>
 
-#ifndef CPU_UTILS_H
-#define CPU_UTILS_H
+#pragma once
 
 namespace cpu {
 
@@ -60,5 +59,3 @@ const std::array<Address, 5> interrupt_vector = {
 };
 
 } // namespace cpu
-
-#endif

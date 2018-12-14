@@ -5,8 +5,7 @@
 
 #include <string>
 
-#ifndef UTIL_INCLUDE_UTIL_LOG_H
-#define UTIL_INCLUDE_UTIL_LOG_H
+#pragma once
 
 /**
  * List of the different possible logging levels
@@ -30,5 +29,3 @@ class Log {
 	static void error(std::string message);
 	static void fatal(std::string message);
 };
-
-#endif

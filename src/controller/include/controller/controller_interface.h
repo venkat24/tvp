@@ -7,8 +7,7 @@
 
 #include <cstdint>
 
-#ifndef CONTROLLER_INCLUDE_CONTROLLER_CONTROLLER_INTERFACE_H
-#define CONTROLLER_INCLUDE_CONTROLLER_CONTROLLER_INTERFACE_H
+#pragma once
 
 namespace controller {
 
@@ -44,5 +43,3 @@ class ControllerInterface {
 };
 
 } // namespace controller
-
-#endif

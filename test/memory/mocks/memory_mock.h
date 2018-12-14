@@ -1,5 +1,4 @@
-#ifndef TEST_MEMORY_MOCKS_MEMORY_MOCK_H
-#define TEST_MEMORY_MOCKS_MEMORY_MOCK_H
+#pragma once
 
 #include "cpu/cpu_interface.h"
 #include "gpu/gpu_interface.h"
@@ -17,5 +16,3 @@ class MemoryMock : public MemoryInterface {
 	MOCK_METHOD1(set_cpu, void(cpu::CPUInterface *_cpu));
 	MOCK_METHOD1(set_gpu, void(gpu::GPUInterface *_gpu));
 };
-
-#endif

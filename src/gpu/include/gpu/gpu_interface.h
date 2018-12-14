@@ -8,8 +8,7 @@
 
 #include <cstdint>
 
-#ifndef GPU_GPU_INTERFACE_H
-#define GPU_GPU_INTERFACE_H
+#pragma once
 
 namespace gpu {
 
@@ -39,5 +38,3 @@ class GPUInterface {
 };
 
 } // namespace gpu
-
-#endif

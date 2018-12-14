@@ -8,8 +8,7 @@
 
 #include <cstdint>
 
-#ifndef CPU_REGISTER_H
-#define CPU_REGISTER_H
+#pragma once
 
 namespace cpu {
 
@@ -198,5 +197,3 @@ class PairRegister : public DoubleRegisterInterface {
 };
 
 } // namespace cpu
-
-#endif

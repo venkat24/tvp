@@ -9,8 +9,7 @@
 #include <string>
 #include <vector>
 
-#ifndef CARTRIDGE_INCLUDE_CARTRIDGE_CARTRIDGE_H
-#define CARTRIDGE_INCLUDE_CARTRIDGE_CARTRIDGE_H
+#pragma once
 
 namespace cartridge {
 
@@ -42,5 +41,3 @@ class Cartridge {
 };
 
 } // namespace cartridge
-
-#endif

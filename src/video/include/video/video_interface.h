@@ -2,8 +2,7 @@
  * @file video_interface.h
  * Declares the Interface for Video - to display a buffer to the screen
  */
-#ifndef VIDEO_INCLUDE_VIDEO_VIDEO_INTERFACE_H
-#define VIDEO_INCLUDE_VIDEO_VIDEO_INTERFACE_H
+#pragma once
 
 #include "gpu/utils.h"
 
@@ -22,5 +21,3 @@ class VideoInterface {
 };
 
 } // namespace video
-
-#endif

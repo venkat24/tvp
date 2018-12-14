@@ -3,8 +3,7 @@
  * Utils for the Controller class
  */
 
-#ifndef CONTROLLER_INCLUDE_CONTROLLER_UTILS_H
-#define CONTROLLER_INCLUDE_CONTROLLER_UTILS_H
+#pragma once
 
 namespace controller {
 
@@ -23,5 +22,3 @@ enum class Button {
 };
 
 } // namespace controller
-
-#endif

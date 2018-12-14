@@ -12,8 +12,7 @@
 #include <cstdint>
 #include <memory>
 
-#ifndef MEMORY_MEMORY_H
-#define MEMORY_MEMORY_H
+#pragma once
 
 namespace memory {
 
@@ -96,5 +95,3 @@ class Memory : public MemoryInterface {
 };
 
 } // namespace memory
-
-#endif

@@ -2,8 +2,7 @@
  * @file video.h
  * Declares the Video class for display and GUI features
  */
-#ifndef VIDEO_INCLUDE_VIDEO_VIDEO_H
-#define VIDEO_INCLUDE_VIDEO_VIDEO_H
+#pragma once
 
 #include "controller/controller_interface.h"
 #include "gpu/utils.h"
@@ -60,5 +59,3 @@ class Video : public VideoInterface {
 };
 
 } // namespace video
-
-#endif

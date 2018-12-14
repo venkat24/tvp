@@ -8,8 +8,7 @@
 #include "memory/utils.h"
 #include <cstdint>
 
-#ifndef MEMORY_INCLUDE_MEMORY_MEMORY_INTERFACE_H
-#define MEMORY_INCLUDE_MEMORY_MEMORY_INTERFACE_H
+#pragma once
 
 namespace memory {
 
@@ -48,5 +47,3 @@ class MemoryInterface {
 };
 
 } // namespace memory
-
-#endif

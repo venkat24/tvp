@@ -7,8 +7,7 @@
 #include "cpu/utils.h"
 #include <cstdint>
 
-#ifndef CPU_CPU_INTERFACE_H
-#define CPU_CPU_INTERFACE_H
+#pragma once
 
 namespace cpu {
 
@@ -41,5 +40,3 @@ class CPUInterface {
 };
 
 } // namespace cpu
-
-#endif

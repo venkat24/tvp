@@ -9,8 +9,7 @@
 #include <array>
 #include <cstdint>
 
-#ifndef GPU_INCLUDE_GPU_UTILS_H
-#define GPU_INCLUDE_GPU_UTILS_H
+#pragma once
 
 namespace gpu {
 
@@ -132,5 +131,3 @@ const uint8_t OAM_ENTRY_SIZE = 4;
 const Address OAM_START_ADDR = 0xFE00;
 
 } // namespace gpu
-
-#endif

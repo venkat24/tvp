@@ -1,5 +1,4 @@
-#ifndef TEST_CPU_MOCKS_REGISTER_MOCK_H
-#define TEST_CPU_MOCKS_REGISTER_MOCK_H
+#pragma once
 
 #include "cpu/register/register_interface.h"
 
@@ -46,5 +45,3 @@ class DoubleRegisterMock : public DoubleRegisterInterface {
 	}
 	virtual void operator--() { operator_decrement(); }
 };
-
-#endif

@@ -14,8 +14,7 @@
 #include <cstdint>
 #include <memory>
 
-#ifndef GPU_INCLUDE_GPU_GPU_H
-#define GPU_INCLUDE_GPU_GPU_H
+#pragma once
 
 namespace gpu {
 
@@ -281,5 +280,3 @@ class GPU : public GPUInterface {
 };
 
 } // namespace gpu
-
-#endif

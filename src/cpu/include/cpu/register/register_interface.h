@@ -7,8 +7,7 @@
 
 #include <cstdint>
 
-#ifndef CPU_REGISTER_INTERFACE_H
-#define CPU_REGISTER_INTERFACE_H
+#pragma once
 
 namespace cpu {
 
@@ -138,5 +137,3 @@ class DoubleRegisterInterface {
 };
 
 } // namespace cpu
-
-#endif

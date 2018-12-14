@@ -13,8 +13,7 @@
 #include <memory>
 #include <vector>
 
-#ifndef CPU_CPU_H
-#define CPU_CPU_H
+#pragma once
 
 namespace cpu {
 
@@ -278,5 +277,3 @@ class CPU : public CPUInterface {
 };
 
 } // namespace cpu
-
-#endif
