@@ -39,6 +39,28 @@ namespace memory {
  * $0000 - $00FF  ->  Restart and Interrupt Vectors
  */
 class Memory : public MemoryInterface {
+  private:
+	/**
+	 * Main memory array - the GameBoy can address 65536 total bytes of memory
+	 * Not all of these wll be used, as most will be mapped to other devices
+	 */
+	std::array<uint8_t, 0x10000> memory;
+
+	/**
+	 * Cartridge instance
+	 */
+	std::unique_ptr<cartridge::Cartridge> cartridge;
+
+	/**
+	 * Pointer to CPU instance
+	 */
+	cpu::CPUInterface *cpu;
+
+	/**
+	 * Pointer to GPU instance
+	 */
+	gpu::GPUInterface *gpu;
+
   public:
 	/**
 	 * Default Constructor
@@ -64,28 +86,6 @@ class Memory : public MemoryInterface {
 	 * Set the GPU Object pointer for this class
 	 */
 	void set_gpu(gpu::GPUInterface *gpu) override;
-
-  private:
-	/**
-	 * Main memory array - the GameBoy can address 65536 total bytes of memory
-	 * Not all of these wll be used, as most will be mapped to other devices
-	 */
-	std::array<uint8_t, 0x10000> memory;
-
-	/**
-	 * Cartridge instance
-	 */
-	std::unique_ptr<cartridge::Cartridge> cartridge;
-
-	/**
-	 * Pointer to CPU instance
-	 */
-	cpu::CPUInterface *cpu;
-
-	/**
-	 * Pointer to GPU instance
-	 */
-	gpu::GPUInterface *gpu;
 };
 
 } // namespace memory
