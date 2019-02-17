@@ -9,26 +9,37 @@
 
 using namespace std;
 
+// Define ANSI color codes
+namespace color {
+const auto GRAY = "\033[1;37m";
+const auto BLUE = "\033[1;34m";
+const auto YELLOW = "\033[1;33m";
+const auto RED = "\033[1;31m";
+const auto PURPLE = "\033[1;35m";
+
+const auto END = "\033[0m";
+}; // namespace color
+
 void Log::log(string message, LogLevel log_level) {
 	switch (log_level) {
 	case LogLevel::VERBOSE:
-		cout << "\033[1;37m [VERB] \033[0m";
+		cout << color::GRAY << " [VERB] " << color::END;
 		break;
 
 	case LogLevel::INFO:
-		cout << "\033[1;34m [INFO] \033[0m";
+		cout << color::BLUE << "[INFO] " << color::END;
 		break;
 
 	case LogLevel::WARN:
-		cout << "\033[1;33m [WARN] \033[0m";
+		cout << color::YELLOW << " [WARN] " << color::END;
 		break;
 
 	case LogLevel::ERROR:
-		cout << "\033[1;31m [ERR!] \033[0m";
+		cout << color::RED << " [ERR!] " << color::END;
 		break;
 
 	case LogLevel::FATAL:
-		cout << "\033[1;35m [DEAD] \033[0m";
+		cout << color::PURPLE << " [DEAD] " << color::END;
 		break;
 	}
 
