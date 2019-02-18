@@ -12,18 +12,12 @@
 
 namespace gpu {
 
-GPU::GPU(std::unique_ptr<cpu::RegisterInterface> lcdc,
-         std::unique_ptr<cpu::RegisterInterface> stat,
-         std::unique_ptr<cpu::RegisterInterface> scy,
-         std::unique_ptr<cpu::RegisterInterface> scx,
-         std::unique_ptr<cpu::RegisterInterface> ly,
-         std::unique_ptr<cpu::RegisterInterface> lyc,
-         std::unique_ptr<cpu::RegisterInterface> wy,
-         std::unique_ptr<cpu::RegisterInterface> wx,
-         std::unique_ptr<cpu::RegisterInterface> bgp,
-         std::unique_ptr<cpu::RegisterInterface> obp0,
-         std::unique_ptr<cpu::RegisterInterface> obp1,
-         std::unique_ptr<cpu::RegisterInterface> dma,
+GPU::GPU(std::unique_ptr<cpu::IReg> lcdc, std::unique_ptr<cpu::IReg> stat,
+         std::unique_ptr<cpu::IReg> scy, std::unique_ptr<cpu::IReg> scx,
+         std::unique_ptr<cpu::IReg> ly, std::unique_ptr<cpu::IReg> lyc,
+         std::unique_ptr<cpu::IReg> wy, std::unique_ptr<cpu::IReg> wx,
+         std::unique_ptr<cpu::IReg> bgp, std::unique_ptr<cpu::IReg> obp0,
+         std::unique_ptr<cpu::IReg> obp1, std::unique_ptr<cpu::IReg> dma,
          memory::MemoryInterface *memory, cpu::CPUInterface *cpu,
          video::VideoInterface *video)
     : lcdc(std::move(lcdc)), stat(std::move(stat)), scy(std::move(scy)),
@@ -285,18 +279,18 @@ Tile GPU::get_tile_from_memory(uint8_t tile_number, bool sprite) {
 }
 
 /// Getters
-cpu::RegisterInterface *GPU::get_lcdc() { return lcdc.get(); }
-cpu::RegisterInterface *GPU::get_stat() { return stat.get(); }
-cpu::RegisterInterface *GPU::get_scy() { return scy.get(); }
-cpu::RegisterInterface *GPU::get_scx() { return scx.get(); }
-cpu::RegisterInterface *GPU::get_ly() { return ly.get(); }
-cpu::RegisterInterface *GPU::get_lyc() { return lyc.get(); }
-cpu::RegisterInterface *GPU::get_wy() { return wy.get(); }
-cpu::RegisterInterface *GPU::get_wx() { return wx.get(); }
-cpu::RegisterInterface *GPU::get_bgp() { return bgp.get(); }
-cpu::RegisterInterface *GPU::get_obp0() { return obp0.get(); }
-cpu::RegisterInterface *GPU::get_obp1() { return obp1.get(); }
-cpu::RegisterInterface *GPU::get_dma() { return dma.get(); }
+cpu::IReg *GPU::get_lcdc() { return lcdc.get(); }
+cpu::IReg *GPU::get_stat() { return stat.get(); }
+cpu::IReg *GPU::get_scy() { return scy.get(); }
+cpu::IReg *GPU::get_scx() { return scx.get(); }
+cpu::IReg *GPU::get_ly() { return ly.get(); }
+cpu::IReg *GPU::get_lyc() { return lyc.get(); }
+cpu::IReg *GPU::get_wy() { return wy.get(); }
+cpu::IReg *GPU::get_wx() { return wx.get(); }
+cpu::IReg *GPU::get_bgp() { return bgp.get(); }
+cpu::IReg *GPU::get_obp0() { return obp0.get(); }
+cpu::IReg *GPU::get_obp1() { return obp1.get(); }
+cpu::IReg *GPU::get_dma() { return dma.get(); }
 
 /// Tile
 

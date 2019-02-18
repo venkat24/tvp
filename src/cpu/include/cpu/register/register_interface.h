@@ -136,4 +136,8 @@ class DoubleRegisterInterface {
 	virtual void operator--(int) = 0;
 };
 
+/// Define aliases for register interface classes
+using IReg = RegisterInterface;
+using IDblReg = DoubleRegisterInterface;
+
 } // namespace cpu

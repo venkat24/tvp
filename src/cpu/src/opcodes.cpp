@@ -125,7 +125,7 @@ void CPU::op_sbc(uint8_t val) {
 	f->set_bit(flag::CARRY, carry);
 }
 
-void CPU::op_inc(RegisterInterface *reg) {
+void CPU::op_inc(IReg *reg) {
 	// Increment the given Register
 	(*reg)++;
 
@@ -153,7 +153,7 @@ void CPU::op_inc(Address addr) {
 	f->set_bit(flag::HALFCARRY, halfcarry);
 }
 
-void CPU::op_dec(RegisterInterface *reg) {
+void CPU::op_dec(IReg *reg) {
 	// Decrement the given Register
 	(*reg)--;
 
@@ -220,13 +220,13 @@ void CPU::op_add_sp(int8_t val) {
 	f->set_bit(flag::CARRY, carry);
 }
 
-void CPU::op_inc_dbl(DoubleRegisterInterface *reg) {
+void CPU::op_inc_dbl(IDblReg *reg) {
 	(*reg)++;
 
 	// This instruction sets no flags
 }
 
-void CPU::op_dec_dbl(DoubleRegisterInterface *reg) {
+void CPU::op_dec_dbl(IDblReg *reg) {
 	(*reg)--;
 
 	// This instruction sets no flags
@@ -234,7 +234,7 @@ void CPU::op_dec_dbl(DoubleRegisterInterface *reg) {
 
 /// 8-bit Load
 
-void CPU::op_ld(RegisterInterface *reg, uint8_t val) {
+void CPU::op_ld(IReg *reg, uint8_t val) {
 	// Load the val into the register
 	reg->set(val);
 }
@@ -280,7 +280,7 @@ void CPU::op_ldh_addr(Address addr, uint8_t val) {
 
 /// 16-bit Load
 
-void CPU::op_ld_dbl(DoubleRegisterInterface *reg, uint16_t val) {
+void CPU::op_ld_dbl(IDblReg *reg, uint16_t val) {
 	// Store value in register
 	reg->set(val);
 }
@@ -308,7 +308,7 @@ void CPU::op_ld_hl_sp_offset(int8_t offset) {
 	f->set_bit(flag::CARRY, carry);
 }
 
-void CPU::op_push(DoubleRegisterInterface *reg) {
+void CPU::op_push(IDblReg *reg) {
 	// We need to push the source register value onto the stack
 	// Now, the stack grows downwards, so we push the higher byte onto the
 	// stack, and then the lower byte. We decrement the SP twice in the process
@@ -324,7 +324,7 @@ void CPU::op_push(DoubleRegisterInterface *reg) {
 	sp->set(curr_stack_pointer);
 }
 
-void CPU::op_pop(DoubleRegisterInterface *reg) {
+void CPU::op_pop(IDblReg *reg) {
 	// We need to pop the stack value onto the destination register
 	// Now, the stack grows downwards, so first pop the low byte and then the
 	// high byte. We increment the SP twice in the process
@@ -342,7 +342,7 @@ void CPU::op_pop(DoubleRegisterInterface *reg) {
 
 /// Rotates and Shifts
 
-void CPU::op_rlc(RegisterInterface *reg) {
+void CPU::op_rlc(IReg *reg) {
 	auto value = reg->get();
 	auto msb = static_cast<bool>(value >> 7);
 
@@ -375,7 +375,7 @@ void CPU::op_rlc_a() {
 	f->set_bit(flag::ZERO, 0);
 }
 
-void CPU::op_rrc(RegisterInterface *reg) {
+void CPU::op_rrc(IReg *reg) {
 	auto value = reg->get();
 	auto lsb = static_cast<bool>(value & 0x01);
 
@@ -408,7 +408,7 @@ void CPU::op_rrc_a() {
 	f->set_bit(flag::ZERO, 0);
 }
 
-void CPU::op_rl(RegisterInterface *reg) {
+void CPU::op_rl(IReg *reg) {
 	auto value = reg->get();
 	auto msb = static_cast<bool>(value >> 7);
 	auto carry_flag = f->get_bit(flag::CARRY);
@@ -443,7 +443,7 @@ void CPU::op_rl_a() {
 	f->set_bit(flag::ZERO, 0);
 }
 
-void CPU::op_rr(RegisterInterface *reg) {
+void CPU::op_rr(IReg *reg) {
 	auto value = reg->get();
 	auto lsb = static_cast<bool>(value & 0x01);
 	auto carry_flag = f->get_bit(flag::CARRY);
@@ -478,7 +478,7 @@ void CPU::op_rr_a() {
 	f->set_bit(flag::ZERO, 0);
 }
 
-void CPU::op_sla(RegisterInterface *reg) {
+void CPU::op_sla(IReg *reg) {
 	auto value = reg->get();
 	auto msb = static_cast<bool>(value >> 7);
 
@@ -506,7 +506,7 @@ void CPU::op_sla(Address addr) {
 	memory->write(addr, value);
 }
 
-void CPU::op_srl(RegisterInterface *reg) {
+void CPU::op_srl(IReg *reg) {
 	auto value = reg->get();
 	auto lsb = static_cast<bool>(value & 0x01);
 
@@ -534,7 +534,7 @@ void CPU::op_srl(Address addr) {
 	memory->write(addr, value);
 }
 
-void CPU::op_sra(RegisterInterface *reg) {
+void CPU::op_sra(IReg *reg) {
 	auto value = reg->get();
 	auto lsb = static_cast<bool>(value & 0x01);
 	auto msb = static_cast<bool>(value >> 7);
@@ -566,7 +566,7 @@ void CPU::op_sra(Address addr) {
 
 /// Bit Manipulation
 
-void CPU::op_bit(RegisterInterface *reg, uint8_t bit) {
+void CPU::op_bit(IReg *reg, uint8_t bit) {
 	auto check = reg->get_bit(bit);
 	f->set_bit(flag::ZERO, !check);
 	f->set_bit(flag::SUBTRACT, 0);
@@ -580,9 +580,7 @@ void CPU::op_bit(uint8_t val, uint8_t bit) {
 	f->set_bit(flag::HALFCARRY, 1);
 }
 
-void CPU::op_set(RegisterInterface *reg, uint8_t bit) {
-	reg->set_bit(bit, true);
-}
+void CPU::op_set(IReg *reg, uint8_t bit) { reg->set_bit(bit, true); }
 
 void CPU::op_set(Address addr, uint8_t bit) {
 	auto value = memory->read(addr);
@@ -590,9 +588,7 @@ void CPU::op_set(Address addr, uint8_t bit) {
 	memory->write(addr, value);
 }
 
-void CPU::op_res(RegisterInterface *reg, uint8_t bit) {
-	reg->set_bit(bit, false);
-}
+void CPU::op_res(IReg *reg, uint8_t bit) { reg->set_bit(bit, false); }
 
 void CPU::op_res(Address addr, uint8_t bit) {
 	auto value = memory->read(addr);
@@ -687,7 +683,7 @@ void CPU::op_rst(uint8_t val) {
 
 // Miscellaneous
 
-void CPU::op_swap(RegisterInterface *reg) {
+void CPU::op_swap(IReg *reg) {
 	auto value = reg->get();
 	auto lower_nibble = 0x0F & value;
 	auto higher_nibble = (0xF0 & value) >> 4;

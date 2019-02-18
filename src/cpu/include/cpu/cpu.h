@@ -26,13 +26,13 @@ class CPU : public CPUInterface {
 	 * Define the set of standard, 8-bit registers
 	 * There are 8 total small registers, with f being the flag register
 	 */
-	std::unique_ptr<RegisterInterface> a, b, c, d, e, f, h, l;
+	std::unique_ptr<IReg> a, b, c, d, e, f, h, l;
 
 	/**
 	 * Define the set of aggregated pair registers, which each consist of two
 	 * 8-bit registers and act as a 16-bit register
 	 */
-	std::unique_ptr<DoubleRegisterInterface> af, bc, de, hl;
+	std::unique_ptr<IDblReg> af, bc, de, hl;
 
 	/**
 	 * Define the standard 16-bit registers, used exclusively for memory
@@ -40,7 +40,7 @@ class CPU : public CPUInterface {
 	 *
 	 * These are the SP (Stack Pointer) and PC (Program Counter) registers
 	 */
-	std::unique_ptr<DoubleRegisterInterface> sp, pc;
+	std::unique_ptr<IDblReg> sp, pc;
 
 	/**
 	 * A map between the opcodes and the corresponding operation to do.
@@ -91,13 +91,13 @@ class CPU : public CPUInterface {
 	 * Interrupt Enable register, which controls which interrupts are active.
 	 * Mapped to memory location 0xFFFF
 	 */
-	std::unique_ptr<RegisterInterface> interrupt_enable;
+	std::unique_ptr<IReg> interrupt_enable;
 
 	/**
 	 * Interrupt Flag register, which details which interrupts have currently
 	 * been fired. Mapped to memory location 0xFF0F
 	 */
-	std::unique_ptr<RegisterInterface> interrupt_flag;
+	std::unique_ptr<IReg> interrupt_flag;
 
 	/**
 	 * Specifies whether the previous condition checked branch, jumped or not.
@@ -149,19 +149,19 @@ class CPU : public CPUInterface {
 	void op_or(uint8_t val);
 	void op_xor(uint8_t val);
 	void op_cp(uint8_t val);
-	void op_inc(RegisterInterface *reg);
+	void op_inc(IReg *reg);
 	void op_inc(Address addr);
-	void op_dec(RegisterInterface *reg);
+	void op_dec(IReg *reg);
 	void op_dec(Address addr);
 
 	/// 16-bit Arithmetic
 	void op_add_hl(uint16_t val);
 	void op_add_sp(int8_t val);
-	void op_inc_dbl(DoubleRegisterInterface *reg);
-	void op_dec_dbl(DoubleRegisterInterface *reg);
+	void op_inc_dbl(IDblReg *reg);
+	void op_dec_dbl(IDblReg *reg);
 
 	/// 8-bit Load
-	void op_ld(RegisterInterface *reg, uint8_t val);
+	void op_ld(IReg *reg, uint8_t val);
 	void op_ld(Address addr, uint8_t val);
 	void op_ldi_a(uint8_t val);
 	void op_ldi_addr(Address addr, uint8_t);
@@ -171,38 +171,38 @@ class CPU : public CPUInterface {
 	void op_ldh_addr(Address addr, uint8_t val);
 
 	/// 16-bit Load
-	void op_ld_dbl(DoubleRegisterInterface *reg, uint16_t val);
+	void op_ld_dbl(IDblReg *reg, uint16_t val);
 	void op_ld_dbl(Address addr, uint16_t val);
 	void op_ld_hl_sp_offset(int8_t offset);
-	void op_push(DoubleRegisterInterface *reg);
-	void op_pop(DoubleRegisterInterface *reg);
+	void op_push(IDblReg *reg);
+	void op_pop(IDblReg *reg);
 
 	/// Rotates and Shifts
 	void op_rlc_a();
-	void op_rlc(RegisterInterface *reg);
+	void op_rlc(IReg *reg);
 	void op_rlc(Address addr);
 	void op_rrc_a();
-	void op_rrc(RegisterInterface *reg);
+	void op_rrc(IReg *reg);
 	void op_rrc(Address addr);
 	void op_rl_a();
-	void op_rl(RegisterInterface *reg);
+	void op_rl(IReg *reg);
 	void op_rl(Address address);
 	void op_rr_a();
-	void op_rr(RegisterInterface *reg);
+	void op_rr(IReg *reg);
 	void op_rr(Address address);
-	void op_sla(RegisterInterface *reg);
+	void op_sla(IReg *reg);
 	void op_sla(Address address);
-	void op_srl(RegisterInterface *reg);
+	void op_srl(IReg *reg);
 	void op_srl(Address address);
-	void op_sra(RegisterInterface *reg);
+	void op_sra(IReg *reg);
 	void op_sra(Address address);
 
 	/// Bit Manipulation
-	void op_bit(RegisterInterface *reg, uint8_t bit);
+	void op_bit(IReg *reg, uint8_t bit);
 	void op_bit(uint8_t val, uint8_t bit);
-	void op_set(RegisterInterface *reg, uint8_t bit);
+	void op_set(IReg *reg, uint8_t bit);
 	void op_set(Address addr, uint8_t bit);
-	void op_res(RegisterInterface *reg, uint8_t bit);
+	void op_res(IReg *reg, uint8_t bit);
 	void op_res(Address addr, uint8_t bit);
 
 	/// Jump
@@ -223,7 +223,7 @@ class CPU : public CPUInterface {
 	void op_rst(uint8_t val);
 
 	/// Miscellaneous
-	void op_swap(RegisterInterface *reg);
+	void op_swap(IReg *reg);
 	void op_swap(Address addr);
 	void op_daa();
 	void op_cpl();
@@ -242,33 +242,26 @@ class CPU : public CPUInterface {
 	/**
 	 * Default constructor
 	 */
-	CPU(std::unique_ptr<RegisterInterface> a,
-	    std::unique_ptr<RegisterInterface> b,
-	    std::unique_ptr<RegisterInterface> c,
-	    std::unique_ptr<RegisterInterface> d,
-	    std::unique_ptr<RegisterInterface> e,
-	    std::unique_ptr<RegisterInterface> f,
-	    std::unique_ptr<RegisterInterface> h,
-	    std::unique_ptr<RegisterInterface> l,
-	    std::unique_ptr<DoubleRegisterInterface> af,
-	    std::unique_ptr<DoubleRegisterInterface> bc,
-	    std::unique_ptr<DoubleRegisterInterface> de,
-	    std::unique_ptr<DoubleRegisterInterface> hl,
-	    std::unique_ptr<DoubleRegisterInterface> pc,
-	    std::unique_ptr<DoubleRegisterInterface> sp,
-	    std::unique_ptr<RegisterInterface> interrupt_flag,
-	    std::unique_ptr<RegisterInterface> interrupt_enable,
+	CPU(std::unique_ptr<IReg> a, std::unique_ptr<IReg> b,
+	    std::unique_ptr<IReg> c, std::unique_ptr<IReg> d,
+	    std::unique_ptr<IReg> e, std::unique_ptr<IReg> f,
+	    std::unique_ptr<IReg> h, std::unique_ptr<IReg> l,
+	    std::unique_ptr<IDblReg> af, std::unique_ptr<IDblReg> bc,
+	    std::unique_ptr<IDblReg> de, std::unique_ptr<IDblReg> hl,
+	    std::unique_ptr<IDblReg> pc, std::unique_ptr<IDblReg> sp,
+	    std::unique_ptr<IReg> interrupt_flag,
+	    std::unique_ptr<IReg> interrupt_enable,
 	    memory::MemoryInterface *memory);
 
 	/**
 	 * Getter for the Interrupt Enable register
 	 */
-	RegisterInterface *get_interrupt_enable() override;
+	IReg *get_interrupt_enable() override;
 
 	/**
 	 * Getter for the Interrupt Flag Register
 	 */
-	RegisterInterface *get_interrupt_flag() override;
+	IReg *get_interrupt_flag() override;
 
 	/**
 	 * @see CPUInterface#tick

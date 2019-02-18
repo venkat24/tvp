@@ -31,12 +31,12 @@ class CPUInterface {
 	/**
 	 * Getter for the Interrupt Enable register
 	 */
-	virtual RegisterInterface *get_interrupt_enable() = 0;
+	virtual IReg *get_interrupt_enable() = 0;
 
 	/**
 	 * Getter for the Interrupt Flag Register
 	 */
-	virtual RegisterInterface *get_interrupt_flag() = 0;
+	virtual IReg *get_interrupt_flag() = 0;
 };
 
 } // namespace cpu

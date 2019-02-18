@@ -23,18 +23,18 @@ class GPUInterface {
 	virtual void tick(cpu::ClockCycles cycles) = 0;
 
 	/// Getters for the 12 GPU registers
-	virtual cpu::RegisterInterface *get_lcdc() = 0;
-	virtual cpu::RegisterInterface *get_stat() = 0;
-	virtual cpu::RegisterInterface *get_scy() = 0;
-	virtual cpu::RegisterInterface *get_scx() = 0;
-	virtual cpu::RegisterInterface *get_ly() = 0;
-	virtual cpu::RegisterInterface *get_lyc() = 0;
-	virtual cpu::RegisterInterface *get_wy() = 0;
-	virtual cpu::RegisterInterface *get_wx() = 0;
-	virtual cpu::RegisterInterface *get_bgp() = 0;
-	virtual cpu::RegisterInterface *get_obp0() = 0;
-	virtual cpu::RegisterInterface *get_obp1() = 0;
-	virtual cpu::RegisterInterface *get_dma() = 0;
+	virtual cpu::IReg *get_lcdc() = 0;
+	virtual cpu::IReg *get_stat() = 0;
+	virtual cpu::IReg *get_scy() = 0;
+	virtual cpu::IReg *get_scx() = 0;
+	virtual cpu::IReg *get_ly() = 0;
+	virtual cpu::IReg *get_lyc() = 0;
+	virtual cpu::IReg *get_wy() = 0;
+	virtual cpu::IReg *get_wx() = 0;
+	virtual cpu::IReg *get_bgp() = 0;
+	virtual cpu::IReg *get_obp0() = 0;
+	virtual cpu::IReg *get_obp1() = 0;
+	virtual cpu::IReg *get_dma() = 0;
 };
 
 } // namespace gpu

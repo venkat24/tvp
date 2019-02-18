@@ -13,20 +13,16 @@
 namespace cpu {
 
 // Make some registers!
-CPU::CPU(
-    std::unique_ptr<RegisterInterface> a, std::unique_ptr<RegisterInterface> b,
-    std::unique_ptr<RegisterInterface> c, std::unique_ptr<RegisterInterface> d,
-    std::unique_ptr<RegisterInterface> e, std::unique_ptr<RegisterInterface> f,
-    std::unique_ptr<RegisterInterface> h, std::unique_ptr<RegisterInterface> l,
-    std::unique_ptr<DoubleRegisterInterface> af,
-    std::unique_ptr<DoubleRegisterInterface> bc,
-    std::unique_ptr<DoubleRegisterInterface> de,
-    std::unique_ptr<DoubleRegisterInterface> hl,
-    std::unique_ptr<DoubleRegisterInterface> pc,
-    std::unique_ptr<DoubleRegisterInterface> sp,
-    std::unique_ptr<RegisterInterface> interrupt_flag,
-    std::unique_ptr<RegisterInterface> interrupt_enable,
-    memory::MemoryInterface *memory)
+CPU::CPU(std::unique_ptr<IReg> a, std::unique_ptr<IReg> b,
+         std::unique_ptr<IReg> c, std::unique_ptr<IReg> d,
+         std::unique_ptr<IReg> e, std::unique_ptr<IReg> f,
+         std::unique_ptr<IReg> h, std::unique_ptr<IReg> l,
+         std::unique_ptr<IDblReg> af, std::unique_ptr<IDblReg> bc,
+         std::unique_ptr<IDblReg> de, std::unique_ptr<IDblReg> hl,
+         std::unique_ptr<IDblReg> pc, std::unique_ptr<IDblReg> sp,
+         std::unique_ptr<IReg> interrupt_flag,
+         std::unique_ptr<IReg> interrupt_enable,
+         memory::MemoryInterface *memory)
     : a(std::move(a)), b(std::move(b)), c(std::move(c)), d(std::move(d)),
       e(std::move(e)), f(std::move(f)), h(std::move(h)), l(std::move(l)),
       af(std::move(af)), bc(std::move(bc)), de(std::move(de)),
@@ -671,11 +667,9 @@ void CPU::handle_interrupts() {
 	}
 }
 
-RegisterInterface *CPU::get_interrupt_enable() {
-	return interrupt_enable.get();
-}
+IReg *CPU::get_interrupt_enable() { return interrupt_enable.get(); }
 
-RegisterInterface *CPU::get_interrupt_flag() { return interrupt_flag.get(); }
+IReg *CPU::get_interrupt_flag() { return interrupt_flag.get(); }
 
 uint8_t CPU::get_inst_byte() const {
 	auto byte = memory->read(pc->get());
