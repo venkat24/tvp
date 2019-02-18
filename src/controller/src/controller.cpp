@@ -48,11 +48,7 @@ uint8_t Controller::get_value() {
 
 	// Read directions by default 0-3
 	// Read buttons if this is set to 4 (4-7)
-	auto base_index = uint8_t{0};
-
-	if (button_flag) {
-		base_index = 4;
-	}
+	uint8_t base_index = button_flag ? 4 : 0;
 
 	for (int i = 0; i < 4; ++i) {
 		byte[i] = buttons[base_index + i];
