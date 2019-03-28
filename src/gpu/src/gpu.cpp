@@ -92,9 +92,7 @@ void GPU::tick(cpu::ClockCycles cycles_elapsed) {
 			if (ly->get() < 144) {
 				change_mode(GPUMode::OAM);
 			} else {
-				if (stat->get_bit(stat_flag::VBLANK_INTERRUPT_ENABLE)) {
-					fire_interrupt(cpu::Interrupt::VBLANK);
-				}
+				fire_interrupt(cpu::Interrupt::VBLANK);
 				change_mode(GPUMode::VBLANK);
 			}
 		}
@@ -234,17 +232,18 @@ void GPU::change_mode(GPUMode new_mode) {
 void GPU::fire_interrupt(cpu::Interrupt interrupt) {
 	// The interrupt enum value corresponds to the bit number
 	auto bit_number = static_cast<uint8_t>(interrupt);
-	cpu->get_interrupt_flag()->set_bit(bit_number, 1);
+	cpu->get_interrupt_flag()->set_bit(bit_number, true);
 }
 
 OAMEntry GPU::get_oam_from_memory(Address address) {
 	auto entry = OAMEntry{};
+
 	// Read the first three bytes
 	entry.pos_y = memory->read(address);
 	entry.pos_x = memory->read(address + 1);
 	entry.tile_number = memory->read(address + 2);
 
-	// use fourth byte to set flags
+	// Use fourth byte to set flags
 	auto flags = memory->read(address + 3);
 	entry.priority = flags & (1 << oam_flag::BG_PRIORITY);
 	entry.flip_x = flags & (1 << oam_flag::FLIP_X);

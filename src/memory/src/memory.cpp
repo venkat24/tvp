@@ -55,7 +55,7 @@ uint8_t Memory::read(Address address) const {
 			return gpu->get_lyc()->get();
 		case 0x6:
 			Log::warn("Cannot read from DMA register");
-			return 0xFFFF; // DMA is non-readable
+			return 0xFF; // DMA is non-readable
 		case 0x7:
 			return gpu->get_bgp()->get();
 		case 0x8:
@@ -228,7 +228,7 @@ void Memory::write(Address address, uint8_t data) {
 	}
 
 	// Sound Controller Registers
-	if (address_in_range(address, 0xFF26, 0xFF10)) {
+	if (address_in_range(address, 0xFF3F, 0xFF10)) {
 		// TODO: Sound Controller
 		Log::warn("Attempt to write to sound register " + num_to_hex(address));
 		return;

@@ -31,12 +31,14 @@ uint8_t Controller::button_index(Button button) {
 	case Button::START:
 		return 7;
 	}
+
+	return {};
 }
 
 void Controller::set_value(uint8_t value) {
 	// The only settable values are the 4th and 5th bits
-	bool direction_bit = 0b00010000 & value;
-	bool button_bit = 0b00100000 & value;
+	bool direction_bit = (1 << 4) & value;
+	bool button_bit = (1 << 5) & value;
 
 	// 0 is set, 1 is not set, so flip the bits
 	direction_flag = !direction_bit;
@@ -44,15 +46,16 @@ void Controller::set_value(uint8_t value) {
 }
 
 uint8_t Controller::get_value() {
-	std::bitset<8> byte(0xFF);
+	// The first 4 bits don't matter, and the next 4 bits are reversed
+	std::bitset<8> byte(0x0F);
 
-	// Read directions by default 0-3
-	// Read buttons if this is set to 4 (4-7)
+	// Read directions by default (0-3)
+	// Read buttons if button_flag is set (4-7)
 	uint8_t base_index = button_flag ? 4 : 0;
 
-	for (int i = 0; i < 4; ++i) {
-		byte[i] = buttons[base_index + i];
-	}
+	// Assign requested inputs into the result byte
+	for (int i = 0; i < 4; ++i)
+		byte[i] = !buttons[base_index + i];
 
 	return static_cast<uint8_t>(byte.to_ulong());
 }

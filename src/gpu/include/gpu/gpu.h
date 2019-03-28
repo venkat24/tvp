@@ -78,59 +78,58 @@ struct Tile {
  * The GPU class, which controls pixel display to the screen
  */
 class GPU : public GPUInterface {
-	using Reg = cpu::RegisterInterface;
 
 	/**
 	 * LCD Control Register @FF40
 	 * Contains bits controlling various display states
 	 */
-	std::unique_ptr<Reg> lcdc;
+	std::unique_ptr<cpu::IReg> lcdc;
 
 	/**
 	 * LCD Status Register @FF41
 	 * Contains bits controlling various rendering modes
 	 */
-	std::unique_ptr<Reg> stat;
+	std::unique_ptr<cpu::IReg> stat;
 
 	/**
 	 * LCD Scroll Y @FF42
 	 * Specifies the Y position in the 256x256 pixels BG map (32x32 tiles)
 	 * which is to be displayed at the upper/left LCD display position.
 	 */
-	std::unique_ptr<Reg> scy;
+	std::unique_ptr<cpu::IReg> scy;
 
 	/**
 	 * LCD Scroll Y @FF43
 	 * Specifies the X position in the 256x256 pixels BG map (32x32 tiles)
 	 * which is to be displayed at the upper/left LCD display position.
 	 */
-	std::unique_ptr<Reg> scx;
+	std::unique_ptr<cpu::IReg> scx;
 
 	/**
 	 * LCDC Y-Coordinate @FF44
 	 * The LY indicates the vertical line to which the present data is
 	 * transferred to the LCD Driver.
 	 */
-	std::unique_ptr<Reg> ly;
+	std::unique_ptr<cpu::IReg> ly;
 
 	/**
 	 * LYC LC-Compare @FF45
 	 * This register is constantly compared with the LCDC register and the
 	 * corresponding bits in STAT are set depending on this
 	 */
-	std::unique_ptr<Reg> lyc;
+	std::unique_ptr<cpu::IReg> lyc;
 
 	/**
 	 * Window Y Position @FF4A
 	 * Holds the Y position of the overlay window
 	 */
-	std::unique_ptr<Reg> wy;
+	std::unique_ptr<cpu::IReg> wy;
 
 	/**
 	 * Window X Position @FF4B
 	 * Holds the X position of the overlay window, subtracted by 7 (wx - 7)
 	 */
-	std::unique_ptr<Reg> wx;
+	std::unique_ptr<cpu::IReg> wx;
 
 	/**
 	 * BG Palette Data @FF47
@@ -146,7 +145,7 @@ class GPU : public GPUInterface {
 	 *   10  Dark gray
 	 *   11  Black
 	 */
-	std::unique_ptr<Reg> bgp;
+	std::unique_ptr<cpu::IReg> bgp;
 
 	/**
 	 * Object Palette 0 Data @FF48
@@ -154,7 +153,7 @@ class GPU : public GPUInterface {
 	 * as BGP (FF47), except that the lower two bits aren't used because sprite
 	 * data 00 is transparent.
 	 */
-	std::unique_ptr<Reg> obp0;
+	std::unique_ptr<cpu::IReg> obp0;
 
 	/**
 	 * Object Palette 1 Data @FF49
@@ -162,7 +161,7 @@ class GPU : public GPUInterface {
 	 * as BGP (FF47), except that the lower two bits aren't used because sprite
 	 * data 00 is transparent.
 	 */
-	std::unique_ptr<Reg> obp1;
+	std::unique_ptr<cpu::IReg> obp1;
 
 	/**
 	 * DMA Transfer @FF46
@@ -170,7 +169,7 @@ class GPU : public GPUInterface {
 	 * memory (sprite attribute table). The written value specifies the transfer
 	 * source address divided by 100h
 	 */
-	std::unique_ptr<Reg> dma;
+	std::unique_ptr<cpu::IReg> dma;
 
 	/**
 	 * Memory instance, for performing reads and writes to main memory
@@ -248,12 +247,12 @@ class GPU : public GPUInterface {
 	void write_sprites();
 
   public:
-	GPU(std::unique_ptr<Reg> lcdc, std::unique_ptr<Reg> stat,
-	    std::unique_ptr<Reg> scy, std::unique_ptr<Reg> scx,
-	    std::unique_ptr<Reg> ly, std::unique_ptr<Reg> lyc,
-	    std::unique_ptr<Reg> wy, std::unique_ptr<Reg> wx,
-	    std::unique_ptr<Reg> bgp, std::unique_ptr<Reg> obp0,
-	    std::unique_ptr<Reg> obp1, std::unique_ptr<Reg> dma,
+	GPU(std::unique_ptr<cpu::IReg> lcdc, std::unique_ptr<cpu::IReg> stat,
+	    std::unique_ptr<cpu::IReg> scy, std::unique_ptr<cpu::IReg> scx,
+	    std::unique_ptr<cpu::IReg> ly, std::unique_ptr<cpu::IReg> lyc,
+	    std::unique_ptr<cpu::IReg> wy, std::unique_ptr<cpu::IReg> wx,
+	    std::unique_ptr<cpu::IReg> bgp, std::unique_ptr<cpu::IReg> obp0,
+	    std::unique_ptr<cpu::IReg> obp1, std::unique_ptr<cpu::IReg> dma,
 	    memory::MemoryInterface *memory, cpu::CPUInterface *cpu,
 	    video::VideoInterface *video);
 
@@ -265,18 +264,18 @@ class GPU : public GPUInterface {
 	/// Getters for Registers
 	/// Simply return a pointer so that Memory can manipulate these values with
 	/// easily, as each register corresponds to a memory location
-	Reg *get_lcdc() override;
-	Reg *get_stat() override;
-	Reg *get_scy() override;
-	Reg *get_scx() override;
-	Reg *get_ly() override;
-	Reg *get_lyc() override;
-	Reg *get_wy() override;
-	Reg *get_wx() override;
-	Reg *get_bgp() override;
-	Reg *get_obp0() override;
-	Reg *get_obp1() override;
-	Reg *get_dma() override;
+	cpu::IReg *get_lcdc() override;
+	cpu::IReg *get_stat() override;
+	cpu::IReg *get_scy() override;
+	cpu::IReg *get_scx() override;
+	cpu::IReg *get_ly() override;
+	cpu::IReg *get_lyc() override;
+	cpu::IReg *get_wy() override;
+	cpu::IReg *get_wx() override;
+	cpu::IReg *get_bgp() override;
+	cpu::IReg *get_obp0() override;
+	cpu::IReg *get_obp1() override;
+	cpu::IReg *get_dma() override;
 };
 
 } // namespace gpu

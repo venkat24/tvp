@@ -24,7 +24,7 @@ void CPU::op_add(uint8_t val) {
 
 	auto halfcarry = (0xf & val) + (0xf & a->get()) > 0xf;
 	f->set_bit(flag::HALFCARRY, halfcarry);
-	auto carry = (result & 0x100) != 0;
+	auto carry = (0x100 & result) != 0;
 	f->set_bit(flag::CARRY, carry);
 }
 
@@ -113,7 +113,7 @@ void CPU::op_sbc(uint8_t val) {
 	// Subtract the value and current carry from A
 	auto carry_to_sub = f->get_bit(flag::CARRY);
 	auto result = static_cast<int16_t>(a->get() - val - carry_to_sub);
-	a->set(result);
+	a->set(static_cast<uint8_t>(result));
 
 	// Set flag bits
 	f->set_bit(flag::ZERO, a->get() == 0);
@@ -603,6 +603,13 @@ void CPU::op_jp(Address addr) {
 	pc->set(addr);
 }
 
+void CPU::op_jp(bool flag, Address addr) {
+	// Change PC to the given address if condition is true
+	branch_taken = flag;
+	if (flag)
+		op_jp(addr);
+}
+
 void CPU::op_jr(int8_t offset) {
 	// Displace the PC by the given value
 	auto curr_pc = pc->get();
@@ -613,12 +620,9 @@ void CPU::op_jr(int8_t offset) {
 void CPU::op_jr(bool flag, int8_t offset) {
 	// This is a conditional jump. Change the PC only if given bit of the flag
 	// register is set. Else, do nothing
-	if (flag) {
-		branch_taken = true;
+	branch_taken = flag;
+	if (flag)
 		op_jr(offset);
-	} else {
-		branch_taken = false;
-	}
 }
 
 /// Calls
@@ -629,7 +633,7 @@ void CPU::op_call(Address addr) {
 	// to the new value. Update the stack pointer accordingly
 	auto curr_stack_pointer = sp->get();
 
-	// Push PC, high bute first
+	// Push PC, high byte first
 	memory->write(--curr_stack_pointer, pc->get_high());
 	memory->write(--curr_stack_pointer, pc->get_low());
 
@@ -642,12 +646,9 @@ void CPU::op_call(Address addr) {
 
 void CPU::op_call(bool flag, Address addr) {
 	// Conditional call, only if given bit is set
-	if (flag) {
+	branch_taken = flag;
+	if (flag)
 		op_call(addr);
-		branch_taken = true;
-	} else {
-		branch_taken = false;
-	}
 }
 
 /// Returns
@@ -659,12 +660,9 @@ void CPU::op_ret() {
 
 void CPU::op_ret(bool flag) {
 	// Pop stack to PC only if the bit is set
-	if (flag) {
+	branch_taken = flag;
+	if (flag)
 		op_pop(pc.get());
-		branch_taken = true;
-	} else {
-		branch_taken = false;
-	}
 }
 
 void CPU::op_reti() {
@@ -685,8 +683,8 @@ void CPU::op_rst(uint8_t val) {
 
 void CPU::op_swap(IReg *reg) {
 	auto value = reg->get();
-	auto lower_nibble = 0x0F & value;
-	auto higher_nibble = (0xF0 & value) >> 4;
+	auto lower_nibble = 0x0f & value;
+	auto higher_nibble = (0xf0 & value) >> 4;
 
 	auto new_val = (lower_nibble << 4) | higher_nibble;
 	reg->set(new_val);
@@ -700,8 +698,8 @@ void CPU::op_swap(IReg *reg) {
 
 void CPU::op_swap(Address addr) {
 	auto value = memory->read(addr);
-	auto lower_nibble = 0x0F & value;
-	auto higher_nibble = (0xF0 & value) >> 4;
+	auto lower_nibble = 0x0f & value;
+	auto higher_nibble = (0xf0 & value) >> 4;
 
 	auto new_val = (lower_nibble << 4) | higher_nibble;
 	memory->write(addr, new_val);

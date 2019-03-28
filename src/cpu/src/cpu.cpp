@@ -228,7 +228,7 @@ CPU::CPU(std::unique_ptr<IReg> a, std::unique_ptr<IReg> b,
           /* 0xbf */ [&] { op_cp(this->a->get()); },
           /* 0xc0 */ [&] { op_ret(!this->f->get_bit(flag::ZERO)); },
           /* 0xc1 */ [&] { op_pop(this->bc.get()); },
-          /* 0xc2 */ [&] { op_jr(!this->f->get_bit(flag::ZERO), get_inst_dbl()); },
+          /* 0xc2 */ [&] { op_jp(!this->f->get_bit(flag::ZERO), get_inst_dbl()); },
           /* 0xc3 */ [&] { op_jp(get_inst_dbl()); },
           /* 0xc4 */ [&] { op_call(!this->f->get_bit(flag::ZERO), get_inst_dbl()); },
           /* 0xc5 */ [&] { op_push(this->bc.get()); },
@@ -236,7 +236,7 @@ CPU::CPU(std::unique_ptr<IReg> a, std::unique_ptr<IReg> b,
           /* 0xc7 */ [&] { op_rst(0x00); },
           /* 0xc8 */ [&] { op_ret(this->f->get_bit(flag::ZERO)); },
           /* 0xc9 */ [&] { op_ret(); },
-          /* 0xca */ [&] { op_jr(this->f->get_bit(flag::ZERO), get_inst_dbl()); },
+          /* 0xca */ [&] { op_jp(this->f->get_bit(flag::ZERO), get_inst_dbl()); },
           /* 0xcb */ [&] { /* CB Opcodes handled separately */ },
           /* 0xcc */ [&] { op_call(this->f->get_bit(flag::ZERO), get_inst_dbl()); },
           /* 0xcd */ [&] { op_call(get_inst_dbl()); },
@@ -244,7 +244,7 @@ CPU::CPU(std::unique_ptr<IReg> a, std::unique_ptr<IReg> b,
           /* 0xcf */ [&] { op_rst(0x08); },
           /* 0xd0 */ [&] { op_ret(!this->f->get_bit(flag::CARRY)); },
           /* 0xd1 */ [&] { op_pop(this->de.get()); },
-          /* 0xd2 */ [&] { op_jr(!this->f->get_bit(flag::CARRY), get_inst_dbl()); },
+          /* 0xd2 */ [&] { op_jp(!this->f->get_bit(flag::CARRY), get_inst_dbl()); },
           /* 0xd3 */ [&] { /* UNDEFINED */ },
           /* 0xd4 */ [&] { op_call(!this->f->get_bit(flag::CARRY), get_inst_dbl()); },
           /* 0xd5 */ [&] { op_push(this->de.get()); },
@@ -252,7 +252,7 @@ CPU::CPU(std::unique_ptr<IReg> a, std::unique_ptr<IReg> b,
           /* 0xd7 */ [&] { op_rst(0x10); },
           /* 0xd8 */ [&] { op_ret(this->f->get_bit(flag::CARRY)); },
           /* 0xd9 */ [&] { op_reti(); },
-          /* 0xda */ [&] { op_jr(this->f->get_bit(flag::CARRY), get_inst_dbl()); },
+          /* 0xda */ [&] { op_jp(this->f->get_bit(flag::CARRY), get_inst_dbl()); },
           /* 0xdb */ [&] { /* UNDEFINED */ },
           /* 0xdc */ [&] { op_call(this->f->get_bit(flag::CARRY), get_inst_dbl()); },
           /* 0xdd */ [&] { /* UNDEFINED */ },
@@ -285,7 +285,7 @@ CPU::CPU(std::unique_ptr<IReg> a, std::unique_ptr<IReg> b,
           /* 0xf8 */ [&] { op_ld_hl_sp_offset(static_cast<int8_t>(get_inst_byte())); },
           /* 0xf9 */ [&] { op_ld_dbl(this->sp.get(), this->hl->get()); },
           /* 0xfa */ [&] { op_ld(this->a.get(), this->memory->read(get_inst_dbl())); },
-          /* 0xfb */ [&] { op_di(); },
+          /* 0xfb */ [&] { op_ei(); },
           /* 0xfc */ [&] { /* UNDEFINED */ },
           /* 0xfd */ [&] { /* UNDEFINED */ },
           /* 0xfe */ [&] { op_cp(get_inst_byte()); },
@@ -570,10 +570,10 @@ CPU::CPU(std::unique_ptr<IReg> a, std::unique_ptr<IReg> b,
             1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1,
             1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1,
             1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1,
-            2, 3, 3, 1, 3, 1, 2, 1, 2, 1, 3, 0, 3, 6, 2, 1,
-            2, 3, 3, 0, 3, 1, 2, 1, 2, 1, 3, 0, 3, 0, 2, 1,
-            3, 3, 2, 0, 0, 1, 2, 1, 1, 1, 1, 0, 0, 0, 2, 1,
-            3, 3, 2, 1, 0, 1, 2, 1, 3, 2, 1, 1, 0, 0, 2, 1
+            2, 3, 3, 4, 3, 4, 2, 4, 2, 4, 3, 0, 3, 6, 2, 4,
+            2, 3, 3, 0, 3, 4, 2, 4, 2, 4, 3, 0, 3, 0, 2, 4,
+            3, 3, 2, 0, 0, 4, 2, 4, 4, 1, 4, 0, 0, 0, 2, 4,
+            3, 3, 2, 1, 0, 4, 2, 4, 3, 2, 4, 1, 0, 0, 2, 4
       }),
       cycles_branched({
             1, 3, 2, 2, 1, 1, 2, 1, 5, 2, 2, 2, 1, 1, 2, 1,
@@ -588,28 +588,28 @@ CPU::CPU(std::unique_ptr<IReg> a, std::unique_ptr<IReg> b,
             1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1,
             1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1,
             1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1,
-            5, 3, 1, 1, 6, 1, 2, 1, 5, 1, 1, 0, 6, 6, 2, 1,
-            5, 3, 1, 0, 6, 1, 2, 1, 5, 1, 1, 0, 6, 0, 2, 1,
-            3, 3, 2, 0, 0, 1, 2, 1, 1, 1, 1, 0, 0, 0, 2, 1,
-            3, 3, 2, 1, 0, 1, 2, 1, 3, 2, 1, 1, 0, 0, 2, 1
+            5, 3, 4, 4, 6, 4, 2, 4, 5, 4, 4, 0, 6, 6, 2, 4,
+            5, 3, 4, 0, 6, 4, 2, 4, 5, 4, 4, 0, 6, 0, 2, 4,
+            3, 3, 2, 0, 0, 4, 2, 4, 4, 1, 4, 0, 0, 0, 2, 4,
+            3, 3, 2, 1, 0, 4, 2, 4, 3, 2, 4, 1, 0, 0, 2, 4
       }),
       cycles_cb({
-            2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2,
-            2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2,
-            2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2,
-            2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2,
+            2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2,
+            2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2,
+            2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2,
+            2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2,
             2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 3, 2,
             2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 3, 2,
             2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 3, 2,
             2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 3, 2,
-            2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2,
-            2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2,
-            2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2,
-            2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2,
-            2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2,
-            2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2,
-            2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2,
-            2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2
+            2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2,
+            2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2,
+            2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2,
+            2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2,
+            2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2,
+            2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2,
+            2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2,
+            2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 4, 2
         })
 // clang-format on
 {}
@@ -647,21 +647,36 @@ ClockCycles CPU::tick() {
 }
 
 void CPU::handle_interrupts() {
-	if (this->interrupt_enabled) {
+	if (interrupt_enabled) {
 		auto interrupts = interrupt_flag->get() & interrupt_enable->get();
 
-		// Interrupts are ordered 0..4 in order of priority
-		// If one of them is set, handle it and break
-		for (uint8_t i = 0; i <= 4; ++i) {
-			if (interrupts & (1 << i)) {
-				//  Clear the interrupt
-				interrupts &= (0 << i);
-				interrupt_enabled = false;
+		if (interrupts) {
+			// There's an interrupt, so we must switch to the right handler
+			// Now, save the current core, write the PC into the Stack
+			auto curr_sp = sp->get();
+			auto high_byte = pc->get_high();
+			auto low_byte = pc->get_low();
 
-				// Jump to the interrupt handling code
-				pc->set(interrupt_vector[i]);
-				Log::error("Interrupt lmao");
-				break;
+			memory->write(--curr_sp, high_byte);
+			memory->write(--curr_sp, low_byte);
+
+			sp->set(curr_sp);
+
+			// Clear a halt, in case one is in progress
+			halted = false;
+
+			// Interrupts are ordered 0..4 in order of priority
+			// If one of them is set, handle it and break
+			for (uint8_t i = 0; i <= 4; ++i) {
+				if (interrupts & (1 << i)) {
+					//  Clear the interrupt
+					interrupt_flag->set_bit(i, false);
+					interrupt_enabled = false;
+
+					// Jump to the interrupt handling code
+					pc->set(interrupt_vector[i]);
+					break;
+				}
 			}
 		}
 	}

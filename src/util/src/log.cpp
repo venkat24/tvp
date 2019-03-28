@@ -27,7 +27,7 @@ void Log::log(string message, LogLevel log_level) {
 		break;
 
 	case LogLevel::INFO:
-		cout << color::BLUE << "[INFO] " << color::END;
+		cout << color::BLUE << " [INFO] " << color::END;
 		break;
 
 	case LogLevel::WARN:

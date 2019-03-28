@@ -25,6 +25,8 @@ using namespace cartridge;
 using namespace controller;
 
 int main(int argc, char *argv[]) {
+	ios_base::sync_with_stdio(false);
+
 	if (argc < 2) {
 		cerr << "Please provide the name of a ROM file." << endl;
 		exit(1);

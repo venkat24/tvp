@@ -207,6 +207,7 @@ class CPU : public CPUInterface {
 
 	/// Jump
 	void op_jp(Address addr);
+	void op_jp(bool flag, Address addr);
 	void op_jr(int8_t offset);
 	void op_jr(bool flag, int8_t offset);
 
