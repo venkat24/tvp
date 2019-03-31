@@ -13,6 +13,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <vector>
 
 #pragma once
 
@@ -66,12 +67,17 @@ struct Tile {
 	/**
 	 * Data contained in this tile
 	 */
-	std::array<Pixel, TILE_SIZE> data;
+	std::vector<GBPixel> data;
 
 	/**
-	 * Helper to get the pixel at a particular X,Y
+	 * Helper to get the pixel at a particular X, Y
 	 */
-	Pixel &get_pixel_at(uint8_t x, uint8_t y);
+	GBPixel &get_pixel_at(uint8_t x, uint8_t y);
+
+	/**
+	 * True if this is a double height tile, false otherwise
+	 */
+	bool double_height;
 };
 
 /**
@@ -230,6 +236,13 @@ class GPU : public GPUInterface {
 	 * Get tile data from memory, given the tile number
 	 */
 	Tile get_tile_from_memory(uint8_t tile_number, bool sprite = false);
+
+	/**
+	 * Convert the given internal color value to a pixel color using the given
+	 * palette register's current value. The BG uses the BGP palette, and
+	 * Sprites use OBJ0 and OBJ1
+	 */
+	Pixel get_pixel_from_palette(GBPixel gb_pixel, cpu::IReg *reg);
 
 	/**
 	 * Write the current scanline of pixels into the video buffer

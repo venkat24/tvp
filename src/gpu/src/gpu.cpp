@@ -108,8 +108,8 @@ void GPU::tick(cpu::ClockCycles cycles_elapsed) {
 			(*ly)++;
 
 			if (ly->get() == 154) {
+				write_sprites();
 				video->paint(v_buffer);
-				// TODO: Write Sprites
 				ly->set(0);
 				change_mode(GPUMode::OAM);
 			}
@@ -172,32 +172,92 @@ void GPU::write_bg_line() {
 		    static_cast<uint16_t>(memory->read(tile_line_index + 1));
 
 		auto reverse_index_x = 7 - tile_index_x;
-		auto first = static_cast<bool>(pix_data_high & (1 << reverse_index_x));
-		auto second = static_cast<bool>(pix_data_low & (1 << reverse_index_x));
+		bool first = pix_data_high & (1 << reverse_index_x);
+		bool second = pix_data_low & (1 << reverse_index_x);
+		auto gb_pixel = static_cast<GBPixel>((first << 1) + second);
 
-		if (not first and not second) {
-			v_buffer[current_line * SCREEN_WIDTH + i] = Pixel::ZERO;
-		} else if (not first and second) {
-			v_buffer[current_line * SCREEN_WIDTH + i] = Pixel::ONE;
-		} else if (first and not second) {
-			v_buffer[current_line * SCREEN_WIDTH + i] = Pixel::TWO;
-		} else if (first and second) {
-			v_buffer[current_line * SCREEN_WIDTH + i] = Pixel::THREE;
-		}
+		auto real_pixel = get_pixel_from_palette(gb_pixel, bgp.get());
+
+		v_buffer[current_line * SCREEN_WIDTH + i] = real_pixel;
 	}
 }
 
 void GPU::write_sprites() {
-	// Get all 40 sprites from the OAM
-	auto oam_entries = std::array<OAMEntry, 40>{};
-	for (int i = 0; i < 40; ++i) {
-		auto curr_addr = OAM_START_ADDR + (i * OAM_ENTRY_SIZE);
-		oam_entries[i] = get_oam_from_memory(curr_addr);
-	}
 
-	// TODO: Draw the sprites on the buffer
-	for (auto &oam_entry : oam_entries) {
+	// For all 40 sprites in OAM...
+	for (int i = 0; i < 40; ++i) {
+
+		// Get the current sprite OAM info from memory
+		auto curr_addr = OAM_START_ADDR + (i * OAM_ENTRY_SIZE);
+		auto oam = get_oam_from_memory(curr_addr);
+
+		// Top-left corner points are easier to work with
+		auto sprite_x = oam.pos_x - 8;
+		auto sprite_y = oam.pos_y - 16;
+
+		// Skip drawing sprites which are offscreen
+		if (oam.pos_x == 0 || oam.pos_x >= SCREEN_HEIGHT + 24)
+			continue;
+
+		if (oam.pos_y == 0 || oam.pos_y >= SCREEN_WIDTH)
+			continue;
+
+		// Check if we're drawing double size sprites
+		bool should_sprite_size_scale = lcdc->get_bit(lcdc_flag::SPRITE_SIZE);
+		auto sprite_size_scale = should_sprite_size_scale ? 2 : 1;
+
+		// Sprites are taken from the lower tileset
+		auto tile_set_addr = TILE_SET_ADDRS[1];
+
+		// Load the right palette register based on the current palette flag
+		auto palette_reg = oam.palette ? obp1.get() : obp0.get();
+
+		// Load this tile from memory (sprite = true)
+		auto tile = get_tile_from_memory(oam.tile_number, true);
+
+		// Draw the 8x8 or 8x16 pixel by copying the right pixels from the
+		// tileset to the screen, from the rectangular tile of addresses
+		auto real_height = TILE_HEIGHT * sprite_size_scale;
+		for (int y = 0; y < real_height; ++y) {
+			for (int x = 0; x < TILE_WIDTH; ++x) {
+
+				// Handle sprite flipping
+				auto rel_x = oam.flip_x ? TILE_WIDTH - (x + 1) : x;
+				auto rel_y = oam.flip_y ? real_height - (y + 1) : y;
+
+				// Get pixel from tile
+				auto gb_pixel = tile.get_pixel_at(rel_x, rel_y);
+				auto real_pixel = get_pixel_from_palette(gb_pixel, palette_reg);
+
+				// Find actual screen pixel to draw on
+				auto pixel_x = sprite_x + rel_x;
+				auto pixel_y = sprite_y + rel_y;
+
+				// Bounds checks
+				if (pixel_x < 0 || pixel_x > SCREEN_WIDTH)
+					continue;
+				if (pixel_y < 0 || pixel_y > SCREEN_HEIGHT)
+					continue;
+
+				// Draw pixel
+				v_buffer[pixel_y * SCREEN_WIDTH + pixel_x] = real_pixel;
+			}
+		}
 	}
+}
+
+Pixel GPU::get_pixel_from_palette(GBPixel gb_pixel, cpu::IReg *reg) {
+	auto pix_index = static_cast<uint8_t>(gb_pixel);
+	auto reg_value = reg->get();
+
+	// Read the required palette bits from the register
+	// The 4 palette values are stored as pairs of bits
+	bool high_bit = reg_value & (1 << (2 * pix_index + 1));
+	bool low_bit = reg_value & (1 << (2 * pix_index));
+
+	auto pix_value = (high_bit << 1) + low_bit;
+
+	return static_cast<Pixel>(pix_value);
 }
 
 void GPU::change_mode(GPUMode new_mode) {
@@ -261,20 +321,57 @@ Tile GPU::get_tile_from_memory(uint8_t tile_number, bool sprite) {
 	}
 
 	// Determine the start address of this tile
+	// Sprites are always pulled from the lower tileset
 	auto tile_set_num = lcdc->get_bit(lcdc_flag::BG_TILE_DATA_SELECT);
-	auto tile_set_addr = TILE_SET_ADDRS[tile_set_num];
+	auto tile_set_addr =
+	    sprite ? TILE_SET_ADDRS[1] : TILE_SET_ADDRS[tile_set_num];
+	auto tile_height = 8 * size_multiplier;
 	auto tile_size = TILE_SIZE * size_multiplier;
 	auto tile_offset = tile_size * tile_number;
-	auto tile_start = static_cast<uint8_t>(tile_set_addr + tile_offset);
 
-	// Read tile data
-	auto new_tile = Tile{};
-	for (auto i = uint16_t{0x00}; i < tile_size; ++i) {
-		auto cell_data = memory->read(tile_start + i);
-		new_tile.data[i] = static_cast<Pixel>(cell_data);
+	Address tile_start = tile_set_addr + tile_offset;
+
+	// Tile Data is stored by composing the two bytes in each line of the 8x8
+	// (or 16x8) tile. For example, the first line in a tile image (where the
+	// numbers here correspond to the GBPixel value) would look like :
+	//
+	// 1 2 2 1 3 3 2 0
+	//
+	// We convert this to binary, then compose the upper and lower bits together
+	// 0 1 1 0 1 1 1 0  ->  6E
+	// 1 0 0 1 1 1 0 0  ->  9C
+	//
+	// Hence, this first line of the tile would be represented as two adjacent
+	// bytes in memory : 0x6E and 0x9C. Similarly, we would read each of the 8
+	// lines for a total of 16 bytes (Or 32 bytes for double height tiles)
+
+	auto tile = Tile{};
+	tile.double_height = size_multiplier == 2 ? true : false;
+	tile.data.reserve(tile_size);
+
+	for (int line = 0; line < tile_height; ++line) {
+		// Each line has two bytes
+		auto line_index = 2 * line;
+		Address line_start = tile_start + line_index;
+
+		// Read these two bytes
+		auto lower = memory->read(line_start);
+		auto higher = memory->read(line_start + 1);
+
+		// Convert line bytes into colors
+		for (int i = 0; i < 8; ++i) {
+			auto bit_num = 7 - i;
+			bool high_bit = (1 << bit_num) & higher;
+			bool low_bit = (1 << bit_num) & lower;
+
+			uint8_t color_val = (high_bit << 1) | low_bit;
+			auto color = static_cast<GBPixel>(color_val);
+
+			tile.data.push_back(color);
+		}
 	}
 
-	return new_tile;
+	return tile;
 }
 
 /// Getters
@@ -293,8 +390,9 @@ cpu::IReg *GPU::get_dma() { return dma.get(); }
 
 /// Tile
 
-Pixel &Tile::get_pixel_at(uint8_t x, uint8_t y) {
-	return data[y * TILE_WIDTH + x];
+GBPixel &Tile::get_pixel_at(uint8_t x, uint8_t y) {
+	auto index = (y * TILE_WIDTH) + x;
+	return data[index];
 }
 
 } // namespace gpu

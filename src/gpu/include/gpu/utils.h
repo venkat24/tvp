@@ -14,7 +14,14 @@
 namespace gpu {
 
 /**
- * Represents a single pixel on the LCD display. It can be only one of 4 colors
+ * Represents an INTERNAL color, and is one of four options. The actual Pixel
+ * color that each of these correspond to can be customized by the game
+ */
+enum class GBPixel : uint8_t { ZERO = 0, ONE = 1, TWO = 2, THREE = 3 };
+
+/**
+ * Represents a single pixel on the LCD display. It can be only one of 4
+ * different shades of grey, not 50 ;)
  */
 enum class Pixel : uint8_t { ZERO = 0, ONE = 1, TWO = 2, THREE = 3 };
 
@@ -116,13 +123,11 @@ enum OAMFlagBits : uint8_t {
 };
 }
 
-const uint8_t TILE_WIDTH_PX = 32;
-
 const uint8_t TILE_HEIGHT = 8;
 const uint8_t TILE_WIDTH = 8;
 
 // Tile size in bytes. 8 lines of two bytes each
-constexpr uint8_t TILE_SIZE = (2 * TILE_HEIGHT);
+constexpr uint8_t TILE_SIZE = (2 * TILE_WIDTH);
 
 const std::array<Address, 2> TILE_SET_ADDRS = {0x8800, 0x8000};
 const std::array<Address, 2> TILE_MAP_ADDRS = {0x9800, 0x9C00};
