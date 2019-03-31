@@ -268,14 +268,14 @@ CPU::CPU(std::unique_ptr<IReg> a, std::unique_ptr<IReg> b,
           /* 0xe7 */ [&] { op_rst(0x20); },
           /* 0xe8 */ [&] { op_add_sp(static_cast<int8_t>(get_inst_byte())); },
           /* 0xe9 */ [&] { op_jp(this->hl->get()); },
-          /* 0xea */ [&] { op_ld_dbl(static_cast<Address>(get_inst_dbl()), this->a->get()); },
+          /* 0xea */ [&] { op_ld(static_cast<Address>(get_inst_dbl()), this->a->get()); },
           /* 0xeb */ [&] { /* UNDEFINED */ },
           /* 0xec */ [&] { /* UNDEFINED */ },
           /* 0xed */ [&] { /* UNDEFINED */ },
           /* 0xee */ [&] { op_xor(get_inst_byte()); },
           /* 0xef */ [&] { op_rst(0x28); },
           /* 0xf0 */ [&] { op_ldh_a(this->memory->read(0xFF00 + get_inst_byte())); },
-          /* 0xf1 */ [&] { op_pop(this->af.get()); },
+          /* 0xf1 */ [&] { op_pop(this->af.get(), true); },
           /* 0xf2 */ [&] { op_ld(this->a.get(), this->memory->read(0xFF00 + this->c->get())); },
           /* 0xf3 */ [&] { op_di(); },
           /* 0xf4 */ [&] { /* UNDEFINED */ },
@@ -631,11 +631,9 @@ ClockCycles CPU::tick() {
 		opcode_map[opcode]();
 
 		// If the instruction branched, take the count from cycles_branched
-		if (!branch_taken) {
-			current_cycles = cycles[opcode];
-		} else {
-			current_cycles = cycles_branched[opcode];
-		}
+		current_cycles =
+		    branch_taken ? cycles_branched[opcode] : cycles[opcode];
+
 	} else {
 		// This is a 0xCB prefixed instruction. Call the CB handler
 		opcode = get_inst_byte();
@@ -693,8 +691,8 @@ uint8_t CPU::get_inst_byte() const {
 };
 
 uint16_t CPU::get_inst_dbl() const {
-	auto lower = get_inst_byte();
-	auto upper = get_inst_byte();
+	uint16_t lower = get_inst_byte();
+	uint16_t upper = get_inst_byte();
 
 	auto result = static_cast<uint16_t>((upper << 8) | lower);
 	return result;

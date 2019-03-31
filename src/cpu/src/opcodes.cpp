@@ -9,20 +9,23 @@
 #include "util/helpers.h"
 #include "util/log.h"
 
+#include <iostream>
+
 namespace cpu {
 
 /// 8-bit Arithmetic
 
 void CPU::op_add(uint8_t val) {
 	// Add and set the result
-	auto result = static_cast<int16_t>(a->get() + val);
+	auto a_val = a->get();
+	auto result = static_cast<int16_t>(a_val + val);
 	a->set(static_cast<uint8_t>(result));
 
 	// Set flag bits
 	f->set_bit(flag::ZERO, a->get() == 0);
 	f->set_bit(flag::SUBTRACT, 0);
 
-	auto halfcarry = (0xf & val) + (0xf & a->get()) > 0xf;
+	auto halfcarry = (0xf & val) + (0xf & a_val) > 0xf;
 	f->set_bit(flag::HALFCARRY, halfcarry);
 	auto carry = (0x100 & result) != 0;
 	f->set_bit(flag::CARRY, carry);
@@ -31,14 +34,15 @@ void CPU::op_add(uint8_t val) {
 void CPU::op_adc(uint8_t val) {
 	// Add the value and current carry to A
 	auto carry_to_add = f->get_bit(flag::CARRY);
-	auto result = static_cast<int16_t>(a->get() + val + carry_to_add);
+	auto a_val = a->get();
+	auto result = static_cast<int16_t>(a_val + val + carry_to_add);
 	a->set(result);
 
 	// Set flag bits
 	f->set_bit(flag::ZERO, a->get() == 0);
 	f->set_bit(flag::SUBTRACT, 0);
 
-	auto halfcarry = (0xf & val) + (0xf & a->get()) > 0xf;
+	auto halfcarry = ((0xf & val) + (0xf & a_val) + carry_to_add) > 0xf;
 	f->set_bit(flag::HALFCARRY, halfcarry);
 	auto carry = (result & 0x100) != 0;
 	f->set_bit(flag::CARRY, carry);
@@ -88,38 +92,39 @@ void CPU::op_cp(uint8_t val) {
 	f->set_bit(flag::ZERO, result == 0);
 	f->set_bit(flag::SUBTRACT, 1);
 
-	auto halfcarry = (0xf & val) - (0xf & a->get()) > 0xf;
+	auto halfcarry = (0xf & a->get()) - (0xf & val) < 0;
 	f->set_bit(flag::HALFCARRY, halfcarry);
-	auto carry = result < 0;
+	auto carry = a->get() < val;
 	f->set_bit(flag::CARRY, carry);
 }
 
 void CPU::op_sub(uint8_t val) {
 	// Subtract and set the result
-	auto result = static_cast<int16_t>(a->get() - val);
-	a->set(static_cast<uint8_t>(result));
+	auto a_val = a->get();
+	a->set(a_val - val);
 
 	// Set flag bits
 	f->set_bit(flag::ZERO, a->get() == 0);
 	f->set_bit(flag::SUBTRACT, 1);
 
-	auto halfcarry = (0xf & val) - (0xf & a->get()) > 0xf;
+	auto halfcarry = (0xf & a_val) - (0xf & val) < 0;
 	f->set_bit(flag::HALFCARRY, halfcarry);
-	auto carry = result < 0;
+	auto carry = a_val < val;
 	f->set_bit(flag::CARRY, carry);
 }
 
 void CPU::op_sbc(uint8_t val) {
 	// Subtract the value and current carry from A
 	auto carry_to_sub = f->get_bit(flag::CARRY);
-	auto result = static_cast<int16_t>(a->get() - val - carry_to_sub);
+	auto a_val = a->get();
+	auto result = static_cast<int16_t>(a_val - val - carry_to_sub);
 	a->set(static_cast<uint8_t>(result));
 
 	// Set flag bits
 	f->set_bit(flag::ZERO, a->get() == 0);
 	f->set_bit(flag::SUBTRACT, 1);
 
-	auto halfcarry = (0xf & val) - (0xf & a->get()) > 0xf;
+	auto halfcarry = ((0xf & a_val) - (0xf & val) - carry_to_sub) < 0;
 	f->set_bit(flag::HALFCARRY, halfcarry);
 	auto carry = result < 0;
 	f->set_bit(flag::CARRY, carry);
@@ -162,7 +167,7 @@ void CPU::op_dec(IReg *reg) {
 	f->set_bit(flag::SUBTRACT, 1);
 
 	// If the last 4 bits are all 0, then there was a halfcarry
-	auto halfcarry = (reg->get() & 0x0F) == 0;
+	auto halfcarry = (reg->get() & 0x0F) == 0x0F;
 	f->set_bit(flag::HALFCARRY, halfcarry);
 }
 
@@ -177,7 +182,7 @@ void CPU::op_dec(Address addr) {
 	f->set_bit(flag::SUBTRACT, 1);
 
 	// If the last 4 bits are all 0, then there was a halfcarry
-	auto halfcarry = (value & 0x0F) == 0;
+	auto halfcarry = (value & 0x0F) == 0x0F;
 	f->set_bit(flag::HALFCARRY, halfcarry);
 }
 
@@ -185,14 +190,14 @@ void CPU::op_dec(Address addr) {
 
 void CPU::op_add_hl(uint16_t val) {
 	// Add the value to HL
-	auto result = hl->get() + val;
+	auto hl_val = hl->get();
+	uint result = hl_val + val;
 	hl->set(static_cast<uint16_t>(result));
 
 	// Set the flags
-	f->set_bit(flag::ZERO, hl->get() == 0);
 	f->set_bit(flag::SUBTRACT, 0);
 
-	auto halfcarry = (0xfff & val) + (0xfff & hl->get()) > 0xfff;
+	auto halfcarry = ((0xfff & hl_val) + (0xfff & val)) > 0xfff;
 	f->set_bit(flag::HALFCARRY, halfcarry);
 
 	auto carry = (result & 0x10000) != 0;
@@ -205,7 +210,8 @@ void CPU::op_add_sp(int8_t val) {
 	// number of bytes.
 
 	// Add the value to SP
-	auto result = sp->get() + val;
+	auto sp_val = sp->get();
+	auto result = sp_val + val;
 	sp->set(static_cast<uint16_t>(result));
 
 	// Set the flags
@@ -213,10 +219,10 @@ void CPU::op_add_sp(int8_t val) {
 	f->set_bit(flag::ZERO, 0);
 	f->set_bit(flag::SUBTRACT, 0);
 
-	auto halfcarry = (0xfff & val) + (0xfff & sp->get()) > 0xfff;
+	auto halfcarry = ((sp_val ^ val ^ (0xffff & result)) & 0x10) == 0x10;
 	f->set_bit(flag::HALFCARRY, halfcarry);
 
-	auto carry = (result & 0x10000) != 0;
+	auto carry = ((sp_val ^ val ^ (0xffff & result)) & 0x100) == 0x100;
 	f->set_bit(flag::CARRY, carry);
 }
 
@@ -286,8 +292,12 @@ void CPU::op_ld_dbl(IDblReg *reg, uint16_t val) {
 }
 
 void CPU::op_ld_dbl(Address addr, uint16_t val) {
-	// Store value in memory
-	memory->write(addr, val);
+	// Store value in memory as lower and higher bytes
+	uint8_t higher_byte = val >> 8;
+	uint8_t lower_byte = 0x00FF & val;
+
+	memory->write(addr, lower_byte);
+	memory->write(addr + 1, higher_byte);
 }
 
 void CPU::op_ld_hl_sp_offset(int8_t offset) {
@@ -295,17 +305,20 @@ void CPU::op_ld_hl_sp_offset(int8_t offset) {
 	// Since there is an implicit addition involved, the flags will be affected
 
 	// Read the value from the stack pointer, and add the offset to it
-	auto stack_val = memory->read(sp->get());
-	auto result = stack_val + offset;
+	uint16_t sp_val = sp->get();
+	auto result = sp_val + offset;
 
 	// Set flag bits
 	f->set_bit(flag::ZERO, 0);
 	f->set_bit(flag::SUBTRACT, 0);
 
-	auto halfcarry = (0xf & stack_val) + (0xf & result) > 0xf;
+	auto halfcarry = ((sp_val ^ offset ^ (0xffff & result)) & 0x10) == 0x10;
 	f->set_bit(flag::HALFCARRY, halfcarry);
-	auto carry = (result & 0x100) != 0;
+
+	auto carry = ((sp_val ^ offset ^ (0xffff & result)) & 0x100) == 0x100;
 	f->set_bit(flag::CARRY, carry);
+
+	hl->set(static_cast<uint16_t>(result));
 }
 
 void CPU::op_push(IDblReg *reg) {
@@ -324,16 +337,20 @@ void CPU::op_push(IDblReg *reg) {
 	sp->set(curr_stack_pointer);
 }
 
-void CPU::op_pop(IDblReg *reg) {
+void CPU::op_pop(IDblReg *reg, bool f) {
 	// We need to pop the stack value onto the destination register
 	// Now, the stack grows downwards, so first pop the low byte and then the
 	// high byte. We increment the SP twice in the process
 	auto curr_stack_pointer = sp->get();
 
-	auto low_byte = memory->read(curr_stack_pointer++);
-	auto high_byte = memory->read(curr_stack_pointer++);
+	uint16_t low_byte = memory->read(curr_stack_pointer++);
+	uint16_t high_byte = memory->read(curr_stack_pointer++);
 
-	auto value = (high_byte << 8) + low_byte;
+	uint16_t value = (high_byte << 8) | low_byte;
+
+	if (f)
+		value &= 0xFFF0;
+
 	reg->set(value);
 
 	// Set the double incremented stack pointer back into the SP reg
@@ -362,7 +379,7 @@ void CPU::op_rlc(Address addr) {
 
 	value = static_cast<uint8_t>((value << 1) | msb);
 
-	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::ZERO, 0);
 	f->set_bit(flag::SUBTRACT, 0);
 	f->set_bit(flag::HALFCARRY, 0);
 	f->set_bit(flag::CARRY, msb);
@@ -712,8 +729,30 @@ void CPU::op_swap(Address addr) {
 }
 
 void CPU::op_daa() {
-	/// TODO!
-	Log::fatal("Unimplemented DAA opcode called");
+	uint8_t acc = a->get();
+
+	// BCD Conversion Algorithm
+	uint16_t carry_adjustment = f->get_bit(flag::CARRY) ? 0x60 : 0x00;
+
+	bool carry = f->get_bit(flag::CARRY);
+	bool halfcarry = f->get_bit(flag::HALFCARRY);
+	bool subtract = f->get_bit(flag::SUBTRACT);
+
+	if (halfcarry || (!subtract && ((acc & 0x0f) > 9)))
+		carry_adjustment |= 0x06;
+
+	if (carry || (!subtract && (acc > 0x99)))
+		carry_adjustment |= 0x60;
+
+	acc += subtract ? -carry_adjustment : carry_adjustment;
+
+	if (((carry_adjustment << 2) & 0x100) != 0)
+		f->set_bit(flag::CARRY, true);
+
+	f->set_bit(flag::HALFCARRY, false);
+	f->set_bit(flag::ZERO, acc == 0);
+
+	a->set(acc);
 }
 
 void CPU::op_cpl() {

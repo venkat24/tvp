@@ -49,6 +49,10 @@ uint8_t Controller::get_value() {
 	// The first 4 bits don't matter, and the next 4 bits are reversed
 	std::bitset<8> byte(0x0F);
 
+	// Assign flag values
+	byte[4] = !direction_flag;
+	byte[5] = !button_flag;
+
 	// Read directions by default (0-3)
 	// Read buttons if button_flag is set (4-7)
 	uint8_t base_index = button_flag ? 4 : 0;

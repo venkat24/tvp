@@ -175,7 +175,7 @@ class CPU : public CPUInterface {
 	void op_ld_dbl(Address addr, uint16_t val);
 	void op_ld_hl_sp_offset(int8_t offset);
 	void op_push(IDblReg *reg);
-	void op_pop(IDblReg *reg);
+	void op_pop(IDblReg *reg, bool f = false);
 
 	/// Rotates and Shifts
 	void op_rlc_a();
