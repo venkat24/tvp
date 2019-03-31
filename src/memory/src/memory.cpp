@@ -47,8 +47,6 @@ uint8_t Memory::read(Address address) const {
 			return gpu->get_stat()->get();
 		case 0x2:
 			return gpu->get_scy()->get();
-		case 0x3:
-			return gpu->get_scx()->get();
 		case 0x4:
 			return gpu->get_ly()->get();
 		case 0x5:
@@ -207,7 +205,7 @@ void Memory::write(Address address, uint8_t data) {
 			gpu->get_lyc()->set(data);
 			return;
 		case 0x6:
-			gpu->get_dma()->set(data);
+			dma_transfer(data);
 			return;
 		case 0x7:
 			gpu->get_bgp()->set(data);
@@ -325,5 +323,19 @@ void Memory::write(Address address, uint8_t data) {
 void Memory::set_cpu(cpu::CPUInterface *p_cpu) { cpu = p_cpu; }
 
 void Memory::set_gpu(gpu::GPUInterface *p_gpu) { gpu = p_gpu; }
+
+void Memory::dma_transfer(uint8_t offset) {
+	// The DMA routine transfers the 160 byte block at the given address to the
+	// corresponding block in high RAM (+ 0xFE00). We copy each byte in the
+	// block to the destination.
+	Address dma_start = offset * 0x100;
+
+	for (Address i = 0x0; i <= 0x9F; i++) {
+		Address source = dma_start + i;
+		Address destination = 0xFE00 + i;
+
+		memory[destination] = memory[source];
+	}
+}
 
 } // namespace memory

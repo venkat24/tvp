@@ -95,10 +95,10 @@ void Video::paint(VideoBuffer &v_buffer) {
 			color = sf::Color::White;
 			break;
 		case Pixel::ONE:
-			color = sf::Color::Red;
+			color = sf::Color(85, 85, 85);
 			break;
 		case Pixel::TWO:
-			color = sf::Color::Black;
+			color = sf::Color(170, 170, 170);
 			break;
 		case Pixel::THREE:
 			color = sf::Color::Black;

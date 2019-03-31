@@ -66,6 +66,11 @@ class Memory : public MemoryInterface {
 	 */
 	gpu::GPUInterface *gpu;
 
+	/**
+	 * Initiates a DMA transfer, starting from the given address offset
+	 */
+	void dma_transfer(uint8_t offset);
+
   public:
 	/**
 	 * Default Constructor
