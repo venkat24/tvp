@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11.1)
+cmake_minimum_required(VERSION 3.5.1)
 project(tvp)
 
 # Add the CMake folder to the module search path
@@ -40,6 +40,7 @@ set(MODULES
   cartridge
   video
   controller
+  timer
 )
 
 foreach(MODULE ${MODULES})

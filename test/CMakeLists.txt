@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11.1)
+cmake_minimum_required(VERSION 3.5.1)
 project(test)
 
 include(GoogleTest)
@@ -16,7 +16,7 @@ set(SOURCE_FILES
 
 	# CPU
 	cpu/register_test.cpp
-	#cpu/arithmetic_opcode_test.cpp
+	# cpu/arithmetic_opcode_test.cpp
 )
 
 add_executable(test ${SOURCE_FILES})

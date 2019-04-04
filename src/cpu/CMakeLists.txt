@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11.1)
+cmake_minimum_required(VERSION 3.5.1)
 project(cpu)
 
 set(SOURCE_FILES
@@ -10,7 +10,10 @@ set(SOURCE_FILES
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/util/include
     ${CMAKE_SOURCE_DIR}/src/gpu/include
+    ${CMAKE_SOURCE_DIR}/src/timer/include
     ${CMAKE_SOURCE_DIR}/src/memory/include
+    ${CMAKE_SOURCE_DIR}/src/cartridge/include
+    ${CMAKE_SOURCE_DIR}/src/controller/include
 )
 
 add_library(cpu STATIC ${SOURCE_FILES})
