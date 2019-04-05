@@ -11,7 +11,7 @@ This is an incomplete, experimental Nintendo GameBoy emulator written in C++. It
 
 Build Instructions :
 
-1. Install CMake (> 3.11.1)
+1. Install CMake (> 3.5.1)
 
 2. Install SFML (libsfml-dev) through your distro's package manager, or download / build the library yourself. [https://www.sfml-dev.org/](https://www.sfml-dev.org/)
 
