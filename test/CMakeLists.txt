@@ -16,7 +16,7 @@ set(SOURCE_FILES
 
 	# CPU
 	cpu/register_test.cpp
-	# cpu/arithmetic_opcode_test.cpp
+	#cpu/arithmetic_opcode_test.cpp
 )
 
 add_executable(test ${SOURCE_FILES})

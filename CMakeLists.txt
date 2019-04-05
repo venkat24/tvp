@@ -40,7 +40,6 @@ set(MODULES
   cartridge
   video
   controller
-  timer
 )
 
 foreach(MODULE ${MODULES})
