@@ -17,6 +17,6 @@ Build Instructions :
 
 3. `mkdir build && cd build`
 
-4. `cmake .. -CMAKE_INSTALL_PREFIX=<path_to_someplace_to_install> -DCMAKE_BUILD_TYPE=Release`
+4. `cmake .. -DCMAKE_INSTALL_PREFIX=<path_to_someplace_to_install> -DCMAKE_BUILD_TYPE=Release`
 
 5. `make install`
