@@ -8,7 +8,6 @@
 #include "util/log.h"
 #include "video/video.h"
 
-#include <bits/stdc++.h>
 #include <ctime>
 #include <fstream>
 #include <iomanip>

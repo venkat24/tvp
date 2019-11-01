@@ -8,6 +8,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <array>
 
 #pragma once
 
@@ -47,7 +48,7 @@ class Controller : public ControllerInterface {
 	 * @param button
 	 * @return uint8_t
 	 */
-	uint8_t button_index(Button button);
+	int button_index(Button button);
 
 	/**
 	 * @brief Set the button state for some button
