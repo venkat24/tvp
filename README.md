@@ -21,18 +21,24 @@ If you're here for a [Delta Winter of Code](https://dwoc.io) project, check out 
 ### Linux
 
 1. Install CMake (> 3.5.1)
-        On Ubuntu, run `apt install cmake`
-        Otherwise, you can download the binaries from [cmake.org/download](https://cmake.org/download/)
+
+    On Ubuntu, run `apt install cmake`
+
+    Otherwise, you can download the binaries from [cmake.org/download](https://cmake.org/download/)
 
 2. Install SFML
-        On Ubuntu, run `apt install libsfml-dev`
-        Otherwise, download / build the library from [sfml-dev.org](https://www.sfml-dev.org/)
+    
+    On Ubuntu, run `apt install libsfml-dev`
+    
+    Otherwise, download / build the library from [sfml-dev.org](https://www.sfml-dev.org/)
 
 3. Clone the project and run
-`mkdir build && cd build`
+
+    `mkdir build && cd build`
 
 4. `cmake .. -DCMAKE_INSTALL_PREFIX=<path_to_someplace_to_install> -DCMAKE_BUILD_TYPE=Release`
-        You can skip the `CMAKE_BUILD_TYPE` flag (or set it to `Debug`) if you want to run unit tests.
+    
+    You can skip the `CMAKE_BUILD_TYPE` flag (or set it to `Debug`) if you want to run unit tests.
 
 5. `make install`
 
