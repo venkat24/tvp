@@ -23,21 +23,7 @@ using namespace memory;
 using namespace cartridge;
 using namespace controller;
 
-int main(int argc, char *argv[]) {
-	ios_base::sync_with_stdio(false);
-
-	if (argc < 2) {
-		cerr << "Please provide the name of a ROM file." << endl;
-		exit(1);
-	}
-	auto rom_path = string(argv[1]);
-
-	auto cartridge = std::make_unique<Cartridge>(rom_path);
-
-	auto controller = std::make_unique<Controller>();
-
-	auto memory = make_unique<Memory>(std::move(cartridge), controller.get());
-
+unique_ptr<CPU> create_cpu(MemoryInterface *memory_ptr) {
 	auto a = make_unique<Register>();
 	auto b = make_unique<Register>();
 	auto c = make_unique<Register>();
@@ -55,11 +41,14 @@ int main(int argc, char *argv[]) {
 	auto iflag = make_unique<Register>();
 	auto ienable = make_unique<Register>();
 
-	auto cpu = make_unique<CPU>(move(a), move(b), move(c), move(d), move(e),
-	                            move(f), move(h), move(l), move(af), move(bc),
-	                            move(de), move(hl), move(pc), move(sp),
-	                            move(iflag), move(ienable), memory.get());
+	return make_unique<CPU>(move(a), move(b), move(c), move(d), move(e),
+	                        move(f), move(h), move(l), move(af), move(bc),
+	                        move(de), move(hl), move(pc), move(sp), move(iflag),
+	                        move(ienable), memory_ptr);
+}
 
+unique_ptr<GPU> create_gpu(MemoryInterface *memory_ptr, CPUInterface *cpu_ptr,
+                           VideoInterface *video_ptr) {
 	auto lcdc = make_unique<cpu::Register>();
 	auto stat = make_unique<cpu::Register>();
 	auto scy = make_unique<cpu::Register>();
@@ -73,18 +62,33 @@ int main(int argc, char *argv[]) {
 	auto obp1 = make_unique<cpu::Register>();
 	auto dma = make_unique<cpu::Register>();
 
-	auto video = make_unique<Video>(controller.get());
+	return make_unique<GPU>(move(lcdc), move(stat), move(scy), move(scx),
+	                        move(ly), move(lyc), move(wy), move(wx), move(bgp),
+	                        move(obp0), move(obp1), move(dma), memory_ptr,
+	                        cpu_ptr, video_ptr);
+}
 
-	auto gpu = make_unique<GPU>(move(lcdc), move(stat), move(scy), move(scx),
-	                            move(ly), move(lyc), move(wy), move(wx),
-	                            move(bgp), move(obp0), move(obp1), move(dma),
-	                            memory.get(), cpu.get(), video.get());
+int main(int argc, char *argv[]) {
+	ios_base::sync_with_stdio(false);
+
+	if (argc < 2) {
+		cerr << "Please provide the name of a ROM file." << endl;
+		exit(1);
+	}
+	auto rom_path = string(argv[1]);
+
+	auto cartridge = std::make_unique<Cartridge>(rom_path);
+	auto controller = std::make_unique<Controller>();
+	auto video = make_unique<Video>(controller.get());
+	auto memory = make_unique<Memory>(std::move(cartridge), controller.get());
+	auto cpu = create_cpu(memory.get());
+	auto gpu = create_gpu(memory.get(), cpu.get(), video.get());
 
 	// Set instances of CPU and GPU in memory
 	memory->set_cpu(cpu.get());
 	memory->set_gpu(gpu.get());
 
-	long long int cycle_count = 0;
+	unsigned long long cycle_count = 0;
 	for (auto i = 0;; i++) {
 		auto curr_count = cpu->tick();
 		cycle_count += curr_count;
