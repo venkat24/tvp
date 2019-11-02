@@ -4,10 +4,10 @@ project(video)
 # Build static libs in Windows
 if (WIN32)
 	set(SFML_STATIC_LIBRARIES TRUE)
-endif()
 
-# This lets the user override SFML_ROOT
-cmake_policy(SET CMP0074 NEW)
+	# This lets the user override SFML_ROOT
+	cmake_policy(SET CMP0074 NEW)
+endif()
 
 find_package(SFML 2 REQUIRED graphics window system)
 
