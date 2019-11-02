@@ -1,8 +1,6 @@
 # tvp
 ## A GameBoy Emuator
 
----
-
 [![CircleCI](https://circleci.com/gh/venkat24/tvp/tree/master.svg?style=shield&circle-token=0915c0ed7c3b36f5aed8ddcd1b659547c662088c)](https://circleci.com/gh/venkat24/tvp/tree/master)
 
 <h1 align="center">
@@ -11,6 +9,12 @@
 </h1>
 
 This is an incomplete, experimental Nintendo GameBoy emulator written in C++. It runs Tetris!
+
+## Hello, DWoC!
+
+<img src="https://imgur.com/TLx5rsv.png" width="325px" />
+
+If you're here for a [Delta Winter of Code](https://dwoc.io) project, check out the [Contributor's Guide](https://github.com/venkat24/tvp/wiki/DWoC---Contributor's-Guide) in the Wiki.
 
 ## Build and Install Instructions :
 
