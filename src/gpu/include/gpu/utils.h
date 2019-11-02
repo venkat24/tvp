@@ -30,7 +30,7 @@ enum class Pixel : uint8_t { ZERO = 0, ONE = 1, TWO = 2, THREE = 3 };
  */
 const uint8_t SCREEN_WIDTH = 160;
 const uint8_t SCREEN_HEIGHT = 144;
-constexpr uint PIXEL_COUNT = SCREEN_WIDTH * SCREEN_HEIGHT;
+constexpr unsigned int PIXEL_COUNT = SCREEN_WIDTH * SCREEN_HEIGHT;
 
 /**
  * Constants representing the complete background map dimensions in pixels

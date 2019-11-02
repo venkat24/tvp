@@ -8,9 +8,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 17)
 
 # Set some flags for debug and release modes
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+if (NOT WIN32)
+	set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+	set(CMAKE_CXX_FLAGS_DEBUG "-g")
+	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+else()
+	message(WARNING "Compiler flags may be set incorrectly on Windows")
+endif()
 
 # Copy the compile_commands.json into the root dir
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON )
@@ -36,15 +40,21 @@ set(MODULES
   util
   memory
   cpu
-  gpu
   cartridge
   video
   controller
+  gpu
 )
 
 foreach(MODULE ${MODULES})
   add_subdirectory(src/${MODULE})
 endforeach(MODULE)
+
+# I don't know why I need to do this here on Windows, but it woks if this is here
+# TODO: Fix this. SFML variables shouldn't be needed outside the video module
+if (WIN32)
+	include_directories(${SFML_INCLUDE_DIR})
+endif()
 
 # Add the main executable
 add_executable(tvp src/main/main.cpp)
@@ -55,9 +65,14 @@ target_link_libraries(tvp ${MODULES})
 # If this is not the release build, compile unit tests
 # TODO: This is should be triggered by some other flag, not CMAKE_BUILD_TYPE
 if((NOT CMAKE_BUILD_TYPE STREQUAL "Release"))
-	include(cmake/clang-format.cmake)
-	add_subdirectory(ext/googletest)
-	add_subdirectory(test)
+	if (NOT WIN32)
+		include(cmake/clang-format.cmake)
+		add_subdirectory(ext/googletest)
+		add_subdirectory(test)
+	else()
+		message(WARNING "No Clang-Format support on Windows")
+		message(WARNING "No Unit Testing support on Windows")
+	endif()
 endif()
 
 # Set install destinations

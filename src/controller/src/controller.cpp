@@ -6,12 +6,13 @@
 #include "controller/controller.h"
 
 #include <bitset>
+#include <array>
 
 namespace controller {
 
 Controller::Controller() : buttons(std::array<bool, 8>{}) {}
 
-uint8_t Controller::button_index(Button button) {
+int Controller::button_index(Button button) {
 	// Return the corresponding index
 	switch (button) {
 	case Button::RIGHT:
@@ -59,8 +60,8 @@ uint8_t Controller::get_value() {
 
 	// Assign requested inputs into the result byte
 	for (int i = 0; i < 4; ++i)
-		byte[i] = !buttons[base_index + i];
-
+		byte[i] = !buttons[(int)base_index + i];
+	
 	return static_cast<uint8_t>(byte.to_ulong());
 }
 

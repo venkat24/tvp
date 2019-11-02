@@ -191,7 +191,7 @@ void CPU::op_dec(Address addr) {
 void CPU::op_add_hl(uint16_t val) {
 	// Add the value to HL
 	auto hl_val = hl->get();
-	uint result = hl_val + val;
+	int result = hl_val + val;
 	hl->set(static_cast<uint16_t>(result));
 
 	// Set the flags
