@@ -3,7 +3,7 @@
 
 ---
 
-[![CircleCI](https://circleci.com/gh/venkat24/tvp/tree/master.svg?style=svg&circle-token=0915c0ed7c3b36f5aed8ddcd1b659547c662088c)](https://circleci.com/gh/venkat24/tvp/tree/master)
+[![CircleCI](https://circleci.com/gh/venkat24/tvp/tree/master.svg?style=shield&circle-token=0915c0ed7c3b36f5aed8ddcd1b659547c662088c)](https://circleci.com/gh/venkat24/tvp/tree/master)
 
 <h1 align="center">
     <img src="https://github.com/venkat24/tvp/blob/master/images/start.png" width="300"/>
