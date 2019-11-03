@@ -9,6 +9,39 @@
 
 using namespace std;
 
+#if defined(_WIN32) || defined(WIN32)
+
+void Log::log(string message, LogLevel log_level) {
+	switch (log_level) {
+	case LogLevel::VERBOSE:
+		cout << " [VERB] ";
+		break;
+
+	case LogLevel::INFO:
+		cout << " [INFO] ";
+		break;
+
+	case LogLevel::WARN:
+		cout << " [WARN] ";
+		break;
+
+	case LogLevel::ERROR:
+		cout << " [ERR!] ";
+		break;
+
+	case LogLevel::FATAL:
+		cout << " [DEAD] ";
+		break;
+	}
+
+	cout << message << endl;
+
+	if (log_level == LogLevel::FATAL)
+		exit(1);
+}
+
+#else
+
 // Define ANSI color codes
 namespace color {
 const auto GRAY = "\033[1;37m";
@@ -48,6 +81,8 @@ void Log::log(string message, LogLevel log_level) {
 	if (log_level == LogLevel::FATAL)
 		exit(1);
 }
+
+#endif
 
 void Log::verbose(string message) { log(message, LogLevel::VERBOSE); }
 
