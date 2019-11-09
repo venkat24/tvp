@@ -52,13 +52,13 @@ If you're here for a [Delta Winter of Code](https://dwoc.io) project, check out 
 
 You can build and run tvp in Visual Studio. Open the repo as a folder from Visual Studio 2017 or above, and it should automatically configure CMake.
 
-1. Install [CMake](https://cmake.org/download/)
-
-2. Download the [SFML SDK](https://www.sfml-dev.org/download/sfml/2.5.1/),
+1. Download the [SFML SDK](https://www.sfml-dev.org/download/sfml/2.5.1/),
     If Visual Studio cannot find SFML, manually set the `SFML_ROOT` CMake variable to wherever you downloaded the SDK. You can pass this as a command line argument in the run settings with `-DSFML_ROOT=<path>`. 
 
-3. Click `Build All` from the CMake menu.
+2. Click `Build All` from the CMake menu.
 
-4. Select `tvp.exe` as your launch item. You can edit the launch item properties to set command line arguments.
+3. Select `tvp.exe` as your launch item. You can edit the launch item properties to set command line arguments.
 
-5. Enjoy your game! Use the WASD keys as the GameBoy DPad. Use K, L, Backspace, and Enter keys as A, B, SELECT, and START buttons.
+4. Enjoy your game! Use the WASD keys as the GameBoy DPad. Use K, L, Backspace, and Enter keys as A, B, SELECT, and START buttons.
+
+If you don't want to use Visual Studio, you can still download the SFML SDK and set `-DSFML_ROOT="your/sdk/download/location"` and run CMake like mentioned above. Install [CMake](https://cmake.org/download/) from here. 
