@@ -71,11 +71,18 @@ unique_ptr<GPU> create_gpu(MemoryInterface *memory_ptr, CPUInterface *cpu_ptr,
 int main(int argc, char *argv[]) {
 	ios_base::sync_with_stdio(false);
 
+	auto rom_path = string("");
 	if (argc < 2) {
-		cerr << "Please provide the name of a ROM file." << endl;
-		exit(1);
+		cerr << "Please provide the name of a ROM file or press q/Q to exit"
+		     << endl;
+		getline(cin, rom_path);
+		if (rom_path == "q" || rom_path == "Q") {
+			cout << "Exiting TVP" << endl;
+			exit(0);
+		}
+	} else {
+		rom_path = string(argv[1]);
 	}
-	auto rom_path = string(argv[1]);
 
 	auto cartridge = std::make_unique<Cartridge>(rom_path);
 	auto controller = std::make_unique<Controller>();
