@@ -73,23 +73,16 @@ int main(int argc, char *argv[]) {
 
 	auto rom_path = string("");
 	if (argc < 2) {
-		cerr << "Please provide the name of a ROM file or press q to exit" << endl;
+		cerr << "Please provide the name of a ROM file or press q/Q to exit"
+		     << endl;
 		getline(cin, rom_path);
-		if(rom_path == "q"){
+		if (rom_path == "q" || rom_path == "Q") {
 			cout << "Exiting TVP" << endl;
-			exit(1);
+			exit(0);
 		}
-	}
-	else {
+	} else {
 		rom_path = string(argv[1]);
 	}
-		
-	auto rom_file_check = std::ifstream(rom_path, std::ifstream::in | std::ios::binary);
-	if(rom_file_check.fail()){
-		cerr << "File Does not Exist! Exiting TVP." << endl;
-		exit(1);
-	}
-	rom_file_check.close();
 
 	auto cartridge = std::make_unique<Cartridge>(rom_path);
 	auto controller = std::make_unique<Controller>();
