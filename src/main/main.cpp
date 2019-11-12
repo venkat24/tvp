@@ -85,8 +85,32 @@ int main(int argc, char *argv[]) {
 	}
 
 	auto cartridge = std::make_unique<Cartridge>(rom_path);
+
+	// Reading Meta Data of ROM file and checking if ROM is valid or Not
+	unsigned short int logo_hex_dump[48] = {
+	    0xCE, 0xED, 0x66, 0x66, 0xCC, 0x0D, 0x00, 0x0B, 0x03, 0x73, 0x00, 0x83,
+	    0x00, 0x0C, 0x00, 0x0D, 0x00, 0x08, 0x11, 0x1F, 0x88, 0x89, 0x00, 0x0E,
+	    0xDC, 0xCC, 0x6E, 0xE6, 0xDD, 0xDD, 0xD9, 0x99, 0xBB, 0xBB, 0x67, 0x63,
+	    0x6E, 0x0E, 0xEC, 0xCC, 0xDD, 0xDC, 0x99, 0x9F, 0xBB, 0xB9, 0x33, 0x3E};
+	unsigned int logo_address = 0x0104;
+	for (int i = 0; i < 48; i++) {
+		if (cartridge->read(logo_address + i) != logo_hex_dump[i]) {
+			cout << "Invalid GB ROM. Exiting TVP" << endl;
+			exit(1);
+		}
+	}
+	cout << "GameBoy ROM Valid!" << endl;
+
+	// Title of the Game
+	string title = string("");
+	unsigned int address = 0x0134;
+	for (int i = 0; i < 16; i++) {
+		title = title + char(cartridge->read(address + i));
+	}
+	cout << "Title: " << title << endl;
+
 	auto controller = std::make_unique<Controller>();
-	auto video = make_unique<Video>(controller.get());
+	auto video = make_unique<Video>(controller.get(), title);
 	auto memory = make_unique<Memory>(std::move(cartridge), controller.get());
 	auto cpu = create_cpu(memory.get());
 	auto gpu = create_gpu(memory.get(), cpu.get(), video.get());

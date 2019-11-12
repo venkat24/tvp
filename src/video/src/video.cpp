@@ -21,7 +21,7 @@ const auto MULT = 3;
 
 namespace video {
 
-Video::Video(ControllerInterface *controller)
+Video::Video(ControllerInterface *controller, std::string title)
     : window(std::make_unique<sf::RenderWindow>(
           sf::VideoMode(SCREEN_WIDTH * MULT, SCREEN_HEIGHT * MULT),
           "Welcome to TVP")),
@@ -35,6 +35,9 @@ Video::Video(ControllerInterface *controller)
 
 	// Set the image size
 	window_image->create(SCREEN_WIDTH * MULT, SCREEN_HEIGHT * MULT);
+
+	// Set the Title of the Screen to the Game title
+	window->setTitle(title);
 }
 
 std::optional<Button> get_button_from_code(int64_t code) {
