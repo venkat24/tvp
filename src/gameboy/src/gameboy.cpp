@@ -17,14 +17,9 @@ Gameboy::Gameboy(std::string rom_path, bool debug_on) {
 	Log::info("Gameboy start successful!");
 }
 
-void Gameboy::start() {
-	// Tick..
-	unsigned long long cycle_count = 0;
-	for (auto i = 0;; i++) {
-		auto curr_count = cpu->tick();
-		cycle_count += curr_count;
-		gpu->tick(curr_count);
-	}
+void Gameboy::tick() {
+	auto cpu_cyles = cpu->tick();
+	gpu->tick(cpu_cyles);
 }
 
 unique_ptr<CPU> Gameboy::create_cpu(Memory *memory_ptr) {

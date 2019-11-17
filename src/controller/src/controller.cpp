@@ -5,8 +5,8 @@
 
 #include "controller/controller.h"
 
-#include <bitset>
 #include <array>
+#include <bitset>
 
 namespace controller {
 
@@ -61,7 +61,7 @@ uint8_t Controller::get_value() {
 	// Assign requested inputs into the result byte
 	for (int i = 0; i < 4; ++i)
 		byte[i] = !buttons[(int)base_index + i];
-	
+
 	return static_cast<uint8_t>(byte.to_ulong());
 }
 

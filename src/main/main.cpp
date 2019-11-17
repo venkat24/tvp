@@ -23,7 +23,10 @@ int main(int argc, char *argv[]) {
 
 	// Create and start Gameboy object
 	auto gameboy = make_unique<gameboy::Gameboy>(rom_path);
-	gameboy->start();
+
+	for (auto i = 0; /*Infinite Loop*/; i++) {
+		gameboy->tick();
+	}
 
 	return 0;
 }
