@@ -11,6 +11,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/util/include
     ${CMAKE_SOURCE_DIR}/src/gpu/include
     ${CMAKE_SOURCE_DIR}/src/memory/include
+    ${CMAKE_SOURCE_DIR}/src/cartridge/include
+    ${CMAKE_SOURCE_DIR}/src/controller/include
 )
 
 add_library(cpu STATIC ${SOURCE_FILES})
