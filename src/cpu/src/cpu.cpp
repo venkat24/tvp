@@ -9,6 +9,8 @@
 #include "util/log.h"
 
 #include <functional>
+#include <iostream>
+#include <memory/memory.h>
 
 namespace cpu {
 

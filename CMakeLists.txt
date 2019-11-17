@@ -44,6 +44,7 @@ set(MODULES
   video
   controller
   gpu
+  gameboy
 )
 
 foreach(MODULE ${MODULES})
