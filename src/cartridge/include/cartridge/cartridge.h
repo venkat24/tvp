@@ -7,9 +7,9 @@
 #include "memory/utils.h"
 
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 #pragma once
 
@@ -30,9 +30,11 @@ class Cartridge {
 	Cartridge(std::string filepath);
 
 	/**
-	 * Create a unique_ptr to MetaCartridge Object which will have the MetaData info of the Cartridge
+	 * Create a unique_ptr to MetaCartridge Object which will contain the
+	 * MetaData info of the Cartridge
 	 */
-	std::unique_ptr<MetaCartridge> meta_data = std::make_unique<MetaCartridge>();
+	std::unique_ptr<MetaCartridge> meta_data =
+	    std::make_unique<MetaCartridge>();
 
 	/**
 	 * Read a value from the given address in the cartridge

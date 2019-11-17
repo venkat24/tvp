@@ -50,7 +50,7 @@ class Video : public VideoInterface {
 	/**
 	 * Constructor
 	 */
-	Video(controller::ControllerInterface *controller);
+	Video(controller::ControllerInterface *controller, std::string rom_title);
 
 	/**
 	 * Print the contents of the buffer to the terminal
