@@ -3,11 +3,13 @@
  * Declares the Cartridge class
  */
 
+#include "cartridge/meta_cartridge.h"
 #include "memory/utils.h"
 
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <memory>
 
 #pragma once
 
@@ -20,8 +22,17 @@ class Cartridge {
 	 */
 	std::vector<uint8_t> data;
 
+	/**
+	 * The MetaData Stored in this cartridge
+	 */
+
   public:
 	Cartridge(std::string filepath);
+
+	/**
+	 * Create a unique_ptr to MetaCartridge Object which will have the MetaData info of the Cartridge
+	 */
+	std::unique_ptr<MetaCartridge> meta_data = std::make_unique<MetaCartridge>();
 
 	/**
 	 * Read a value from the given address in the cartridge

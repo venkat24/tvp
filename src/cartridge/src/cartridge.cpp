@@ -30,6 +30,7 @@ Cartridge::Cartridge(std::string rom_path) {
 		byte_input = std::vector<char>(rom_file_size, '\0');
 		rom_file.read(&byte_input[0], rom_file_size);
 		data = std::vector<uint8_t>(byte_input.begin(), byte_input.end());
+		meta_data->populate_meta(data);
 
 	} catch (std::exception &e) {
 		std::cerr << "Error Opening the ROM file! Exiting TVP." << std::endl;

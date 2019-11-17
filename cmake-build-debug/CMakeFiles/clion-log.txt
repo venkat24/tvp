@@ -1,0 +1,15 @@
+/opt/clion-2019.2.5/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/anish0x2a/repositories/tvp
+-- Found SFML 2.4.2 in /usr/include
+-- Found clang-format
+-- clang-format executable location: /usr/bin/clang-format;/usr/bin/clang-format-10
+-- clang-format version: version 10.0.0-+20191108120328+79b3cce7f14-1~exp1~20191108112637.1580 
+CMake Error at CMakeLists.txt:70 (add_subdirectory):
+  The source directory
+
+    /home/anish0x2a/repositories/tvp/ext/googletest
+
+  does not contain a CMakeLists.txt file.
+
+
+-- Configuring incomplete, errors occurred!
+See also "/home/anish0x2a/repositories/tvp/cmake-build-debug/CMakeFiles/CMakeOutput.log".
