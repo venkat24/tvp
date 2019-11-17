@@ -6,9 +6,9 @@
 #include "controller/controller_interface.h"
 #include "controller/utils.h"
 
+#include <array>
 #include <cstdint>
 #include <memory>
-#include <array>
 
 #pragma once
 
