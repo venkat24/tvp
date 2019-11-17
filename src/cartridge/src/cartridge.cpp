@@ -4,6 +4,8 @@
  */
 
 #include "cartridge/cartridge.h"
+#include "util/helpers.h"
+#include "util/log.h"
 
 #include <fstream>
 #include <vector>
@@ -36,10 +38,10 @@ Cartridge::Cartridge(std::string rom_path) {
 		 */
 		meta_data->check_logo_validity(data);
 		if (meta_data->is_logo_valid) {
-			std::cout << "Nintendo Logo Verification Successful" << std::endl;
+			Log::verbose("ROM Verification Done!");
 			meta_data->populate_meta(data);
 		} else {
-			std::cout << "Nintendo Logo Verification Unsuccessful" << std::endl;
+		    Log::error("ROM Verification Failed!");
 		}
 
 	} catch (std::exception &e) {
