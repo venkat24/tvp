@@ -11,23 +11,24 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include <iostream>
 #include <optional>
 
 using namespace gpu;
 using namespace controller;
+using namespace cartridge;
 
 const auto MULT = 3;
 
 namespace video {
 
-Video::Video(ControllerInterface *controller, std::string rom_title)
+Video::Video(ControllerInterface *controller, Cartridge *cartridge)
     : window(std::make_unique<sf::RenderWindow>(
           sf::VideoMode(SCREEN_WIDTH * MULT, SCREEN_HEIGHT * MULT),
           "Welcome to TVP")),
       window_texture(std::make_unique<sf::Texture>()),
       window_image(std::make_unique<sf::Image>()),
-      window_sprite(std::make_unique<sf::Sprite>()), controller(controller) {
+      window_sprite(std::make_unique<sf::Sprite>()), controller(controller),
+      cartridge(cartridge) {
 
 	// Set some window properties
 	window->setVerticalSyncEnabled(true);
@@ -36,8 +37,9 @@ Video::Video(ControllerInterface *controller, std::string rom_title)
 	// Set the image size
 	window_image->create(SCREEN_WIDTH * MULT, SCREEN_HEIGHT * MULT);
 
-	// Set the title of the Window
-	window->setTitle(rom_title);
+	// Set the title of the Window if rom_title is not empty
+	if (!cartridge->meta_data->title.empty())
+		window->setTitle(cartridge->meta_data->title);
 }
 
 std::optional<Button> get_button_from_code(int64_t code) {

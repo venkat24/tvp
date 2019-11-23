@@ -4,20 +4,8 @@ namespace gameboy {
 
 Gameboy::Gameboy(std::string rom_path, bool debug_on) {
 	cartridge = std::make_unique<Cartridge>(rom_path);
-
-	/**
-	 *  Displaying the Meta Information of the Cartridge if it was a successful
-	 * load, else the TVP freezes
-	 */
-	if (cartridge->meta_data->is_logo_valid) {
-		cartridge->meta_data->display_meta();
-        Log::info("GameBoy Startup Successful!");
-	} else {
-		Log::error("GameBoy Startup Failed!");
-	}
-
 	controller = std::make_unique<Controller>();
-	video = make_unique<Video>(controller.get(), cartridge->meta_data->title);
+	video = make_unique<Video>(controller.get(), cartridge.get());
 	memory = make_unique<Memory>(std::move(cartridge), controller.get());
 	cpu = create_cpu(memory.get());
 	gpu = create_gpu(memory.get(), cpu.get(), video.get());
@@ -26,7 +14,7 @@ Gameboy::Gameboy(std::string rom_path, bool debug_on) {
 	memory->set_cpu(cpu.get());
 	memory->set_gpu(gpu.get());
 
-
+	Log::info("GameBoy Start Successful!");
 }
 
 void Gameboy::tick() {

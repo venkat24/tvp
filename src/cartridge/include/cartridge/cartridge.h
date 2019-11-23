@@ -30,11 +30,10 @@ class Cartridge {
 	Cartridge(std::string filepath);
 
 	/**
-	 * Create a unique_ptr to MetaCartridge Object which will contain the
+	 * Create a unique_ptr to CartridgeMetadata Object which will contain the
 	 * MetaData info of the Cartridge
 	 */
-	std::unique_ptr<MetaCartridge> meta_data =
-	    std::make_unique<MetaCartridge>();
+	std::unique_ptr<CartridgeMetadata> meta_data;
 
 	/**
 	 * Read a value from the given address in the cartridge
@@ -51,6 +50,12 @@ class Cartridge {
 	 * @param data Byte to write
 	 */
 	void write(Address address, uint8_t data);
+
+	/**
+	 * Displays the Meta Data of the Cartridge
+	 *
+	 */
+	void display_meta();
 };
 
 } // namespace cartridge

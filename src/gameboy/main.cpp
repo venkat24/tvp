@@ -85,17 +85,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	auto cartridge = std::make_unique<Cartridge>(rom_path);
-
-	/**
-	 *  Displaying the Meta Information of the Cartridge if it was a successful
-	 * load, else the TVP freezes
-	 */
-	if (cartridge->meta_data->is_logo_valid) {
-		cartridge->meta_data->display_meta();
-	} else {
-		cout << "Failed to fetch ROM Details" << endl;
-	}
-
 	auto controller = std::make_unique<Controller>();
 	auto video =
 	    make_unique<Video>(controller.get(), cartridge->meta_data->title);

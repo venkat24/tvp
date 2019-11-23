@@ -1,6 +1,6 @@
 /**
  * @file meta_cartridge.h
- * Declares the MetaCartridge class
+ * Declares the CartridgeMetadata class
  */
 
 #include "cartridge/utils.h"
@@ -13,12 +13,12 @@
 
 namespace cartridge {
 
-class MetaCartridge {
+class CartridgeMetadata {
   public:
 	/**
 	 * The title of the Cartridge. Address from: 0x0134 to: 0x0143
 	 */
-	std::string title = "Welcome to TVP!";
+	std::string title;
 
 	/**
 	 * CGB Flag Address: 0x0143
@@ -55,7 +55,7 @@ class MetaCartridge {
 	 */
 	uint8_t dest_code;
 
-	MetaCartridge();
+	CartridgeMetadata(std::vector<uint8_t> &data);
 
 	/**
 	 * A flag for checking whether the logo is valid or not
@@ -63,24 +63,11 @@ class MetaCartridge {
 	bool is_logo_valid = true;
 
 	/**
-	 * Populates the Meta Data of the Cartridge
-	 *
-	 * @param data The Data of the Cartridge
-	 */
-	void populate_meta(std::vector<uint8_t> &data);
-
-	/**
 	 * Checks if the Logo in the Boot ROM matches the Official Nintendo Logo
 	 *
 	 * @param data The Data of the Cartridge
 	 */
 	void check_logo_validity(std::vector<uint8_t> &data);
-
-	/**
-	 * Displays the Meta Data of the Cartridge
-	 *
-	 */
-	void display_meta();
 };
 
 } // namespace cartridge

@@ -22,6 +22,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gpu/include
     ${CMAKE_SOURCE_DIR}/src/memory/include
     ${CMAKE_SOURCE_DIR}/src/controller/include
+    ${CMAKE_SOURCE_DIR}/src/cartridge/include
 )
 
 add_library(video STATIC ${SOURCE_FILES})
