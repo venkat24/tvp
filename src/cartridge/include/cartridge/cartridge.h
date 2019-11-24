@@ -22,10 +22,6 @@ class Cartridge {
 	 */
 	std::vector<uint8_t> data;
 
-	/**
-	 * The MetaData Stored in this cartridge
-	 */
-
   public:
 	Cartridge(std::string filepath);
 
