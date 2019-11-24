@@ -299,4 +299,4 @@ const std::map<uint8_t, std::string> dest_code_parse{{0x00, "Japanese"},
 /**
  * The starting address of the BOOT ROM logo
  */
-const Address start_address = 0x0104;
+const Address nintendo_logo_start_address = 0x0104;

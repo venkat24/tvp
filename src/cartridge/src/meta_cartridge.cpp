@@ -24,7 +24,7 @@ CartridgeMetadata::CartridgeMetadata(std::vector<uint8_t> &data) {
 
 void CartridgeMetadata::check_logo_validity(std::vector<uint8_t> &data) {
 	for (auto i = 0; i < nintendo_logo.size(); i++) {
-		if (data[start_address + i] != nintendo_logo[i]) {
+		if (data[nintendo_logo_start_address + i] != nintendo_logo[i]) {
 			is_logo_valid = false;
 			break;
 		}
