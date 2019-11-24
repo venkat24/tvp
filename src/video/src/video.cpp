@@ -21,14 +21,15 @@ const auto MULT = 3;
 
 namespace video {
 
-Video::Video(ControllerInterface *controller, Cartridge *cartridge)
+Video::Video(ControllerInterface *controller,
+             CartridgeMetadata *cartridge_metadata)
     : window(std::make_unique<sf::RenderWindow>(
           sf::VideoMode(SCREEN_WIDTH * MULT, SCREEN_HEIGHT * MULT),
           "Welcome to TVP")),
       window_texture(std::make_unique<sf::Texture>()),
       window_image(std::make_unique<sf::Image>()),
       window_sprite(std::make_unique<sf::Sprite>()), controller(controller),
-      cartridge(cartridge) {
+      cartridge_metadata(cartridge_metadata) {
 
 	// Set some window properties
 	window->setVerticalSyncEnabled(true);
@@ -38,8 +39,8 @@ Video::Video(ControllerInterface *controller, Cartridge *cartridge)
 	window_image->create(SCREEN_WIDTH * MULT, SCREEN_HEIGHT * MULT);
 
 	// Set the title of the Window if rom_title is not empty
-	if (!cartridge->meta_data->title.empty())
-		window->setTitle(cartridge->meta_data->title);
+	if (!cartridge_metadata->title.empty())
+		window->setTitle(cartridge_metadata->title);
 }
 
 std::optional<Button> get_button_from_code(int64_t code) {

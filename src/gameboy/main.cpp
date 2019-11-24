@@ -86,7 +86,8 @@ int main(int argc, char *argv[]) {
 
 	auto cartridge = std::make_unique<Cartridge>(rom_path);
 	auto controller = std::make_unique<Controller>();
-	auto video = make_unique<Video>(controller.get(), cartridge);
+	auto video =
+	    make_unique<Video>(controller.get(), cartridge->meta_data.get());
 	auto memory = make_unique<Memory>(std::move(cartridge), controller.get());
 	auto cpu = create_cpu(memory.get());
 	auto gpu = create_gpu(memory.get(), cpu.get(), video.get());

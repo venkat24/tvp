@@ -4,7 +4,7 @@
  */
 #pragma once
 
-#include "cartridge/cartridge.h"
+#include "cartridge/meta_cartridge.h"
 #include "controller/controller_interface.h"
 #include "gpu/utils.h"
 #include "video/video_interface.h"
@@ -45,7 +45,7 @@ class Video : public VideoInterface {
 	/**
 	 * Pointer to cartridge instance
 	 */
-	cartridge::Cartridge *cartridge;
+	cartridge::CartridgeMetadata *cartridge_metadata;
 
 	/**
 	 * Processes all external events like key presses
@@ -57,7 +57,7 @@ class Video : public VideoInterface {
 	 * Constructor
 	 */
 	Video(controller::ControllerInterface *controller,
-	      cartridge::Cartridge *cartridge);
+	      cartridge::CartridgeMetadata *cartridge_metadata);
 
 	/**
 	 * Print the contents of the buffer to the terminal
