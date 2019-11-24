@@ -21,6 +21,11 @@ class CartridgeMetadata {
 	std::string title;
 
 	/**
+	 * A flag for checking whether the logo is valid or not
+	 */
+	bool is_logo_valid;
+
+	/**
 	 * CGB Flag Address: 0x0143
 	 */
 	uint8_t cgb_flag;
@@ -56,11 +61,6 @@ class CartridgeMetadata {
 	uint8_t dest_code;
 
 	CartridgeMetadata(std::vector<uint8_t> &data);
-
-	/**
-	 * A flag for checking whether the logo is valid or not
-	 */
-	bool is_logo_valid = true;
 
 	/**
 	 * Checks if the Logo in the Boot ROM matches the Official Nintendo Logo
