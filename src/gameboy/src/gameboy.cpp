@@ -5,7 +5,7 @@ namespace gameboy {
 Gameboy::Gameboy(std::string rom_path, bool debug_on) {
 	cartridge = std::make_unique<Cartridge>(rom_path);
 	controller = std::make_unique<Controller>();
-	video = make_unique<Video>(controller.get());
+	video = make_unique<Video>(controller.get(), cartridge->meta_data.get());
 	memory = make_unique<Memory>(std::move(cartridge), controller.get());
 	cpu = create_cpu(memory.get());
 	gpu = create_gpu(memory.get(), cpu.get(), video.get());
@@ -14,7 +14,7 @@ Gameboy::Gameboy(std::string rom_path, bool debug_on) {
 	memory->set_cpu(cpu.get());
 	memory->set_gpu(gpu.get());
 
-	Log::info("Gameboy start successful!");
+	Log::info("GameBoy Start Successful!");
 }
 
 void Gameboy::tick() {

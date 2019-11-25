@@ -3,6 +3,7 @@ project(cartridge)
 
 set(SOURCE_FILES
 	src/cartridge.cpp
+    src/meta_cartridge.cpp
 )
 
 add_library(cartridge STATIC ${SOURCE_FILES})

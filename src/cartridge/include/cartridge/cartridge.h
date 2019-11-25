@@ -3,9 +3,11 @@
  * Declares the Cartridge class
  */
 
+#include "cartridge/meta_cartridge.h"
 #include "memory/utils.h"
 
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -24,6 +26,12 @@ class Cartridge {
 	Cartridge(std::string filepath);
 
 	/**
+	 * Create a unique_ptr to CartridgeMetadata Object which will contain the
+	 * MetaData info of the Cartridge
+	 */
+	std::unique_ptr<CartridgeMetadata> meta_data;
+
+	/**
 	 * Read a value from the given address in the cartridge
 	 *
 	 * @param address Address to read from
@@ -38,6 +46,12 @@ class Cartridge {
 	 * @param data Byte to write
 	 */
 	void write(Address address, uint8_t data);
+
+	/**
+	 * Displays the Meta Data of the Cartridge
+	 *
+	 */
+	void display_meta();
 };
 
 } // namespace cartridge
