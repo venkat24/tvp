@@ -3,17 +3,19 @@
  * Declares the CPU Class
  */
 
+#pragma once
+
 #include "cpu/cpu_interface.h"
 #include "cpu/register/register_interface.h"
 #include "cpu/utils.h"
+#include "debugger/debugger.h"
+#include "gameboy/gameboy.h"
 #include "memory/memory_interface.h"
 
 #include <cstdint>
 #include <functional>
 #include <memory>
 #include <vector>
-
-#pragma once
 
 namespace cpu {
 
@@ -22,6 +24,11 @@ namespace cpu {
  */
 class CPU : public CPUInterface {
   private:
+	/**
+	 * Ticks
+	 */
+	unsigned long long ticks = 0;
+
 	/**
 	 * Define the set of standard, 8-bit registers
 	 * There are 8 total small registers, with f being the flag register
@@ -112,7 +119,7 @@ class CPU : public CPUInterface {
 	void handle_interrupts();
 
 	/**
-	 * Get another byte of instructions and incremrnt the program counter
+	 * Get another byte of instructions and increment the program counter
 	 */
 	uint8_t get_inst_byte() const;
 
@@ -241,7 +248,7 @@ class CPU : public CPUInterface {
 
   public:
 	/**
-	 * Default constructor
+	 * Constructor
 	 */
 	CPU(std::unique_ptr<IReg> a, std::unique_ptr<IReg> b,
 	    std::unique_ptr<IReg> c, std::unique_ptr<IReg> d,
@@ -268,6 +275,11 @@ class CPU : public CPUInterface {
 	 * @see CPUInterface#tick
 	 */
 	ClockCycles tick() override;
+
+	/**
+	 * Allow debugger to view private members of this class
+	 */
+	friend class debugger::Debugger;
 };
 
 } // namespace cpu

@@ -5,15 +5,9 @@ set(SOURCE_FILES
     src/memory.cpp
 )
 
-add_library(memory STATIC ${SOURCE_FILES})
+include_directories(${MODULE_INCLUDE_DIRS})
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src/cpu/include
-    ${CMAKE_SOURCE_DIR}/src/gpu/include
-    ${CMAKE_SOURCE_DIR}/src/cartridge/include
-    ${CMAKE_SOURCE_DIR}/src/controller/include
-    ${CMAKE_SOURCE_DIR}/src/util/include
-)
+add_library(memory STATIC ${SOURCE_FILES})
 
 target_link_libraries(memory util)
 

@@ -11,6 +11,7 @@
 #include <functional>
 #include <iostream>
 #include <memory/memory.h>
+#include <string>
 
 namespace cpu {
 
@@ -617,6 +618,7 @@ CPU::CPU(std::unique_ptr<IReg> a, std::unique_ptr<IReg> b,
 {}
 
 ClockCycles CPU::tick() {
+	ticks++;
 
 	handle_interrupts();
 
@@ -627,9 +629,10 @@ ClockCycles CPU::tick() {
 	// Get the next opcode from the PC
 	auto opcode = get_inst_byte();
 
-	auto current_cycles = ClockCycles{0};
+	ClockCycles current_cycles;
 	if (opcode != 0xCB) {
-		// This is a standard instruction. Call handler and get the cycle count
+		// This is a standard instruction. Call handler and get the cycle
+		// count
 		opcode_map[opcode]();
 
 		// If the instruction branched, take the count from cycles_branched
@@ -699,18 +702,5 @@ uint16_t CPU::get_inst_dbl() const {
 	auto result = static_cast<uint16_t>((upper << 8) | lower);
 	return result;
 };
-
-void CPU::log_registers() {
-	Log::info("A  -> " + num_to_hex(a->get()) + " | F  -> " +
-	          num_to_hex(f->get()));
-	Log::info("B  -> " + num_to_hex(b->get()) + " | C  -> " +
-	          num_to_hex(c->get()));
-	Log::info("D  -> " + num_to_hex(d->get()) + " | E  -> " +
-	          num_to_hex(e->get()));
-	Log::info("H  -> " + num_to_hex(h->get()) + " | L  -> " +
-	          num_to_hex(l->get()));
-	Log::info("PC -> " + num_to_hex(pc->get()));
-	Log::info("SP -> " + num_to_hex(sp->get()));
-}
 
 } // namespace cpu
