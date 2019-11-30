@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 3.5.1)
 project(debugger)
 
 set(SOURCE_FILES
-    src/debugger.cpp
-    src/disassembly_loader.cpp)
+    src/debugger.cpp)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
 
