@@ -5,14 +5,12 @@
 
 #pragma once
 
-/// Forward Declarations
-#include "cartridge/cartridge.fwd.h"
-#include "cpu/cpu.fwd.h"
-#include "gameboy/gameboy.fwd.h"
-#include "gpu/gpu.fwd.h"
-#include "memory/memory.fwd.h"
-
+#include "cartridge/cartridge.h"
+#include "cpu/cpu.h"
 #include "cpu/utils.h"
+#include "gameboy/gameboy.h"
+#include "gpu/gpu.h"
+#include "memory/memory.h"
 #include "memory/utils.h"
 
 #include <cstdint>

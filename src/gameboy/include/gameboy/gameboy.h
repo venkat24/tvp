@@ -8,13 +8,14 @@
 #include "controller/controller.h"
 #include "cpu/cpu.h"
 #include "cpu/register/register.h"
-#include "debugger/debugger.h"
 #include "gpu/gpu.h"
 #include "gpu/utils.h"
 #include "memory/memory.h"
 #include "util/helpers.h"
 #include "util/log.h"
 #include "video/video.h"
+
+#include "debugger/debugger.fwd.h"
 
 #include <ctime>
 #include <fstream>

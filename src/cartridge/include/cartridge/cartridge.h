@@ -4,8 +4,9 @@
  */
 
 #include "cartridge/meta_cartridge.h"
-#include "debugger/debugger.h"
 #include "memory/utils.h"
+
+#include "debugger/debugger.fwd.h"
 
 #include <cstdint>
 #include <memory>

@@ -8,9 +8,10 @@
 #include "cartridge/cartridge.h"
 #include "controller/controller.h"
 #include "cpu/cpu_interface.h"
-#include "debugger/debugger.h"
 #include "gpu/gpu_interface.h"
 #include "memory/memory_interface.h"
+
+#include "debugger/debugger.fwd.h"
 
 #include <array>
 #include <cstdint>

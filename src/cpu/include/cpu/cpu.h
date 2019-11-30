@@ -8,9 +8,9 @@
 #include "cpu/cpu_interface.h"
 #include "cpu/register/register_interface.h"
 #include "cpu/utils.h"
-#include "debugger/debugger.h"
-#include "gameboy/gameboy.h"
 #include "memory/memory_interface.h"
+
+#include "debugger/debugger.fwd.h"
 
 #include <cstdint>
 #include <functional>
