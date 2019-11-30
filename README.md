@@ -44,7 +44,7 @@ If you're here for a [Delta Winter of Code](https://dwoc.io) project, check out 
 
 6. `cd <path_to_someplace_to_install>/bin`
 
-7. `./tvp /path/to/rom_file.gb`
+7. `./tvp --rom /path/to/rom_file.gb`
 
 8. Enjoy your game! Use the WASD keys as the GameBoy DPad. Use K, L, Backspace, and Enter keys as A, B, SELECT, and START buttons.
 
