@@ -2,17 +2,20 @@
  * @file memory.h
  * Declares the memory class
  */
+
+#pragma once
+
 #include "cartridge/cartridge.h"
 #include "controller/controller.h"
 #include "cpu/cpu_interface.h"
 #include "gpu/gpu_interface.h"
 #include "memory/memory_interface.h"
 
+#include "debugger/debugger.fwd.h"
+
 #include <array>
 #include <cstdint>
 #include <memory>
-
-#pragma once
 
 namespace memory {
 
@@ -47,9 +50,9 @@ class Memory : public MemoryInterface {
 	std::array<uint8_t, 0x10000> memory;
 
 	/**
-	 * Cartridge instance
+	 * Pointer to cartridge instance
 	 */
-	std::unique_ptr<cartridge::Cartridge> cartridge;
+	cartridge::Cartridge *cartridge;
 
 	/**
 	 * Pointer to controller instance
@@ -75,8 +78,7 @@ class Memory : public MemoryInterface {
 	/**
 	 * Default Constructor
 	 */
-	Memory(std::unique_ptr<cartridge::Cartridge> cartridge,
-	       controller::Controller *controller);
+	Memory(cartridge::Cartridge *cartridge, controller::Controller *controller);
 
 	/**
 	 * @see MemoryInterface#read
@@ -97,6 +99,11 @@ class Memory : public MemoryInterface {
 	 * Set the GPU Object pointer for this class
 	 */
 	void set_gpu(gpu::GPUInterface *gpu) override;
+
+	/**
+	 * Allow debugger to view private members of this class
+	 */
+	friend class debugger::Debugger;
 };
 
 } // namespace memory

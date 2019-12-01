@@ -45,8 +45,15 @@ set(MODULES
   controller
   gpu
   gameboy
+  debugger
 )
 
+# Make list of all module header paths
+foreach(MODULE ${MODULES})
+  list(APPEND MODULE_INCLUDE_DIRS " ${CMAKE_SOURCE_DIR}/src/${MODULE}/include")
+endforeach()
+
+# Add all modules to build
 foreach(MODULE ${MODULES})
   add_subdirectory(src/${MODULE})
 endforeach(MODULE)
@@ -61,7 +68,11 @@ endif()
 add_executable(tvp src/main/main.cpp)
 
 # Link headers and libraries
+target_link_libraries(tvp cxxopts)
 target_link_libraries(tvp ${MODULES})
+
+# Add dependencies
+add_subdirectory(ext/cxxopts)
 
 # If this is not the release build, compile unit tests
 # TODO: This is should be triggered by some other flag, not CMAKE_BUILD_TYPE

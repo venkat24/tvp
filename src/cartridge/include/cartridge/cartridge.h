@@ -6,6 +6,8 @@
 #include "cartridge/meta_cartridge.h"
 #include "memory/utils.h"
 
+#include "debugger/debugger.fwd.h"
+
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -22,14 +24,13 @@ class Cartridge {
 	 */
 	std::vector<uint8_t> data;
 
+	/**
+	 * Holds game related metadata extracted from this cartridge
+	 */
+	std::unique_ptr<CartridgeMetadata> metadata;
+
   public:
 	Cartridge(std::string filepath);
-
-	/**
-	 * Create a unique_ptr to CartridgeMetadata Object which will contain the
-	 * MetaData info of the Cartridge
-	 */
-	std::unique_ptr<CartridgeMetadata> meta_data;
 
 	/**
 	 * Read a value from the given address in the cartridge
@@ -48,10 +49,19 @@ class Cartridge {
 	void write(Address address, uint8_t data);
 
 	/**
-	 * Displays the Meta Data of the Cartridge
-	 *
+	 * Displays the cartridge metadata
 	 */
-	void display_meta();
+	void display_metadata();
+
+	/**
+	 * Get a pointer to the CartridgeMetadata instance
+	 */
+	CartridgeMetadata *get_metadata();
+
+	/**
+	 * Debugger may read private members of this class
+	 */
+	friend class debugger::Debugger;
 };
 
 } // namespace cartridge

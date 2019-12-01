@@ -2,6 +2,9 @@
  * @file gameboy.h
  * Declares the Gameboy class
  */
+
+#pragma once
+
 #include "controller/controller.h"
 #include "cpu/cpu.h"
 #include "cpu/register/register.h"
@@ -11,6 +14,8 @@
 #include "util/helpers.h"
 #include "util/log.h"
 #include "video/video.h"
+
+#include "debugger/debugger.fwd.h"
 
 #include <ctime>
 #include <fstream>
@@ -33,6 +38,7 @@ namespace gameboy {
  * Gameboy class that initializes and contains the complete application
  */
 class Gameboy {
+  public:
 	/**
 	 * Cartridge instance
 	 */
@@ -82,19 +88,22 @@ class Gameboy {
 	std::unique_ptr<GPU> create_gpu(Memory *memory_ptr, CPU *cpu_ptr,
 	                                Video *video_ptr);
 
-  public:
 	/**
 	 * @brief Construct a new Gameboy object
 	 *
 	 * @param rom_path Path to ROM File
-	 * @param debug_on Turn on or off debugging mode
 	 */
-	Gameboy(std::string rom_path, bool debug_on = false);
+	Gameboy(std::string rom_path);
 
 	/**
 	 * Runs one CPU tick and corresponding GPU tick
 	 */
 	void tick();
+
+	/**
+	 * The all-seeing Debugger overlord may peep into this object, muahaha!
+	 */
+	friend class debugger::Debugger;
 };
 
 } // namespace gameboy

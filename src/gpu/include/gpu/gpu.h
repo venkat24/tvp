@@ -11,6 +11,8 @@
 #include "memory/memory_interface.h"
 #include "video/video_interface.h"
 
+#include "debugger/debugger.fwd.h"
+
 #include <cstdint>
 #include <memory>
 #include <vector>
@@ -289,6 +291,11 @@ class GPU : public GPUInterface {
 	cpu::IReg *get_obp0() override;
 	cpu::IReg *get_obp1() override;
 	cpu::IReg *get_dma() override;
+
+	/**
+	 * Debugger may access private members of this class
+	 */
+	friend class debugger::Debugger;
 };
 
 } // namespace gpu

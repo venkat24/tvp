@@ -1,15 +1,12 @@
 cmake_minimum_required(VERSION 3.5.1)
-project(cartridge)
+project(debugger)
 
 set(SOURCE_FILES
-    src/meta_cartridge.cpp
-    src/cartridge.cpp
-)
-
-include_directories(${MODULE_INCLUDE_DIRS})
+    src/debugger.cpp)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
 
+include_directories(${MODULE_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )

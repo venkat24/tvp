@@ -376,14 +376,15 @@ void CPU::op_rlc(IReg *reg) {
 
 void CPU::op_rlc(Address addr) {
 	auto value = memory->read(addr);
-	auto msb = static_cast<bool>(value >> 7);
+	bool msb = value & (1 << 7);
+	bool carry = value & (1 << 7);
 
 	value = static_cast<uint8_t>((value << 1) | msb);
 
-	f->set_bit(flag::ZERO, 0);
+	f->set_bit(flag::ZERO, value == 0);
+	f->set_bit(flag::CARRY, carry);
 	f->set_bit(flag::SUBTRACT, 0);
 	f->set_bit(flag::HALFCARRY, 0);
-	f->set_bit(flag::CARRY, msb);
 
 	memory->write(addr, value);
 }

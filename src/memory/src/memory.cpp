@@ -9,16 +9,13 @@
 
 namespace memory {
 
-Memory::Memory(std::unique_ptr<cartridge::Cartridge> cartridge,
+Memory::Memory(cartridge::Cartridge *cartridge,
                controller::Controller *controller)
-    : memory(std::array<uint8_t, 0x10000>()), cartridge(std::move(cartridge)),
+    : memory(std::array<uint8_t, 0x10000>()), cartridge(cartridge),
       controller(controller) {}
 
 bool address_in_range(Address addr, Address start, Address end) {
-	if ((addr >= start && addr <= end) || (addr >= end && addr <= start)) {
-		return true;
-	}
-	return false;
+	return (addr >= start && addr <= end) || (addr >= end && addr <= start);
 }
 
 uint8_t Memory::read(Address address) const {
@@ -71,7 +68,7 @@ uint8_t Memory::read(Address address) const {
 	if (address_in_range(address, 0xFF26, 0xFF10)) {
 		// TODO: Sound Controller
 		Log::warn("Attempt to read from sound register " + num_to_hex(address));
-		return 0xFFFF;
+		return memory[address];
 	}
 
 	// Interrupt Flag register
@@ -101,7 +98,8 @@ uint8_t Memory::read(Address address) const {
 	// Restricted memory
 	if (address_in_range(address, 0xFEFF, 0xFEA0)) {
 		// Invalid Memory addresses!
-		Log::error("Tried to access location " + num_to_hex(address));
+		Log::warn("Tried to access location " + num_to_hex(address));
+		return 0xFF;
 	}
 
 	// OAM
@@ -152,7 +150,7 @@ uint8_t Memory::read(Address address) const {
 		}
 	}
 
-	Log::fatal("Default for location " + num_to_hex(address) + " returned!");
+	Log::error("Default for location " + num_to_hex(address) + " returned!");
 
 	return memory[address];
 }
@@ -229,6 +227,7 @@ void Memory::write(Address address, uint8_t data) {
 	if (address_in_range(address, 0xFF3F, 0xFF10)) {
 		// TODO: Sound Controller
 		Log::warn("Attempt to write to sound register " + num_to_hex(address));
+		memory[address] = data;
 		return;
 	}
 
@@ -263,7 +262,7 @@ void Memory::write(Address address, uint8_t data) {
 	// Restricted memory
 	if (address_in_range(address, 0xFEFF, 0xFEA0)) {
 		// Invalid Memory addresses!
-		Log::error("Tried to write to location " + num_to_hex(address));
+		Log::warn("Tried to write to location " + num_to_hex(address));
 		return;
 	}
 
@@ -317,7 +316,7 @@ void Memory::write(Address address, uint8_t data) {
 		return;
 	}
 
-	Log::fatal("Attempt to write to location " + num_to_hex(address));
+	Log::error("Attempt to write to location " + num_to_hex(address));
 }
 
 void Memory::set_cpu(cpu::CPUInterface *p_cpu) { cpu = p_cpu; }

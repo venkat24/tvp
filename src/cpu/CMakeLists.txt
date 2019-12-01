@@ -7,13 +7,7 @@ set(SOURCE_FILES
     src/register/register.cpp
 )
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src/util/include
-    ${CMAKE_SOURCE_DIR}/src/gpu/include
-    ${CMAKE_SOURCE_DIR}/src/memory/include
-    ${CMAKE_SOURCE_DIR}/src/cartridge/include
-    ${CMAKE_SOURCE_DIR}/src/controller/include
-)
+include_directories(${MODULE_INCLUDE_DIRS})
 
 add_library(cpu STATIC ${SOURCE_FILES})
 

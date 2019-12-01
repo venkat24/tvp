@@ -5,12 +5,7 @@ set(SOURCE_FILES
     src/gpu.cpp
 )
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src/util/include
-    ${CMAKE_SOURCE_DIR}/src/cpu/include
-    ${CMAKE_SOURCE_DIR}/src/memory/include
-    ${CMAKE_SOURCE_DIR}/src/video/include
-)
+include_directories(${MODULE_INCLUDE_DIRS})
 
 add_library(gpu STATIC ${SOURCE_FILES})
 
