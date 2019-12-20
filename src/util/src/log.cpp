@@ -9,9 +9,19 @@
 
 using namespace std;
 
+void Log::Enable() {
+	enabled = true;
+}
+
+void Log::Disable() {
+	enabled = false;
+}
+
 #if defined(_WIN32) || defined(WIN32)
 
 void Log::log(string message, LogLevel log_level) {
+	if (!enabled) return;
+
 	switch (log_level) {
 	case LogLevel::VERBOSE:
 		cout << " [VERB] ";
@@ -54,6 +64,8 @@ const auto END = "\033[0m";
 }; // namespace color
 
 void Log::log(string message, LogLevel log_level) {
+	if (!enabled) return;
+
 	switch (log_level) {
 	case LogLevel::VERBOSE:
 		cout << color::GRAY << " [VERB] " << color::END;
