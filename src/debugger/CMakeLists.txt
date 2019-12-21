@@ -6,7 +6,7 @@ set(SOURCE_FILES
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
 
-include_directories(${MODULE_INCLUDE_DIRS})
+include_directories(${MODULE_INCLUDE_DIRS} include)
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )

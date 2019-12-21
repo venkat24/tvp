@@ -33,7 +33,7 @@ class Debugger {
 	/**
 	 * Ticks for this object
 	 */
-	unsigned long long ticks;
+	unsigned long long ticks = 0;
 
 	/**
 	 * Gameboy instance
@@ -41,24 +41,19 @@ class Debugger {
 	std::unique_ptr<gameboy::Gameboy> gameboy;
 
 	/**
-	 * Pointer to CPU instance inside gameboy
+	 * A vector container for storing instruction breakpoints
 	 */
-	CPU *cpu;
+	std::vector<Address> breakpoints;
 
 	/**
-	 * Pointer to memory instance inside gameboy
+	 * A vector container for storing breakpoints at CPU cycles
 	 */
-	Memory *memory;
+	std::vector<ClockCycles> cycle_breakpoints;
 
 	/**
-	 * Pointer to GPU instance inside gameboy
+	 * A vector container for storing breakpoints at GameBoy cycles
 	 */
-	GPU *gpu;
-
-	/**
-	 * Pointer to Cartridge instance inside gameboy
-	 */
-	Cartridge *cartridge;
+	std::vector<ClockCycles> tick_breakpoints;
 
   public:
 	/**
@@ -70,6 +65,29 @@ class Debugger {
 	 * Run debugger iteration
 	 */
 	void tick();
+
+	/**
+	 * Adding Breakpoints
+	 */
+	virtual void set_breakpoint(Address breakpoint);
+	virtual void set_tick_breakpoint(ClockCycles tick);
+	virtual void set_cycle_breakpoint(ClockCycles cycle);
+
+	/**
+	 * @brief Removes breakpoints from Vector container
+	 * @param breakpoint of Instructions, ticks and clocks
+	 */
+	virtual void remove_breakpoint(Address breakpoint);
+	virtual void remove_tick_breakpoint(ClockCycles tick);
+	virtual void remove_cycle_breakpoint(ClockCycles cycle);
+
+	// Get current gameboy to check state
+	//    virtual IGameboy* get_gameboy();
+
+	// Get current debugger state
+	virtual vector<Address> get_breakpoints();
+	virtual vector<ClockCycles> get_cycle_breakpoints();
+	virtual vector<ClockCycles> get_tick_breakpoints();
 };
 
 } // namespace debugger
