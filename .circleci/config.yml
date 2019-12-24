@@ -68,7 +68,7 @@ jobs:
       - run:
           name: Run Tests
           working_directory: /root/project/tvp/bin
-          command: ./test
+          command: ./tests
 
 workflows:
   version: 2

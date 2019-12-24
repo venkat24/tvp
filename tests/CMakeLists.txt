@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.1)
-project(tvp_test)
+project(tests)
 
 include(GoogleTest)
 
@@ -12,17 +12,17 @@ include_directories(
 )
 
 set(SOURCE_FILES
-	test.cpp
+	tests.cpp
 
 	# CPU
 	cpu/register_test.cpp
 	#cpu/arithmetic_opcode_test.cpp
 )
 
-add_executable(tvp_test ${SOURCE_FILES})
-target_link_libraries(tvp_test cpu memory gpu gtest gmock)
-gtest_add_tests(tvp_test "" AUTO)
+add_executable(tests ${SOURCE_FILES})
+target_link_libraries(tests cpu memory gpu gtest gmock)
+gtest_add_tests(tests "" AUTO)
 
-install(TARGETS tvp_test
+install(TARGETS tests
 	RUNTIME DESTINATION bin
 )
