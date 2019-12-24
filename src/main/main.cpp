@@ -20,6 +20,7 @@ using namespace controller;
 
 int main(int argc, char *argv[]) {
 	ios_base::sync_with_stdio(false);
+	Log::Enable();
 
 	auto cmdline_args_parser =
 	    cxxopts::Options("tvp", "Welcome to tvp - The GameBoy Emulator!");
