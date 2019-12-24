@@ -12,6 +12,8 @@
 #include "gpu/gpu.h"
 #include "memory/memory.h"
 #include "memory/utils.h"
+#include "debugger/debugger_interface.fwd.h"
+#include "debugger/debugger_interface.h"
 
 #include <cstdint>
 #include <memory>
@@ -55,6 +57,11 @@ class Debugger {
 	 */
 	std::vector<ClockCycles> tick_breakpoints;
 
+	/**
+	 * A vector container iterator to keep track of breakpoints
+	 */
+    std::vector<Address>::iterator breakpoints_iter = breakpoints.begin();
+
   public:
 	/**
 	 * Debugger constructor
@@ -88,6 +95,11 @@ class Debugger {
 	virtual vector<Address> get_breakpoints();
 	virtual vector<ClockCycles> get_cycle_breakpoints();
 	virtual vector<ClockCycles> get_tick_breakpoints();
+
+	virtual void run();
+	virtual void step();
+
+	std::unique_ptr<debugger::DebuggerInterface> interface_;
 };
 
 } // namespace debugger

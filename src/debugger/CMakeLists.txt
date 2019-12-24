@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.5.1)
 project(debugger)
 
 set(SOURCE_FILES
-    src/debugger.cpp)
+    src/debugger.cpp
+    src/debugger_interface.cpp)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
 

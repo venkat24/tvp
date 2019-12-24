@@ -12,13 +12,11 @@ namespace debugger {
 
 Debugger::Debugger(std::unique_ptr<gameboy::Gameboy> gameboy)
     : gameboy(std::move(gameboy)) {
-
+	interface_ = std::make_unique<debugger::DebuggerInterface>();
 }
 
 void Debugger::tick() {
 	ticks++;
-	// TODO: Do debug stuff here
-
 	gameboy->tick();
 }
 
@@ -105,6 +103,24 @@ vector<ClockCycles> Debugger::get_cycle_breakpoints() {
 
 vector<ClockCycles> Debugger::get_tick_breakpoints() {
 	return tick_breakpoints;
+}
+
+void Debugger::run() {
+	if (breakpoints.empty())
+		tick();
+	while (*breakpoints_iter != gameboy->cpu->pc->get()) {
+		tick();
+	}
+	Log::info("Reached Breakpoint: " + int(*breakpoints_iter));
+	breakpoints_iter++;
+	if (breakpoints_iter == breakpoints.end()) {
+		Log::info("Finished processing all breakpoints!");
+		breakpoints_iter = breakpoints.begin();
+	}
+}
+
+void Debugger::step(){
+
 }
 
 } // namespace debugger
