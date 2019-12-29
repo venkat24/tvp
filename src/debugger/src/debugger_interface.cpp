@@ -2,6 +2,7 @@
 #include <iostream>
 
 using namespace debugger;
+using namespace std;
 
 DebuggerInterface::DebuggerInterface(std::shared_ptr<Debugger> debugger_core)
     : debugger_core(debugger_core) {}

@@ -14,16 +14,16 @@ class DebuggerInterface {
   private:
 	std::shared_ptr<Debugger> debugger_core;
 
-	string str;
-	string command_type;
-	string command;
-	string command_value;
+	std::string str;
+	std::string command_type;
+	std::string command;
+	std::string command_value;
 
   public:
 	DebuggerInterface(std::shared_ptr<Debugger> debugger_core);
 	void tick();
-	bool parse_command(string str);
-	void split_command(string str);
+	bool parse_command(std::string str);
+	void split_command(std::string str);
 	void print_help();
 };
 } // namespace debugger
