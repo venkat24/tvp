@@ -8,12 +8,12 @@
 #include "cartridge/cartridge.h"
 #include "cpu/cpu.h"
 #include "cpu/utils.h"
+#include "debugger/debugger_interface.fwd.h"
+#include "debugger/debugger_interface.h"
 #include "gameboy/gameboy.h"
 #include "gpu/gpu.h"
 #include "memory/memory.h"
 #include "memory/utils.h"
-#include "debugger/debugger_interface.fwd.h"
-#include "debugger/debugger_interface.h"
 
 #include <cstdint>
 #include <memory>
@@ -72,7 +72,7 @@ class Debugger {
 	/**
 	 * A vector container iterator to keep track of breakpoints
 	 */
-    std::vector<Address>::iterator breakpoints_iter = breakpoints.begin();
+	std::vector<Address>::iterator breakpoints_iter = breakpoints.begin();
 
 	/**
 	 * A flag to check if we have reached the breakpoint

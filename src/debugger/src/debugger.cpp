@@ -11,8 +11,7 @@
 namespace debugger {
 
 Debugger::Debugger(std::unique_ptr<gameboy::Gameboy> gameboy)
-    : gameboy(std::move(gameboy)) {
-}
+    : gameboy(std::move(gameboy)) {}
 
 void Debugger::tick() {
 	ticks++;

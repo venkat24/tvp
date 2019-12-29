@@ -30,7 +30,7 @@ bool DebuggerInterface::parse_command(string str) {
 		print_help();
 		return true;
 	}
-	if (str.substr(0,1).compare("p") == 0) {
+	if (str.substr(0, 1).compare("p") == 0) {
 		debugger_core->peek(strtoul(str.substr(2).c_str(), nullptr, 10));
 		return true;
 	}

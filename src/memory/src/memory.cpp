@@ -67,7 +67,8 @@ uint8_t Memory::read(Address address) const {
 	// Sound Controller Registers
 	if (address_in_range(address, 0xFF26, 0xFF10)) {
 		// TODO: Sound Controller
-//		Log::warn("Attempt to read from sound register " + num_to_hex(address));
+		//		Log::warn("Attempt to read from sound register " +
+		//num_to_hex(address));
 		return memory[address];
 	}
 
@@ -79,14 +80,16 @@ uint8_t Memory::read(Address address) const {
 	// Timer registers
 	if (address_in_range(address, 0xFF07, 0xFF04)) {
 		// TODO: System Timers
-//		Log::warn("Attempt to read from timer register " + num_to_hex(address));
+		//		Log::warn("Attempt to read from timer register " +
+		//num_to_hex(address));
 		return memory[address];
 	}
 
 	// Serial data transfer registers
 	if (address_in_range(address, 0xFF02, 0xFF01)) {
 		// TODO: Serial Data Transfer
-//		Log::warn("Attempt to read from SDT register " + num_to_hex(address));
+		//		Log::warn("Attempt to read from SDT register " +
+		//num_to_hex(address));
 		return memory[address];
 	}
 
@@ -98,7 +101,7 @@ uint8_t Memory::read(Address address) const {
 	// Restricted memory
 	if (address_in_range(address, 0xFEFF, 0xFEA0)) {
 		// Invalid Memory addresses!
-//		Log::warn("Tried to access location " + num_to_hex(address));
+		//		Log::warn("Tried to access location " + num_to_hex(address));
 		return 0xFF;
 	}
 
@@ -109,7 +112,8 @@ uint8_t Memory::read(Address address) const {
 
 	// Echo RAM, returns copy of RAM
 	if (address_in_range(address, 0xFDFF, 0xE000)) {
-//		Log::warn("Reading from " + num_to_hex(address) + " which is Echo RAM");
+		//		Log::warn("Reading from " + num_to_hex(address) + " which is Echo
+		//RAM");
 		return memory[address - 0x2000];
 	}
 
@@ -120,7 +124,8 @@ uint8_t Memory::read(Address address) const {
 
 	// Cartridge RAM
 	if (address_in_range(address, 0xBFFF, 0xA000)) {
-//		Log::warn("Tried to access Cartridge RAM from " + num_to_hex(address));
+		//		Log::warn("Tried to access Cartridge RAM from " +
+		//num_to_hex(address));
 		return 0xFFFF;
 		// TODO: Return Cartridge RAM if available
 	}
@@ -150,7 +155,8 @@ uint8_t Memory::read(Address address) const {
 		}
 	}
 
-//	Log::error("Default for location " + num_to_hex(address) + " returned!");
+	//	Log::error("Default for location " + num_to_hex(address) + "
+	//returned!");
 
 	return memory[address];
 }
@@ -170,7 +176,8 @@ void Memory::write(Address address, uint8_t data) {
 
 	// Unused memory that Tetris writes to
 	if (address_in_range(address, 0xFF7F, 0xFF51)) {
-//		Log::warn("Attempt to write to invalid address " + num_to_hex(address));
+		//		Log::warn("Attempt to write to invalid address " +
+		//num_to_hex(address));
 		return;
 	}
 
@@ -197,7 +204,7 @@ void Memory::write(Address address, uint8_t data) {
 			gpu->get_scx()->set(data);
 			return;
 		case 0x4:
-//			Log::error("Cannot write to LY register location");
+			//			Log::error("Cannot write to LY register location");
 			return;
 		case 0x5:
 			gpu->get_lyc()->set(data);
@@ -226,7 +233,8 @@ void Memory::write(Address address, uint8_t data) {
 	// Sound Controller Registers
 	if (address_in_range(address, 0xFF3F, 0xFF10)) {
 		// TODO: Sound Controller
-//		Log::warn("Attempt to write to sound register " + num_to_hex(address));
+		//		Log::warn("Attempt to write to sound register " +
+		//num_to_hex(address));
 		memory[address] = data;
 		return;
 	}
@@ -240,7 +248,8 @@ void Memory::write(Address address, uint8_t data) {
 	// Timer registers
 	if (address_in_range(address, 0xFF07, 0xFF04)) {
 		// TODO: System timers
-//		Log::warn("Attempt to write to timer register " + num_to_hex(address));
+		//		Log::warn("Attempt to write to timer register " +
+		//num_to_hex(address));
 		memory[address] = data;
 		return;
 	}
@@ -248,7 +257,8 @@ void Memory::write(Address address, uint8_t data) {
 	// Serial data transfer registers
 	if (address_in_range(address, 0xFF02, 0xFF01)) {
 		// TODO: Serial Data Transfer
-//		Log::warn("Attempt to write to SDT register " + num_to_hex(address));
+		//		Log::warn("Attempt to write to SDT register " +
+		//num_to_hex(address));
 		memory[address] = data;
 		return;
 	}
@@ -262,7 +272,7 @@ void Memory::write(Address address, uint8_t data) {
 	// Restricted memory
 	if (address_in_range(address, 0xFEFF, 0xFEA0)) {
 		// Invalid Memory addresses!
-//		Log::warn("Tried to write to location " + num_to_hex(address));
+		//		Log::warn("Tried to write to location " + num_to_hex(address));
 		return;
 	}
 
@@ -274,7 +284,8 @@ void Memory::write(Address address, uint8_t data) {
 
 	// Echo RAM, returns copy of RAM
 	if (address_in_range(address, 0xFDFF, 0xE000)) {
-//		Log::warn("Writing to " + num_to_hex(address) + " which is Echo RAM");
+		//		Log::warn("Writing to " + num_to_hex(address) + " which is Echo
+		//RAM");
 		memory[address - 0x2000] = data;
 		return;
 	}
@@ -288,7 +299,8 @@ void Memory::write(Address address, uint8_t data) {
 	// Cartridge RAM
 	if (address_in_range(address, 0xBFFF, 0xA000)) {
 		// TODO: Return Cartridge RAM if available
-//		Log::warn("Tried to write to Cart RAM from " + num_to_hex(address));
+		//		Log::warn("Tried to write to Cart RAM from " +
+		//num_to_hex(address));
 		return;
 	}
 
@@ -316,7 +328,7 @@ void Memory::write(Address address, uint8_t data) {
 		return;
 	}
 
-//	Log::error("Attempt to write to location " + num_to_hex(address));
+	//	Log::error("Attempt to write to location " + num_to_hex(address));
 }
 
 void Memory::set_cpu(cpu::CPUInterface *p_cpu) { cpu = p_cpu; }
