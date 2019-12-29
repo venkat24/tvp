@@ -48,6 +48,18 @@ class Debugger {
 	std::vector<Address> breakpoints;
 
 	/**
+	 * A bool value to specify whether the debugger has currently encountered a
+	 * breakpoint condition and waiting for the user input. This will reset to
+	 * false once run is called again after a breakpoint.
+	 */
+	bool is_breaking = false;
+
+	/**
+	 * A vector for storing all the processed breakpoints
+	 */
+	std::vector<Address> processed_breakpoints;
+
+	/**
 	 * A vector container for storing breakpoints at CPU cycles
 	 */
 	std::vector<ClockCycles> cycle_breakpoints;
@@ -62,6 +74,11 @@ class Debugger {
 	 */
     std::vector<Address>::iterator breakpoints_iter = breakpoints.begin();
 
+	/**
+	 * A flag to check if we have reached the breakpoint
+	 */
+	bool is_breakpoint = false;
+
   public:
 	/**
 	 * Debugger constructor
@@ -71,7 +88,7 @@ class Debugger {
 	/**
 	 * Run debugger iteration
 	 */
-	void tick();
+	virtual void tick();
 
 	/**
 	 * Adding Breakpoints
@@ -99,7 +116,12 @@ class Debugger {
 	virtual void run();
 	virtual void step();
 
-	std::unique_ptr<debugger::DebuggerInterface> interface_;
+	virtual void peek(uint32_t lines);
+
+	void view_current_status();
+	Address curr_pc_instr();
+
+	friend class DebuggerInterface;
 };
 
 } // namespace debugger

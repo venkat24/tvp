@@ -11,3 +11,4 @@ include_directories(${MODULE_INCLUDE_DIRS} include)
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
+target_link_libraries(${PROJECT_NAME} cxxopts)

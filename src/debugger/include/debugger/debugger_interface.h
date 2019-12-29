@@ -11,13 +11,19 @@
 namespace debugger {
 
 class DebuggerInterface {
+  private:
+	std::shared_ptr<Debugger> debugger_core;
+
+    string str;
+    string command_type;
+    string command;
+    string command_value;
   public:
-	DebuggerInterface();
-	void
-	fetch_command(); // Will wait for input and pass to appropriate function
-	                 // set break point
-	                 // remove
-	                 // view
-	                 // Debugger core will have run and step
+	DebuggerInterface(std::shared_ptr<Debugger> debugger_core);
+	void tick();
+	bool parse_command(string str);
+	void split_command(string str);
+	void print_help();
+
 };
 }

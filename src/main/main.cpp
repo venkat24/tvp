@@ -20,7 +20,7 @@ using namespace controller;
 
 int main(int argc, char *argv[]) {
 	ios_base::sync_with_stdio(false);
-	Log::Enable();
+	Log::Disable();
 
 	auto cmdline_args_parser =
 	    cxxopts::Options("tvp", "Welcome to tvp - The GameBoy Emulator!");
@@ -59,15 +59,17 @@ int main(int argc, char *argv[]) {
 	// Turn on debugging if needed
 	auto debugger_on = parsed_args["debug"].as<bool>();
 	if (not debugger_on) {
-		// Start Gameboy normally
+		// Start GameBoy normally
 		for (auto i = 0; /*Infinite Loop*/; i++) {
 			gameboy->tick();
 		}
 	} else {
-		// Start Gameboy with Debugger
-		auto debugger = std::make_unique<Debugger>(std::move(gameboy));
+		// Start GameBoy with Debugger
+		auto debugger = std::make_shared<Debugger>(std::move(gameboy));
+		auto cli_debugger = std::make_unique<DebuggerInterface>(debugger);
+		Log::info("tvp Debugger Started");
 		for (auto i = 0; /*Infinite Loop*/; i++) {
-			debugger->tick();
+			cli_debugger->tick();
 		}
 	}
 
