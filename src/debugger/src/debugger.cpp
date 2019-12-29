@@ -177,8 +177,6 @@ void Debugger::run() {
 	                 gameboy->cpu->pc->get()) == breakpoints.end() ||
 	       std::find(processed_breakpoints.begin(), processed_breakpoints.end(),
 	                 gameboy->cpu->pc->get()) != processed_breakpoints.end()) {
-	    if(gameboy->cpu->pc->get() > 0x2fa)
-	        cout << gameboy->cpu->pc->get() << "\n";
 		tick();
 	}
 	is_breaking = true;
