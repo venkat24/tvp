@@ -1,12 +1,12 @@
 /**
  * @file debugger.fwd.h
- * Forward Declares the Debugger Class
+ * Forward Declares the DebuggerCore Class
  */
 
 #pragma once
 
 namespace debugger {
 
-class Debugger;
+class DebuggerCore;
 
 } // namespace debugger

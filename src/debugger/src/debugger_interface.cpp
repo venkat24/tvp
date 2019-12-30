@@ -4,11 +4,11 @@
 using namespace debugger;
 using namespace std;
 
-DebuggerInterface::DebuggerInterface(std::shared_ptr<Debugger> debugger_core)
+DebuggerInterface::DebuggerInterface(
+    std::shared_ptr<DebuggerCore> debugger_core)
     : debugger_core(debugger_core) {}
 
 void DebuggerInterface::tick() {
-	debugger_core->view_current_status();
 	cout << "Enter here: ";
 	getline(std::cin, str);
 	bool status = parse_command(str);

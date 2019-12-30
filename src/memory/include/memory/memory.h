@@ -103,7 +103,7 @@ class Memory : public MemoryInterface {
 	/**
 	 * Allow debugger to view private members of this class
 	 */
-	friend class debugger::Debugger;
+	friend class debugger::DebuggerCore;
 };
 
 } // namespace memory

@@ -293,9 +293,9 @@ class GPU : public GPUInterface {
 	cpu::IReg *get_dma() override;
 
 	/**
-	 * Debugger may access private members of this class
+	 * DebuggerCore may access private members of this class
 	 */
-	friend class debugger::Debugger;
+	friend class debugger::DebuggerCore;
 };
 
 } // namespace gpu

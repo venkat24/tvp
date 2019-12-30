@@ -1,6 +1,6 @@
 /**
  * @file debugger.cpp
- * Defines the Debugger class
+ * Defines the DebuggerCore class
  */
 
 #include "debugger/debugger.h"
@@ -10,139 +10,99 @@
 
 namespace debugger {
 
-Debugger::Debugger(std::unique_ptr<gameboy::Gameboy> gameboy)
+DebuggerCore::DebuggerCore(std::unique_ptr<gameboy::Gameboy> gameboy)
     : gameboy(std::move(gameboy)) {}
 
-void Debugger::tick() {
+void DebuggerCore::tick() {
 	ticks++;
 	gameboy->tick();
 }
 
-void Debugger::set_breakpoint(Address breakpoint) {
+uint8_t DebuggerCore::set_breakpoint(Address breakpoint) {
 	// A safety measure to ensure breakpoints are not repeated
 	auto found_iterator =
 	    std::find(breakpoints.begin(), breakpoints.end(), breakpoint);
-	/**
-	 * Trying somethings for better output formatting.
-	 */
-	cout << "\n";
-	cout << "----------------------------------------------------------"
-	     << "\n";
 	if (found_iterator == breakpoints.end()) {
 		breakpoints.push_back(breakpoint);
-		cout << "Instruction Breakpoint Inserted: " << hex << breakpoint
-		     << "\n";
+		return 1;
 	} else {
-		cout << "Instruction Breakpoint Already Present!"
-		     << "\n";
+		return 0;
 	}
-	cout << "----------------------------------------------------------"
-	     << "\n";
+	return 2;
 }
 
-void Debugger::set_cycle_breakpoint(ClockCycles cycle) {
+uint8_t DebuggerCore::set_cycle_breakpoint(ClockCycles cycle) {
 	auto found_iterator =
 	    std::find(cycle_breakpoints.begin(), cycle_breakpoints.end(), cycle);
-	cout << "\n";
-	cout << "----------------------------------------------------------"
-	     << "\n";
 	if (found_iterator == cycle_breakpoints.end()) {
 		cycle_breakpoints.push_back(cycle);
-		cout << "CPU Cycle Breakpoint Inserted!"
-		     << "\n";
+		return 1;
 	} else {
-		cout << "CPU Cycle Breakpoint Already Present!"
-		        "\n";
+		return 0;
 	}
-	cout << "----------------------------------------------------------"
-	     << "\n";
+	return 2;
 }
 
-void Debugger::set_tick_breakpoint(ClockCycles tick) {
+uint8_t DebuggerCore::set_tick_breakpoint(ClockCycles tick) {
 	auto found_iterator =
 	    std::find(tick_breakpoints.begin(), tick_breakpoints.end(), tick);
-	cout << "\n";
-	cout << "----------------------------------------------------------"
-	     << "\n";
 	if (found_iterator == tick_breakpoints.end()) {
 		tick_breakpoints.push_back(tick);
-		cout << "System Tick Breakpoint Inserted!"
-		     << "\n";
+		return 1;
 	} else {
-		cout << "System Tick Breakpoint Already Present"
-		     << "\n";
+		return 0;
 	}
-	cout << "----------------------------------------------------------"
-	     << "\n";
+	return 2;
 }
 
-void Debugger::remove_breakpoint(Address breakpoint) {
+uint8_t DebuggerCore::remove_breakpoint(Address breakpoint) {
 	// Check if the breakpoint is present in the vector container
-	// TODO: Improve your variable naming skills, be a bit creative bruh!
 	auto found_iterator =
 	    std::find(breakpoints.begin(), breakpoints.end(), breakpoint);
-	cout << "\n";
-	cout << "----------------------------------------------------------"
-	     << "\n";
 	if (found_iterator == breakpoints.end()) {
-		cout << "Breakpoint Not Found!"
-		     << "\n";
+		return 0;
 	} else {
 		breakpoints.erase(found_iterator);
-		cout << "Instruction Breakpoint Removed Successfully"
-		     << "\n";
+		return 1;
 	}
-	cout << "----------------------------------------------------------"
-	     << "\n";
+	return 2;
 }
 
-void Debugger::remove_cycle_breakpoint(ClockCycles cycle) {
+uint8_t DebuggerCore::remove_cycle_breakpoint(ClockCycles cycle) {
 	auto found_iterator =
 	    std::find(cycle_breakpoints.begin(), cycle_breakpoints.end(), cycle);
-	cout << "\n";
-	cout << "----------------------------------------------------------"
-	     << "\n";
 	if (found_iterator == cycle_breakpoints.end()) {
-		cout << "CPU Cycle Breakpoint not found"
-		     << "\n";
+		return 0;
 	} else {
 		cycle_breakpoints.erase(found_iterator);
-		cout << "CPU Cycle Breakpoint REMOVED"
-		     << "\n";
+		return 1;
 	}
-	cout << "----------------------------------------------------------"
-	     << "\n";
+	return 2;
 }
 
-void Debugger::remove_tick_breakpoint(ClockCycles tick) {
+uint8_t DebuggerCore::remove_tick_breakpoint(ClockCycles tick) {
 	auto found_iterator =
 	    std::find(tick_breakpoints.begin(), tick_breakpoints.end(), tick);
-	cout << "\n";
-	cout << "----------------------------------------------------------"
-	     << "\n";
 	if (found_iterator == tick_breakpoints.end()) {
-		cout << "System Tick Breakpoint NOT FOUND"
-		     << "\n";
+		return 0;
 	} else {
 		tick_breakpoints.erase(found_iterator);
-		cout << "System Tick Breakpoint REMOVED"
-		     << "\n";
+		return 1;
 	}
-	cout << "----------------------------------------------------------"
-	     << "\n";
+	return 2;
 }
 
-vector<Address> Debugger::get_breakpoints() { return breakpoints; }
+vector<Address> DebuggerCore::get_breakpoints() { return breakpoints; }
 
-vector<ClockCycles> Debugger::get_cycle_breakpoints() {
+vector<ClockCycles> DebuggerCore::get_cycle_breakpoints() {
 	return cycle_breakpoints;
 }
 
-vector<ClockCycles> Debugger::get_tick_breakpoints() {
+vector<ClockCycles> DebuggerCore::get_tick_breakpoints() {
 	return tick_breakpoints;
 }
 
-void Debugger::run() {
+void DebuggerCore::run() {
 	if (is_breaking) {
 		is_breaking = false;
 
@@ -182,35 +142,17 @@ void Debugger::run() {
 	processed_breakpoints.push_back(gameboy->cpu->pc->get());
 }
 
-void Debugger::view_current_status() {
-	cout << "\n";
-	cout << "----------------------------------------------------------"
-	     << "\n";
-	cout << std::left << std::setw(30)
-	     << "Current System Tick: " << std::setw(30) << ticks << "\n";
-	cout << std::left << std::setw(30)
-	     << "Current CPU Clock cycles: " << std::setw(30)
-	     << gameboy->gpu->current_cycles << "\n";
-	cout << std::left << std::setw(30)
-	     << "Current Instruction Set: " << std::setw(30)
-	     << gameboy->cpu->pc->get() << "\n";
-	cout << "----------------------------------------------------------"
-	     << "\n";
-}
+void DebuggerCore::step() { tick(); }
 
-void Debugger::step() { tick(); }
-
-void Debugger::peek(uint32_t lines) {
+std::string DebuggerCore::peek(uint32_t lines) {
 	auto pc_contents = gameboy->cpu->pc->get();
-	cout << "----------------------------------------------------------"
-	     << "\n";
+	std::string code_string = "";
 	for (auto i = 0; i < lines; i++) {
-		cout << pc_contents << " "
-		     << get_mnemonic(gameboy->memory->read(pc_contents)) << "\n";
+		code_string += to_string(+pc_contents) + ": " +
+		               get_mnemonic(gameboy->memory->read(pc_contents)) + "\n";
 		pc_contents++;
 	}
-	cout << "----------------------------------------------------------"
-	     << "\n";
+	return code_string;
 }
 
 } // namespace debugger

@@ -59,9 +59,9 @@ class Cartridge {
 	CartridgeMetadata *get_metadata();
 
 	/**
-	 * Debugger may read private members of this class
+	 * DebuggerCore may read private members of this class
 	 */
-	friend class debugger::Debugger;
+	friend class debugger::DebuggerCore;
 };
 
 } // namespace cartridge

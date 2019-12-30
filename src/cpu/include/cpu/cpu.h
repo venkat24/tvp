@@ -279,7 +279,7 @@ class CPU : public CPUInterface {
 	/**
 	 * Allow debugger to view private members of this class
 	 */
-	friend class debugger::Debugger;
+	friend class debugger::DebuggerCore;
 };
 
 } // namespace cpu

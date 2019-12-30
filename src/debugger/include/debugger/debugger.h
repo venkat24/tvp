@@ -1,6 +1,6 @@
 /**
  * @file debugger.h
- * Declares the Debugger Class
+ * Declares the DebuggerCore Class
  */
 
 #pragma once
@@ -31,7 +31,7 @@ namespace debugger {
 /**
  * Define the debugger class, for breakpoint debugging the CPU and Memory
  */
-class Debugger {
+class DebuggerCore {
 	/**
 	 * Ticks for this object
 	 */
@@ -81,9 +81,9 @@ class Debugger {
 
   public:
 	/**
-	 * Debugger constructor
+	 * DebuggerCore constructor
 	 */
-	Debugger(std::unique_ptr<gameboy::Gameboy> gameboy);
+	DebuggerCore(std::unique_ptr<gameboy::Gameboy> gameboy);
 
 	/**
 	 * Run debugger iteration
@@ -91,22 +91,34 @@ class Debugger {
 	virtual void tick();
 
 	/**
-	 * Adding Breakpoints
+	 * @brief Adds breakpoints to the Vector Container, skips if breakpoint
+	 * already present
+	 * @param breakpoint of Instructions, ticks and clocks
+	 *
+	 * returns 0 if Breakpoint was already present, so not added;
+	 * returns 1 if Breakpoint was successfully inserted;
+	 * returns 2 default return value. Will not reach here;
+	 * I chose uint8_t as a return type so that we can add to the error codes
+	 * here if the need arises in the future.
 	 */
-	virtual void set_breakpoint(Address breakpoint);
-	virtual void set_tick_breakpoint(ClockCycles tick);
-	virtual void set_cycle_breakpoint(ClockCycles cycle);
+	virtual uint8_t set_breakpoint(Address breakpoint);
+	virtual uint8_t set_tick_breakpoint(ClockCycles tick);
+	virtual uint8_t set_cycle_breakpoint(ClockCycles cycle);
 
 	/**
-	 * @brief Removes breakpoints from Vector container
+	 * @brief Removes breakpoints from Vector container and returns
+	 * corresponding code
 	 * @param breakpoint of Instructions, ticks and clocks
+	 *
+	 * returns 0 if Breakpoint was not present, so not removed;
+	 * returns 1 if Breakpoint was successfully removed;
+	 * returns 2 default return value. Will not reach here;
+	 * I chose uint8_t as a return type so that we can add to the error codes
+	 * here if the need arises in the future.
 	 */
-	virtual void remove_breakpoint(Address breakpoint);
-	virtual void remove_tick_breakpoint(ClockCycles tick);
-	virtual void remove_cycle_breakpoint(ClockCycles cycle);
-
-	// Get current gameboy to check state
-	//    virtual IGameboy* get_gameboy();
+	virtual uint8_t remove_breakpoint(Address breakpoint);
+	virtual uint8_t remove_tick_breakpoint(ClockCycles tick);
+	virtual uint8_t remove_cycle_breakpoint(ClockCycles cycle);
 
 	// Get current debugger state
 	virtual vector<Address> get_breakpoints();
@@ -116,10 +128,7 @@ class Debugger {
 	virtual void run();
 	virtual void step();
 
-	virtual void peek(uint32_t lines);
-
-	void view_current_status();
-	Address curr_pc_instr();
+	virtual std::string peek(uint32_t lines);
 
 	friend class DebuggerInterface;
 };

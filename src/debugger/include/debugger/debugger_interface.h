@@ -1,6 +1,6 @@
 /**
  * @file debugger_interface.h
- * Declares the Debugger Interface Class for CLI Operations
+ * Declares the DebuggerCore Interface Class for CLI Operations
  */
 
 #pragma once
@@ -12,7 +12,7 @@ namespace debugger {
 
 class DebuggerInterface {
   private:
-	std::shared_ptr<Debugger> debugger_core;
+	std::shared_ptr<DebuggerCore> debugger_core;
 
 	std::string str;
 	std::string command_type;
@@ -20,7 +20,7 @@ class DebuggerInterface {
 	std::string command_value;
 
   public:
-	DebuggerInterface(std::shared_ptr<Debugger> debugger_core);
+	DebuggerInterface(std::shared_ptr<DebuggerCore> debugger_core);
 	void tick();
 	bool parse_command(std::string str);
 	void split_command(std::string str);
