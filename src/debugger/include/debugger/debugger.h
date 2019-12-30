@@ -8,8 +8,7 @@
 #include "cartridge/cartridge.h"
 #include "cpu/cpu.h"
 #include "cpu/utils.h"
-#include "debugger/debugger_interface.fwd.h"
-#include "debugger/debugger_interface.h"
+#include "debugger/cli_debugger.h"
 #include "gameboy/gameboy.h"
 #include "gpu/gpu.h"
 #include "memory/memory.h"
@@ -130,7 +129,7 @@ class DebuggerCore {
 
 	virtual std::string peek(uint32_t lines);
 
-	friend class DebuggerInterface;
+	friend class IDebugger;
 };
 
 } // namespace debugger

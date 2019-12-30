@@ -1,14 +1,13 @@
-#include "debugger/debugger_interface.h"
+#include "debugger/cli_debugger.h"
 #include <iostream>
 
 using namespace debugger;
 using namespace std;
 
-DebuggerInterface::DebuggerInterface(
-    std::shared_ptr<DebuggerCore> debugger_core)
+CliDebugger::CliDebugger(std::shared_ptr<DebuggerCore> debugger_core)
     : debugger_core(debugger_core) {}
 
-void DebuggerInterface::tick() {
+void CliDebugger::tick() {
 	cout << "Enter here: ";
 	getline(std::cin, str);
 	bool status = parse_command(str);
@@ -18,7 +17,7 @@ void DebuggerInterface::tick() {
 	}
 }
 
-bool DebuggerInterface::parse_command(string str) {
+bool CliDebugger::parse_command(string str) {
 	if (str.compare("r") == 0 || str.compare("run") == 0) {
 		debugger_core->run();
 		return true;
@@ -32,7 +31,8 @@ bool DebuggerInterface::parse_command(string str) {
 		return true;
 	}
 	if (str.substr(0, 1).compare("p") == 0) {
-		debugger_core->peek(strtoul(str.substr(2).c_str(), nullptr, 10));
+		auto code_string = debugger_core->peek(strtoul(str.substr(2).c_str(), nullptr, 10));
+		cout << code_string << "\n";
 		return true;
 	}
 	split_command(str);
@@ -51,7 +51,7 @@ bool DebuggerInterface::parse_command(string str) {
 	return true;
 }
 
-void DebuggerInterface::split_command(string str) {
+void CliDebugger::split_command(string str) {
 	stringstream ss(str);
 	ss >> command_type;
 	ss >> command;
@@ -59,7 +59,7 @@ void DebuggerInterface::split_command(string str) {
 	cout << command_type << " " << command << " " << command_value << endl;
 }
 
-void DebuggerInterface::print_help() {
+void CliDebugger::print_help() {
 	cout << "Here's a list of commands you can use with the debugger"
 	     << "\n";
 	cout << std::left << std::setw(25) << "bp set 0x??? :" << std::setw(20)

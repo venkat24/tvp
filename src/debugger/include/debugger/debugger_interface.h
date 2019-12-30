@@ -3,27 +3,16 @@
  * Declares the DebuggerCore Interface Class for CLI Operations
  */
 
-#pragma once
-
-#include "debugger.h"
 #include "debugger/debugger.fwd.h"
 
 namespace debugger {
-
-class DebuggerInterface {
-  private:
-	std::shared_ptr<DebuggerCore> debugger_core;
-
-	std::string str;
-	std::string command_type;
-	std::string command;
-	std::string command_value;
-
+class IDebugger {
   public:
-	DebuggerInterface(std::shared_ptr<DebuggerCore> debugger_core);
-	void tick();
-	bool parse_command(std::string str);
-	void split_command(std::string str);
-	void print_help();
+	virtual ~IDebugger(){};
+
+	/**
+	 * Increments the clock by 1
+	 */
+	virtual void tick() = 0;
 };
-} // namespace debugger
+}

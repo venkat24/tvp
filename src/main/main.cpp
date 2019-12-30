@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 	} else {
 		// Start GameBoy with DebuggerCore
 		auto debugger = std::make_shared<DebuggerCore>(std::move(gameboy));
-		auto cli_debugger = std::make_unique<DebuggerInterface>(debugger);
+		auto cli_debugger = std::make_unique<CliDebugger>(debugger);
 		Log::info("tvp DebuggerCore Started");
 		for (auto i = 0; /*Infinite Loop*/; i++) {
 			cli_debugger->tick();

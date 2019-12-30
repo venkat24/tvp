@@ -3,7 +3,8 @@ project(debugger)
 
 set(SOURCE_FILES
     src/debugger.cpp
-    src/debugger_interface.cpp)
+  src/cli_debugger.cpp
+  )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
 

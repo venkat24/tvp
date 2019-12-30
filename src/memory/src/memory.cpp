@@ -113,7 +113,7 @@ uint8_t Memory::read(Address address) const {
 	// Echo RAM, returns copy of RAM
 	if (address_in_range(address, 0xFDFF, 0xE000)) {
 		//		Log::warn("Reading from " + num_to_hex(address) + " which is
-		//Echo RAM");
+		// Echo RAM");
 		return memory[address - 0x2000];
 	}
 
