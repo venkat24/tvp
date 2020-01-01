@@ -20,10 +20,8 @@ void DebuggerCore::tick() {
 
 bool DebuggerCore::set_breakpoint(Address breakpoint) {
 	// A safety measure to ensure breakpoints are not repeated
-	auto found_iterator =
-	    std::find(breakpoints.begin(), breakpoints.end(), breakpoint);
-	if (found_iterator == breakpoints.end()) {
-		breakpoints.push_back(breakpoint);
+	if (breakpoints.find(breakpoint) == breakpoints.end()) {
+		breakpoints.insert(breakpoint);
 		return true;
 	} else {
 		return false;
@@ -31,10 +29,8 @@ bool DebuggerCore::set_breakpoint(Address breakpoint) {
 }
 
 bool DebuggerCore::set_cycle_breakpoint(ClockCycles cycle) {
-	auto found_iterator =
-	    std::find(cycle_breakpoints.begin(), cycle_breakpoints.end(), cycle);
-	if (found_iterator == cycle_breakpoints.end()) {
-		cycle_breakpoints.push_back(cycle);
+	if (cycle_breakpoints.find(cycle) == cycle_breakpoints.end()) {
+		cycle_breakpoints.insert(cycle);
 		return true;
 	} else {
 		return false;
@@ -42,10 +38,8 @@ bool DebuggerCore::set_cycle_breakpoint(ClockCycles cycle) {
 }
 
 bool DebuggerCore::set_tick_breakpoint(ClockCycles tick) {
-	auto found_iterator =
-	    std::find(tick_breakpoints.begin(), tick_breakpoints.end(), tick);
-	if (found_iterator == tick_breakpoints.end()) {
-		tick_breakpoints.push_back(tick);
+	if (tick_breakpoints.find(tick) == tick_breakpoints.end()) {
+		tick_breakpoints.insert(tick);
 		return true;
 	} else {
 		return false;
@@ -54,8 +48,7 @@ bool DebuggerCore::set_tick_breakpoint(ClockCycles tick) {
 
 bool DebuggerCore::remove_breakpoint(Address breakpoint) {
 	// Check if the breakpoint is present in the vector container
-	auto found_iterator =
-	    std::find(breakpoints.begin(), breakpoints.end(), breakpoint);
+	auto found_iterator = breakpoints.find(breakpoint);
 	if (found_iterator == breakpoints.end()) {
 		return false;
 	} else {
@@ -65,8 +58,7 @@ bool DebuggerCore::remove_breakpoint(Address breakpoint) {
 }
 
 bool DebuggerCore::remove_cycle_breakpoint(ClockCycles cycle) {
-	auto found_iterator =
-	    std::find(cycle_breakpoints.begin(), cycle_breakpoints.end(), cycle);
+	auto found_iterator = cycle_breakpoints.find(cycle);
 	if (found_iterator == cycle_breakpoints.end()) {
 		return false;
 	} else {
@@ -76,8 +68,7 @@ bool DebuggerCore::remove_cycle_breakpoint(ClockCycles cycle) {
 }
 
 bool DebuggerCore::remove_tick_breakpoint(ClockCycles tick) {
-	auto found_iterator =
-	    std::find(tick_breakpoints.begin(), tick_breakpoints.end(), tick);
+	auto found_iterator = tick_breakpoints.find(tick);
 	if (found_iterator == tick_breakpoints.end()) {
 		return false;
 	} else {
@@ -86,13 +77,15 @@ bool DebuggerCore::remove_tick_breakpoint(ClockCycles tick) {
 	}
 }
 
-vector<Address> DebuggerCore::get_breakpoints() { return breakpoints; }
+std::unordered_set<Address> DebuggerCore::get_breakpoints() {
+	return breakpoints;
+}
 
-vector<ClockCycles> DebuggerCore::get_cycle_breakpoints() {
+std::unordered_set<ClockCycles> DebuggerCore::get_cycle_breakpoints() {
 	return cycle_breakpoints;
 }
 
-vector<ClockCycles> DebuggerCore::get_tick_breakpoints() {
+std::unordered_set<ClockCycles> DebuggerCore::get_tick_breakpoints() {
 	return tick_breakpoints;
 }
 
@@ -133,7 +126,7 @@ void DebuggerCore::run() {
 		tick();
 	}
 	is_breaking = true;
-	processed_breakpoints.push_back(gameboy->cpu->pc->get());
+	processed_breakpoints.insert(gameboy->cpu->pc->get());
 }
 
 void DebuggerCore::step() { tick(); }

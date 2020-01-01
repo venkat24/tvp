@@ -8,7 +8,10 @@
 #include "debugger.h"
 #include "debugger/debugger.fwd.h"
 #include "debugger/debugger_interface.h"
+
 #include <cxxopts.hpp>
+
+#include <unordered_set>
 
 namespace debugger {
 

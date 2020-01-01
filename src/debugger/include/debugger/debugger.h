@@ -17,6 +17,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 using namespace std;
@@ -44,7 +45,7 @@ class DebuggerCore {
 	/**
 	 * A vector container for storing instruction breakpoints
 	 */
-	std::vector<Address> breakpoints;
+	std::unordered_set<Address> breakpoints;
 
 	/**
 	 * A bool value to specify whether the debugger has currently encountered a
@@ -56,22 +57,17 @@ class DebuggerCore {
 	/**
 	 * A vector for storing all the processed breakpoints
 	 */
-	std::vector<Address> processed_breakpoints;
+	std::unordered_set<Address> processed_breakpoints;
 
 	/**
 	 * A vector container for storing breakpoints at CPU cycles
 	 */
-	std::vector<ClockCycles> cycle_breakpoints;
+	std::unordered_set<ClockCycles> cycle_breakpoints;
 
 	/**
 	 * A vector container for storing breakpoints at GameBoy cycles
 	 */
-	std::vector<ClockCycles> tick_breakpoints;
-
-	/**
-	 * A vector container iterator to keep track of breakpoints
-	 */
-	std::vector<Address>::iterator breakpoints_iter = breakpoints.begin();
+	std::unordered_set<ClockCycles> tick_breakpoints;
 
 	/**
 	 * A flag to check if we have reached the breakpoint
@@ -114,9 +110,9 @@ class DebuggerCore {
 	virtual bool remove_cycle_breakpoint(ClockCycles cycle);
 
 	// Get current debugger state
-	virtual vector<Address> get_breakpoints();
-	virtual vector<ClockCycles> get_cycle_breakpoints();
-	virtual vector<ClockCycles> get_tick_breakpoints();
+	virtual std::unordered_set<Address> get_breakpoints();
+	virtual std::unordered_set<ClockCycles> get_cycle_breakpoints();
+	virtual std::unordered_set<ClockCycles> get_tick_breakpoints();
 
 	virtual void run();
 	virtual void step();
