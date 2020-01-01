@@ -299,8 +299,7 @@ void Memory::write(Address address, uint8_t data) {
 	// Cartridge RAM
 	if (address_in_range(address, 0xBFFF, 0xA000)) {
 		// TODO: Return Cartridge RAM if available
-		//		Log::warn("Tried to write to Cart RAM from " +
-		// num_to_hex(address));
+		Log::warn("Tried to write to Cart RAM from " + num_to_hex(address));
 		return;
 	}
 

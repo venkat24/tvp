@@ -1,6 +1,6 @@
 /**
  * @file debugger_interface.h
- * Declares the DebuggerCore Interface Class for CLI Operations
+ * Declares the DebuggerCore Interface Class
  */
 
 namespace debugger {

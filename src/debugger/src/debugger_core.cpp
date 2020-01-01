@@ -1,5 +1,5 @@
 /**
- * @file debugger.cpp
+ * @file debugger_core.cpp
  * Defines the DebuggerCore class
  */
 
@@ -92,41 +92,16 @@ std::unordered_set<ClockCycles> DebuggerCore::get_tick_breakpoints() {
 void DebuggerCore::run() {
 	if (is_breaking) {
 		is_breaking = false;
-
-		/**
-		 * To increment the PC by one here. Since we have recently
-		 * finished processing a breakpoint, we don't want to get stuck at the
-		 * same breakpoint.
-		 */
 		tick();
 	}
 
-	/**
-	 * Return to the Interface if no breakpoints are there to process
-	 */
-	if (breakpoints.empty() && tick_breakpoints.empty() &&
-	    cycle_breakpoints.empty()) {
-		return;
-	}
-
-	/**
-	 * Searching through all the breakpoints can be taxing, to prevent this we
-	 * keep an counter(Iterators are unsafe) for each of the kinds of
-	 * breakpoints and increment the counter by one, once a breakpoint is
-	 * reached. If all the breakpoints are processed, we wait for another
-	 * breakpoint and keep the iterator in it's position. This will work for
-	 * System tick breakpoints and CPU cycles, I have my doubts about
-	 * Instruction breakpoints so I am going to use a STL search function for
-	 * instruction breakpoints;
-	 */
-	while (std::find(breakpoints.begin(), breakpoints.end(),
-	                 gameboy->cpu->pc->get()) == breakpoints.end() ||
-	       std::find(processed_breakpoints.begin(), processed_breakpoints.end(),
-	                 gameboy->cpu->pc->get()) != processed_breakpoints.end()) {
+	while (breakpoints.find(gameboy->cpu->pc->get()) == breakpoints.end() &&
+	       tick_breakpoints.find(ticks) == tick_breakpoints.end() &&
+	       cycle_breakpoints.find(gameboy->gpu->current_cycles) ==
+	           cycle_breakpoints.end()) {
 		tick();
 	}
 	is_breaking = true;
-	processed_breakpoints.insert(gameboy->cpu->pc->get());
 }
 
 void DebuggerCore::step() { tick(); }

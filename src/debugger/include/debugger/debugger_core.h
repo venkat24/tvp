@@ -1,5 +1,5 @@
 /**
- * @file debugger.h
+ * @file debugger_core.h
  * Declares the DebuggerCore Class
  */
 
@@ -14,11 +14,11 @@
 #include "memory/utils.h"
 
 #include <cstdint>
+#include <map>
 #include <memory>
 #include <string>
 #include <unordered_set>
 #include <vector>
-#include <map>
 
 using namespace std;
 using namespace cpu;
@@ -118,8 +118,6 @@ class DebuggerCore {
 	virtual void step();
 
 	virtual std::map<Address, std::string> peek(uint32_t lines);
-
-	friend class IDebugger;
 };
 
 } // namespace debugger

@@ -4,33 +4,31 @@
 using namespace debugger;
 using namespace std;
 
-CliDebugger::CliDebugger(std::shared_ptr<DebuggerCore> debugger_core)
-    : debugger_core(debugger_core), command_parser("tdb", "The tvp Debugger") {
+CliDebugger::CliDebugger(std::unique_ptr<DebuggerCore> debugger_core)
+    : debugger_core(move(debugger_core)),
+      command_parser("tdb", "The tvp Debugger") {
 
-	command_parser.add_options()("run",
-	                             "Run the ROM till it encounters a breakpoint")(
-	    "step", "Execute one System tick")(
-	    "bp-set", "Set a breakpoint",
-	    cxxopts::value<string>()->default_value("NULL"))(
-	    "bp-remove", "Remove a breakpoint",
-	    cxxopts::value<string>()->default_value("NULL"))(
-	    "bp_cycles-set", "Set a CPU cycle breakpoint",
-	    cxxopts::value<ClockCycles>()->default_value("0"))(
-	    "bp_cycles-remove", "Remove a breakpoint",
-	    cxxopts::value<ClockCycles>()->default_value("0"))(
-	    "bp_ticks-set", "Set a breakpoint",
-	    cxxopts::value<ClockCycles>()->default_value("0"))(
-	    "bp_ticks-remove", "Remove a breakpoint",
-	    cxxopts::value<ClockCycles>()->default_value("0"))(
-	    "peek", "Peek into the next \'x\' lines of the ROM",
-	    cxxopts::value<uint32_t>()->default_value("0"))(
-	    "help", "Print this information")("bp-view",
-	                                      "View All Instruction Breakpoints")(
-	    "bp_ticks-view", "View all Tick Breakpoints")(
-	    "bp_cycles-view", "View all CPU Cycle Breakpoints");
+	// clang-format off
+	command_parser.add_options()
+	    ("run","Run the ROM till it encounters a breakpoint")
+	    ("step", "Execute one System tick")
+	    ("bp-set", "Set a breakpoint",cxxopts::value<string>()->default_value("NULL"))
+	    ("bp-remove", "Remove a breakpoint",cxxopts::value<string>()->default_value("NULL"))
+	    ("bp_cycles-set", "Set a CPU cycle breakpoint",cxxopts::value<ClockCycles>()->default_value("0"))
+	    ("bp_cycles-remove", "Remove a breakpoint",cxxopts::value<ClockCycles>()->default_value("0"))
+	    ("bp_ticks-set", "Set a breakpoint",cxxopts::value<ClockCycles>()->default_value("0"))
+	    ("bp_ticks-remove", "Remove a breakpoint",cxxopts::value<ClockCycles>()->default_value("0"))
+	    ("peek", "Peek into the next \'x\' lines of the ROM",cxxopts::value<uint32_t>()->default_value("0"))
+	    ("bp-view","View All Instruction Breakpoints")
+	    ("bp_ticks-view", "View all Tick Breakpoints")
+	    ("bp_cycles-view", "View all CPU Cycle Breakpoints")
+        ("help", "Print this information");
+
+	// clang-format on
 }
 
 void CliDebugger::tick() {
+	std::string str;
 	do {
 		cout << "(tdb) ";
 		getline(std::cin, str);
