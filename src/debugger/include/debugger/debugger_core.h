@@ -8,7 +8,6 @@
 #include "cartridge/cartridge.h"
 #include "cpu/cpu.h"
 #include "cpu/utils.h"
-#include "debugger/cli_debugger.h"
 #include "gameboy/gameboy.h"
 #include "gpu/gpu.h"
 #include "memory/memory.h"
@@ -19,6 +18,7 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include <map>
 
 using namespace std;
 using namespace cpu;
@@ -117,7 +117,7 @@ class DebuggerCore {
 	virtual void run();
 	virtual void step();
 
-	virtual std::string peek(uint32_t lines);
+	virtual std::map<Address, std::string> peek(uint32_t lines);
 
 	friend class IDebugger;
 };

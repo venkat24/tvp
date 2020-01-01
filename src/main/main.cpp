@@ -3,7 +3,8 @@
  * Main entrypoint for the tvp executable
  */
 
-#include "debugger/debugger.h"
+#include "debugger/cli_debugger.h"
+#include "debugger/debugger_core.h"
 #include "gameboy/gameboy.h"
 
 #include <cxxopts.hpp>

@@ -58,9 +58,10 @@ bool CliDebugger::run_command() {
 		return true;
 	}
 	if (parsed_args["peek"].as<uint32_t>() > 0) {
-		auto code_string =
-		    debugger_core->peek(parsed_args["peek"].as<uint32_t>());
-		cout << code_string << "\n";
+		auto code_map = debugger_core->peek(parsed_args["peek"].as<uint32_t>());
+		for (auto i : code_map) {
+			cout << hex << i.first << ": " << i.second << "\n";
+		}
 		return true;
 	}
 	if (parsed_args["bp-set"].as<string>() != "NULL") {
@@ -129,7 +130,7 @@ bool CliDebugger::run_command() {
 	}
 	if (parsed_args["bp_cycles-view"].as<bool>()) {
 		auto cycles_bp = debugger_core->get_cycle_breakpoints();
-		cout << "THe cycle breakpoints are: ";
+		cout << "The cycle breakpoints are: ";
 		for (auto i : cycles_bp) {
 			cout << i << " ";
 		}

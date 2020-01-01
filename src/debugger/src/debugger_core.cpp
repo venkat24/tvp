@@ -3,7 +3,7 @@
  * Defines the DebuggerCore class
  */
 
-#include "debugger/debugger.h"
+#include "debugger/debugger_core.h"
 #include "gameboy/gameboy.h"
 
 #include <algorithm>
@@ -131,15 +131,15 @@ void DebuggerCore::run() {
 
 void DebuggerCore::step() { tick(); }
 
-std::string DebuggerCore::peek(uint32_t lines) {
+std::map<Address, std::string> DebuggerCore::peek(uint32_t lines) {
 	auto pc_contents = gameboy->cpu->pc->get();
-	std::string code_string = "";
+	std::map<Address, std::string> code_map;
 	for (auto i = 0; i < lines; i++) {
-		code_string += to_string(+pc_contents) + ": " +
-		               get_mnemonic(gameboy->memory->read(pc_contents)) + "\n";
+		code_map.insert(
+		    {+pc_contents, get_mnemonic(gameboy->memory->read(pc_contents))});
 		pc_contents++;
 	}
-	return code_string;
+	return code_map;
 }
 
 } // namespace debugger

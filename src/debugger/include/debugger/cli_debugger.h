@@ -5,13 +5,14 @@
 
 #pragma once
 
-#include "debugger.h"
 #include "debugger/debugger.fwd.h"
 #include "debugger/debugger_interface.h"
+#include "debugger_core.h"
 
 #include <cxxopts.hpp>
 
 #include <unordered_set>
+#include <map>
 
 namespace debugger {
 
