@@ -5,79 +5,151 @@ using namespace debugger;
 using namespace std;
 
 CliDebugger::CliDebugger(std::shared_ptr<DebuggerCore> debugger_core)
-    : debugger_core(debugger_core) {}
+    : debugger_core(debugger_core), command_parser("tdb", "The tvp Debugger") {
 
-void CliDebugger::tick() {
-	cout << "Enter here: ";
-	getline(std::cin, str);
-	bool status = parse_command(str);
-	if (!status) {
-		cout << "Not a valid Command, press h for help" << endl;
-		tick();
-	}
+	command_parser.add_options()("run",
+	                             "Run the ROM till it encounters a breakpoint")(
+	    "step", "Execute one System tick")(
+	    "bp-set", "Set a breakpoint",
+	    cxxopts::value<string>()->default_value("NULL"))(
+	    "bp-remove", "Remove a breakpoint",
+	    cxxopts::value<string>()->default_value("NULL"))(
+	    "bp_cycles-set", "Set a CPU cycle breakpoint",
+	    cxxopts::value<ClockCycles>()->default_value("0"))(
+	    "bp_cycles-remove", "Remove a breakpoint",
+	    cxxopts::value<ClockCycles>()->default_value("0"))(
+	    "bp_ticks-set", "Set a breakpoint",
+	    cxxopts::value<ClockCycles>()->default_value("0"))(
+	    "bp_ticks-remove", "Remove a breakpoint",
+	    cxxopts::value<ClockCycles>()->default_value("0"))(
+	    "peek", "Peek into the next \'x\' lines of the ROM",
+	    cxxopts::value<uint32_t>()->default_value("0"))(
+	    "help", "Print this information")("bp-view",
+	                                      "View All Instruction Breakpoints")(
+	    "bp_ticks-view", "View all Tick Breakpoints")(
+	    "bp_cycles-view", "View all CPU Cycle Breakpoints");
 }
 
-bool CliDebugger::parse_command(string str) {
-	if (str.compare("r") == 0 || str.compare("run") == 0) {
+void CliDebugger::tick() {
+	do {
+		cout << "(tdb) ";
+		getline(std::cin, str);
+
+		/**
+		 * A hack to make CLI parsing compatible with cxxopts.
+		 */
+		str = "./tdb --" + str;
+		cmd_attributes_gen(str);
+	} while (!run_command());
+}
+
+bool CliDebugger::run_command() {
+	auto parsed_args = command_parser.parse(argc, argv);
+	if (parsed_args["run"].as<bool>()) {
 		debugger_core->run();
 		return true;
 	}
-	if (str.compare("s") == 0 || str.compare("step") == 0) {
+	if (parsed_args["step"].as<bool>()) {
 		debugger_core->step();
 		return true;
 	}
-	if (str.compare("h") == 0 || str.compare("help") == 0) {
-		print_help();
+	if (parsed_args["help"].as<bool>()) {
+		cout << command_parser.help() << "\n";
 		return true;
 	}
-	if (str.substr(0, 1).compare("p") == 0) {
-		auto code_string = debugger_core->peek(strtoul(str.substr(2).c_str(), nullptr, 10));
+	if (parsed_args["peek"].as<uint32_t>() > 0) {
+		auto code_string =
+		    debugger_core->peek(parsed_args["peek"].as<uint32_t>());
 		cout << code_string << "\n";
 		return true;
 	}
-	split_command(str);
-	if (command_type.compare("bp") == 0) {
-		if (command.compare("set") == 0) {
-			debugger_core->set_breakpoint(
-			    strtoul(command_value.c_str(), nullptr, 16));
-		} else if (command.compare("remove") == 0)
-			debugger_core->remove_tick_breakpoint(stoi(command_value));
-		else {
-			return false;
-		}
-	} else {
-		return false;
+	if (parsed_args["bp-set"].as<string>() != "NULL") {
+		auto code = debugger_core->set_breakpoint(
+		    string_to_hex(parsed_args["bp-set"].as<string>()));
+		if (!code)
+			cout << "bp already set!"
+			     << "\n";
+		return code;
 	}
+	if (parsed_args["bp-remove"].as<string>() != "NULL") {
+		auto code = debugger_core->remove_breakpoint(
+		    string_to_hex(parsed_args["bp-remove"].as<string>()));
+		if (!code)
+			cout << "bp not present!"
+			     << "\n";
+		return code;
+	}
+	if (parsed_args["bp_ticks-set"].as<ClockCycles>() > 0) {
+		auto code = debugger_core->set_tick_breakpoint(
+		    parsed_args["bp_ticks-set"].as<ClockCycles>());
+		if (!code)
+			cout << "bp already set!"
+			     << "\n";
+		return code;
+	}
+	if (parsed_args["bp_ticks-remove"].as<ClockCycles>() > 0) {
+		auto code = debugger_core->remove_tick_breakpoint(
+		    parsed_args["bp_ticks-remove"].as<ClockCycles>());
+		if (!code)
+			cout << "bp not present!"
+			     << "\n";
+		return code;
+	}
+	if (parsed_args["bp_cycles-set"].as<ClockCycles>() > 0) {
+		auto code = debugger_core->set_cycle_breakpoint(
+		    parsed_args["bp_ticks-set"].as<ClockCycles>());
+		if (!code)
+			cout << "bp already set!"
+			     << "\n";
+		return code;
+	}
+	if (parsed_args["bp_cycles-remove"].as<ClockCycles>() > 0) {
+		auto code = debugger_core->remove_cycle_breakpoint(
+		    parsed_args["bp_ticks-remove"].as<ClockCycles>());
+		if (!code)
+			cout << "bp not present!"
+			     << "\n";
+		return code;
+	}
+	if (parsed_args["bp-view"].as<bool>()) {
+		auto instr_bp = debugger_core->get_breakpoints();
+		cout << "The instructions breakpoints are: ";
+		for (auto i : instr_bp) {
+			cout << hex << i << " ";
+		}
+		cout << "\n";
+	}
+	if (parsed_args["bp_ticks-view"].as<bool>()) {
+		auto tick_bp = debugger_core->get_tick_breakpoints();
+		cout << "The tick breakpoints are: ";
+		for (auto i : tick_bp) {
+			cout << i << " ";
+		}
+		cout << "\n";
+	}
+	if (parsed_args["bp_cycles-view"].as<bool>()) {
+		auto cycles_bp = debugger_core->get_cycle_breakpoints();
+		cout << "THe cycle breakpoints are: ";
+		for (auto i : cycles_bp) {
+			cout << i << " ";
+		}
+		cout << "\n";
+	}
+
 	return true;
 }
 
-void CliDebugger::split_command(string str) {
-	stringstream ss(str);
-	ss >> command_type;
-	ss >> command;
-	ss >> command_value;
-	cout << command_type << " " << command << " " << command_value << endl;
-}
-
-void CliDebugger::print_help() {
-	cout << "Here's a list of commands you can use with the debugger"
-	     << "\n";
-	cout << std::left << std::setw(25) << "bp set 0x??? :" << std::setw(20)
-	     << "Set a instruction breakpoint. The Instruction should be in hex "
-	        "and should be led by 0x"
-	     << "\n";
-	cout << std::left << std::setw(25) << "bp-ticks set ???? :" << std::setw(20)
-	     << "Set a breakpoint wrt the system ticks. This can be a very large "
-	        "number."
-	     << "\n";
-	cout << std::left << std::setw(25)
-	     << "bp-cycles set ???? :" << std::setw(20)
-	     << "Set a breakpoint wrt the CPU cycles."
-	     << "\n";
-	cout << std::left << std::setw(25) << "r or run :" << std::setw(20)
-	     << "Run the ROM till it encounters a breakpoint."
-	     << "\n";
-	cout << std::left << std::setw(25) << "s or step :" << std::setw(20)
-	     << "Execute one System tick"
-	     << "\n";
+void CliDebugger::cmd_attributes_gen(std::string command) {
+	argv_vec.clear();
+	argc = 0;
+	stringstream string_splitter(command);
+	std::string temp_string;
+	while (string_splitter >> temp_string) {
+		char *arg = new char[temp_string.size() + 1];
+		copy(temp_string.begin(), temp_string.end(), arg);
+		arg[temp_string.length()] = '\0';
+		argv_vec.push_back(arg);
+		argc++;
+	}
+	argv = &argv_vec[0];
 }

@@ -8,6 +8,7 @@
 #include "debugger.h"
 #include "debugger/debugger.fwd.h"
 #include "debugger/debugger_interface.h"
+#include <cxxopts.hpp>
 
 namespace debugger {
 
@@ -16,15 +17,15 @@ class CliDebugger : public IDebugger {
 	std::shared_ptr<DebuggerCore> debugger_core;
 
 	std::string str;
-	std::string command_type;
-	std::string command;
-	std::string command_value;
+	int argc;
+	std::vector<char *> argv_vec;
+	char **argv;
+	cxxopts::Options command_parser;
 
   public:
 	CliDebugger(std::shared_ptr<DebuggerCore> debugger_core);
 	void tick() override;
-	bool parse_command(std::string str);
-	void split_command(std::string str);
-	void print_help();
+	bool run_command();
+	void cmd_attributes_gen(std::string str);
 };
 } // namespace debugger

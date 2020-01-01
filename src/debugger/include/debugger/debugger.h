@@ -94,30 +94,24 @@ class DebuggerCore {
 	 * already present
 	 * @param breakpoint of Instructions, ticks and clocks
 	 *
-	 * returns 0 if Breakpoint was already present, so not added;
-	 * returns 1 if Breakpoint was successfully inserted;
-	 * returns 2 default return value. Will not reach here;
-	 * I chose uint8_t as a return type so that we can add to the error codes
-	 * here if the need arises in the future.
+	 * returns false if Breakpoint was already present, so not added;
+	 * returns true if Breakpoint was successfully inserted;
 	 */
-	virtual uint8_t set_breakpoint(Address breakpoint);
-	virtual uint8_t set_tick_breakpoint(ClockCycles tick);
-	virtual uint8_t set_cycle_breakpoint(ClockCycles cycle);
+	virtual bool set_breakpoint(Address breakpoint);
+	virtual bool set_tick_breakpoint(ClockCycles tick);
+	virtual bool set_cycle_breakpoint(ClockCycles cycle);
 
 	/**
 	 * @brief Removes breakpoints from Vector container and returns
 	 * corresponding code
 	 * @param breakpoint of Instructions, ticks and clocks
 	 *
-	 * returns 0 if Breakpoint was not present, so not removed;
-	 * returns 1 if Breakpoint was successfully removed;
-	 * returns 2 default return value. Will not reach here;
-	 * I chose uint8_t as a return type so that we can add to the error codes
-	 * here if the need arises in the future.
+	 * returns false if Breakpoint was not present, so not removed;
+	 * returns true if Breakpoint was successfully removed;
 	 */
-	virtual uint8_t remove_breakpoint(Address breakpoint);
-	virtual uint8_t remove_tick_breakpoint(ClockCycles tick);
-	virtual uint8_t remove_cycle_breakpoint(ClockCycles cycle);
+	virtual bool remove_breakpoint(Address breakpoint);
+	virtual bool remove_tick_breakpoint(ClockCycles tick);
+	virtual bool remove_cycle_breakpoint(ClockCycles cycle);
 
 	// Get current debugger state
 	virtual vector<Address> get_breakpoints();

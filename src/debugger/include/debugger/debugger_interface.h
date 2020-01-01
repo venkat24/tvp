@@ -3,8 +3,6 @@
  * Declares the DebuggerCore Interface Class for CLI Operations
  */
 
-#include "debugger/debugger.fwd.h"
-
 namespace debugger {
 class IDebugger {
   public:
@@ -15,4 +13,4 @@ class IDebugger {
 	 */
 	virtual void tick() = 0;
 };
-}
+} // namespace debugger
