@@ -7,6 +7,7 @@
 #include "gameboy/gameboy.h"
 
 #include <algorithm>
+#include <string>
 
 namespace debugger {
 

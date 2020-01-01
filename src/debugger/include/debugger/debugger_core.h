@@ -55,11 +55,6 @@ class DebuggerCore {
 	bool is_breaking = false;
 
 	/**
-	 * A vector for storing all the processed breakpoints
-	 */
-	std::unordered_set<Address> processed_breakpoints;
-
-	/**
 	 * A vector container for storing breakpoints at CPU cycles
 	 */
 	std::unordered_set<ClockCycles> cycle_breakpoints;
@@ -68,11 +63,6 @@ class DebuggerCore {
 	 * A vector container for storing breakpoints at GameBoy cycles
 	 */
 	std::unordered_set<ClockCycles> tick_breakpoints;
-
-	/**
-	 * A flag to check if we have reached the breakpoint
-	 */
-	bool is_breakpoint = false;
 
   public:
 	/**
@@ -114,9 +104,21 @@ class DebuggerCore {
 	virtual std::unordered_set<ClockCycles> get_cycle_breakpoints();
 	virtual std::unordered_set<ClockCycles> get_tick_breakpoints();
 
+	/**
+	 * @brief Run until we encounter a breakpoint
+	 */
 	virtual void run();
+
+	/**
+	 * @brief Execute 1 System tick
+	 */
 	virtual void step();
 
+	/**
+	 * @brief Return the next 'x' lines of code
+	 * @param number of lines of code
+	 * @return A map of Instruction Addresses with corresponding mnemonic
+	 */
 	virtual std::map<Address, std::string> peek(uint32_t lines);
 };
 
