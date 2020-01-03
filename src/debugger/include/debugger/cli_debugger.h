@@ -24,16 +24,14 @@ class CliDebugger : public IDebugger {
 	std::unique_ptr<DebuggerCore> debugger_core;
 
 	/**
-	 * argv_vec helps construct argc and argv for CLI parsing via cxxopts
-	 */
-	std::vector<char *> argv_vec;
-	int argc;
-	char **argv;
-
-	/**
 	 * A Command parser provided by cxxopts
 	 */
 	cxxopts::Options command_parser;
+
+	/**
+	 * A boolean status to indicate whether a CLI Operation succeeded or not
+	 */
+	bool status;
 
   public:
 	/**
@@ -46,13 +44,13 @@ class CliDebugger : public IDebugger {
 	 * @return A status true or false, indicating whether the given operation
 	 * succeeded or not
 	 */
-	bool run_command();
+	bool run_command(int argc, char **argv);
 
 	/**
 	 * @brief Generates corresponding argc and argv for the given command
 	 * @param command: The user input
 	 */
-	void cmd_attributes_gen(std::string command);
+	std::tuple<int, char **> cmd_string_to_argv(std::string command);
 
 	CliDebugger(std::unique_ptr<DebuggerCore> debugger_core);
 };

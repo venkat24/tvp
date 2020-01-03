@@ -95,13 +95,21 @@ void DebuggerCore::run() {
 		is_breaking = false;
 		tick();
 	}
+	bool is_breakpoint_hit;
+	bool is_ticks_breakpoint_hit;
+	bool is_cycles_breakpoint_hit;
 
-	while (breakpoints.find(gameboy->cpu->pc->get()) == breakpoints.end() &&
-	       tick_breakpoints.find(ticks) == tick_breakpoints.end() &&
-	       cycle_breakpoints.find(gameboy->gpu->current_cycles) ==
-	           cycle_breakpoints.end()) {
+	do {
+		is_breakpoint_hit =
+		    breakpoints.find(gameboy->cpu->pc->get()) != breakpoints.end();
+		is_ticks_breakpoint_hit =
+		    tick_breakpoints.find(ticks) != tick_breakpoints.end();
+		is_cycles_breakpoint_hit =
+		    cycle_breakpoints.find(gameboy->cpu->total_cpu_cycles) !=
+		    cycle_breakpoints.end();
 		tick();
-	}
+	} while (!is_breakpoint_hit && !is_ticks_breakpoint_hit &&
+	         !is_cycles_breakpoint_hit);
 	is_breaking = true;
 }
 
@@ -110,11 +118,7 @@ void DebuggerCore::step() { tick(); }
 std::map<Address, std::string> DebuggerCore::peek(uint32_t lines) {
 	auto pc_contents = gameboy->cpu->pc->get();
 	std::map<Address, std::string> code_map;
-	for (auto i = 0; i < lines; i++) {
-		code_map.insert(
-		    {+pc_contents, get_mnemonic(gameboy->memory->read(pc_contents))});
-		pc_contents++;
-	}
+	code_map.insert({0, "Peek Not Implemented!"});
 	return code_map;
 }
 
