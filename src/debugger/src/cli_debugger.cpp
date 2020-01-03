@@ -10,15 +10,15 @@ CliDebugger::CliDebugger(std::unique_ptr<DebuggerCore> debugger_core)
 
 	// clang-format off
 	command_parser.add_options()
-	    ("run","Run the ROM till it encounters a breakpoint")
+	    ("run", "Run the ROM till it encounters a breakpoint")
 	    ("step", "Execute one System tick")
-	    ("bp-set", "Set a breakpoint",cxxopts::value<string>())
-	    ("bp-remove", "Remove a breakpoint",cxxopts::value<string>())
-	    ("bp_cycles-set", "Set a CPU cycle breakpoint",cxxopts::value<ClockCycles>()->default_value("0"))
-	    ("bp_cycles-remove", "Remove a breakpoint",cxxopts::value<ClockCycles>()->default_value("0"))
-	    ("bp_ticks-set", "Set a breakpoint",cxxopts::value<ClockCycles>()->default_value("0"))
-	    ("bp_ticks-remove", "Remove a breakpoint",cxxopts::value<ClockCycles>()->default_value("0"))
-	    ("peek", "Peek into the next \'x\' lines of the ROM",cxxopts::value<uint32_t>()->default_value("0"))
+	    ("bp-set", "Set a breakpoint", cxxopts::value<string>())
+	    ("bp-remove", "Remove a breakpoint", cxxopts::value<string>())
+	    ("bp_cycles-set", "Set a CPU cycle breakpoint", cxxopts::value<ClockCycles>()->default_value("0"))
+	    ("bp_cycles-remove", "Remove a breakpoint", cxxopts::value<ClockCycles>()->default_value("0"))
+	    ("bp_ticks-set", "Set a breakpoint", cxxopts::value<ClockCycles>()->default_value("0"))
+	    ("bp_ticks-remove", "Remove a breakpoint", cxxopts::value<ClockCycles>()->default_value("0"))
+	    ("peek", "Peek into the next \'x\' lines of the ROM", cxxopts::value<uint32_t>()->default_value("0"))
 	    ("bp-view", "View All Instruction Breakpoints")
 	    ("bp_ticks-view", "View all Tick Breakpoints")
 	    ("bp_cycles-view", "View all CPU Cycle Breakpoints")
@@ -51,6 +51,33 @@ bool CliDebugger::run_command(int argc, char **argv) {
 	}
 	if (parsed_args["step"].as<bool>()) {
 		debugger_core->step();
+		return true;
+	}
+	if (parsed_args["bp-view"].as<bool>()) {
+		auto instr_bp = debugger_core->get_breakpoints();
+		cout << "The instructions breakpoints are: ";
+		for (auto i : instr_bp) {
+			cout << hex << i << " ";
+		}
+		cout << "\n";
+		return true;
+	}
+	if (parsed_args["bp_ticks-view"].as<bool>()) {
+		auto tick_bp = debugger_core->get_tick_breakpoints();
+		cout << "The tick breakpoints are: ";
+		for (auto i : tick_bp) {
+			cout << i << " ";
+		}
+		cout << "\n";
+		return true;
+	}
+	if (parsed_args["bp_cycles-view"].as<bool>()) {
+		auto cycles_bp = debugger_core->get_cycle_breakpoints();
+		cout << "The cycle breakpoints are: ";
+		for (auto i : cycles_bp) {
+			cout << i << " ";
+		}
+		cout << "\n";
 		return true;
 	}
 	if (parsed_args["help"].as<bool>()) {
@@ -112,31 +139,6 @@ bool CliDebugger::run_command(int argc, char **argv) {
 			     << "\n";
 		return code;
 	}
-	if (parsed_args["bp-view"].as<bool>()) {
-		auto instr_bp = debugger_core->get_breakpoints();
-		cout << "The instructions breakpoints are: ";
-		for (auto i : instr_bp) {
-			cout << hex << i << " ";
-		}
-		cout << "\n";
-	}
-	if (parsed_args["bp_ticks-view"].as<bool>()) {
-		auto tick_bp = debugger_core->get_tick_breakpoints();
-		cout << "The tick breakpoints are: ";
-		for (auto i : tick_bp) {
-			cout << i << " ";
-		}
-		cout << "\n";
-	}
-	if (parsed_args["bp_cycles-view"].as<bool>()) {
-		auto cycles_bp = debugger_core->get_cycle_breakpoints();
-		cout << "The cycle breakpoints are: ";
-		for (auto i : cycles_bp) {
-			cout << i << " ";
-		}
-		cout << "\n";
-	}
-
 	return true;
 }
 
