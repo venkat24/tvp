@@ -29,7 +29,7 @@ CliDebugger::CliDebugger(std::unique_ptr<DebuggerCore> debugger_core)
 
 void CliDebugger::tick() {
 	std::string str;
-
+    bool status;
 	do {
 		cout << "(tdb) ";
 		getline(std::cin, str);
@@ -57,7 +57,7 @@ bool CliDebugger::run_command(int argc, char **argv) {
 		auto instr_bp = debugger_core->get_breakpoints();
 		cout << "The instructions breakpoints are: ";
 		for (auto i : instr_bp) {
-			cout << hex << i << " ";
+			cout << num_to_hex(i) << " ";
 		}
 		cout << "\n";
 		return true;
@@ -87,7 +87,7 @@ bool CliDebugger::run_command(int argc, char **argv) {
 	if (parsed_args["peek"].as<uint32_t>() > 0) {
 		auto code_map = debugger_core->peek(parsed_args["peek"].as<uint32_t>());
 		for (auto i : code_map) {
-			cout << hex << i.first << ": " << i.second << "\n";
+			cout << num_to_hex(i.first) << ": " << i.second << "\n";
 		}
 		return true;
 	}

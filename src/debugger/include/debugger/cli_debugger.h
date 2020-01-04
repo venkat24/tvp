@@ -28,11 +28,6 @@ class CliDebugger : public IDebugger {
 	 */
 	cxxopts::Options command_parser;
 
-	/**
-	 * A boolean status to indicate whether a CLI Operation succeeded or not
-	 */
-	bool status;
-
   public:
 	/**
 	 * @brief: Overrides tick() and we take user input in this function
