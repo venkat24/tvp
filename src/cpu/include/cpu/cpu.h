@@ -30,6 +30,11 @@ class CPU : public CPUInterface {
 	unsigned long long ticks = 0;
 
 	/**
+	 * Total CPU cycles
+	 */
+	ClockCycles total_cpu_cycles = 0;
+
+	/**
 	 * Define the set of standard, 8-bit registers
 	 * There are 8 total small registers, with f being the flag register
 	 */
@@ -279,7 +284,7 @@ class CPU : public CPUInterface {
 	/**
 	 * Allow debugger to view private members of this class
 	 */
-	friend class debugger::Debugger;
+	friend class debugger::DebuggerCore;
 };
 
 } // namespace cpu

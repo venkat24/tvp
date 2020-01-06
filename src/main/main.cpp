@@ -3,7 +3,8 @@
  * Main entrypoint for the tvp executable
  */
 
-#include "debugger/debugger.h"
+#include "debugger/cli_debugger.h"
+#include "debugger/debugger_core.h"
 #include "gameboy/gameboy.h"
 
 #include <cxxopts.hpp>
@@ -20,7 +21,7 @@ using namespace controller;
 
 int main(int argc, char *argv[]) {
 	ios_base::sync_with_stdio(false);
-	Log::Enable();
+	Log::Disable();
 
 	auto cmdline_args_parser =
 	    cxxopts::Options("tvp", "Welcome to tvp - The GameBoy Emulator!");
@@ -59,15 +60,18 @@ int main(int argc, char *argv[]) {
 	// Turn on debugging if needed
 	auto debugger_on = parsed_args["debug"].as<bool>();
 	if (not debugger_on) {
-		// Start Gameboy normally
+		// Start GameBoy normally
 		for (auto i = 0; /*Infinite Loop*/; i++) {
 			gameboy->tick();
 		}
 	} else {
-		// Start Gameboy with Debugger
-		auto debugger = std::make_unique<Debugger>(std::move(gameboy));
+		// Start GameBoy with DebuggerCore
+		auto debugger_core = std::make_unique<DebuggerCore>(std::move(gameboy));
+		auto cli_debugger =
+		    std::make_unique<CliDebugger>(std::move(debugger_core));
+		Log::info("tvp DebuggerCore Started");
 		for (auto i = 0; /*Infinite Loop*/; i++) {
-			debugger->tick();
+			cli_debugger->tick();
 		}
 	}
 

@@ -103,7 +103,7 @@ class Gameboy {
 	/**
 	 * The all-seeing Debugger overlord may peep into this object, muahaha!
 	 */
-	friend class debugger::Debugger;
+	friend class debugger::DebuggerCore;
 };
 
 } // namespace gameboy

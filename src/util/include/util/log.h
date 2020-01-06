@@ -21,6 +21,7 @@ class Log {
 	 * True if the logger is enabled, false otherwise
 	 */
 	inline static bool enabled;
+
   public:
 	Log() = delete;
 

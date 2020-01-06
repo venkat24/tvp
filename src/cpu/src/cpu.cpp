@@ -646,6 +646,8 @@ ClockCycles CPU::tick() {
 		current_cycles = cycles_cb[opcode];
 	}
 
+	total_cpu_cycles += current_cycles;
+
 	return current_cycles;
 }
 
