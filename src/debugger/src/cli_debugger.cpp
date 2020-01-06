@@ -29,7 +29,7 @@ CliDebugger::CliDebugger(std::unique_ptr<DebuggerCore> debugger_core)
 
 void CliDebugger::tick() {
 	std::string str;
-    bool status;
+	bool status;
 	do {
 		cout << "(tdb) ";
 		getline(std::cin, str);
