@@ -4,7 +4,7 @@ project(util)
 set(SOURCE_FILES
     src/log.cpp
     src/helpers.cpp
-)
+    src/argv_generator.cpp)
 
 include_directories(${MODULE_INCLUDE_DIRS})
 

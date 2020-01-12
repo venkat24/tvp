@@ -4,3 +4,6 @@
 [submodule "ext/cxxopts"]
 	path = ext/cxxopts
 	url = https://github.com/jarro2783/cxxopts
+[submodule "ext/span"]
+	path = ext/span
+	url = https://github.com/tcbrindle/span

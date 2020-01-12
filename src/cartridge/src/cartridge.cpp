@@ -62,6 +62,18 @@ void Cartridge::write(Address address, uint8_t byte) {
 	data[address] = byte;
 }
 
+map<Address, InstructionLine> Cartridge::peek(Address start_addr, int lines) {
+	// This starts the span at the start addr, and ends 3x lines later
+	// TODO: Bounds check this
+	// It's tricky to count the number of lines after the starting point,
+	// since line count can't be determined without looking at the code and
+	// checking the byte count of each instruction.
+	auto data_slice = span<uint8_t>(this->data.data() + start_addr, lines * 3);
+	auto parser = InstructionParser(data_slice);
+
+	return parser.get_instruction_lines(lines);
+}
+
 // Helper to display cartridge metadata
 void Cartridge::display_metadata() {
 	std::cout << std::left << std::setw(25) << "Game Title: " << std::setw(25)

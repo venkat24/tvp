@@ -16,5 +16,8 @@
 template <typename T> std::string num_to_hex(T i);
 Address string_to_address(std::string num);
 
+bool string_replace(std::string &str, const std::string &from,
+                    const std::string &to);
+
 std::string get_mnemonic(uint8_t opcode);
 std::string get_cb_mnemonic(uint8_t opcode);

@@ -58,6 +58,11 @@ foreach(MODULE ${MODULES})
   add_subdirectory(src/${MODULE})
 endforeach(MODULE)
 
+# Let all modules include span
+foreach(MODULE ${MODULES})
+	target_include_directories(${MODULE} INTERFACE ext/span/include)
+endforeach()
+
 # I don't know why I need to do this here on Windows, but it woks if this is here
 # TODO: Fix this. SFML variables shouldn't be needed outside the video module
 if (WIN32)
@@ -67,12 +72,12 @@ endif()
 # Add the main executable
 add_executable(tvp src/main/main.cpp)
 
+# Add dependencies
+add_subdirectory(ext/cxxopts)
+
 # Link headers and libraries
 target_link_libraries(tvp cxxopts)
 target_link_libraries(tvp ${MODULES})
-
-# Add dependencies
-add_subdirectory(ext/cxxopts)
 
 # If this is not the release build, compile unit tests
 # TODO: This is should be triggered by some other flag, not CMAKE_BUILD_TYPE

@@ -1,9 +1,9 @@
 /**
- * @file meta_cartridge.cpp
+ * @file cartridge_metadata.cpp
  * Defines the CartridgeMetadata class
  */
 
-#include "cartridge/meta_cartridge.h"
+#include "cartridge/cartridge_metadata.h"
 
 #include <string>
 #include <vector>

@@ -115,11 +115,14 @@ class DebuggerCore {
 	virtual void step();
 
 	/**
-	 * @brief Return the next 'x' lines of code
-	 * @param number of lines of code
+	 * @brief Return the given number of lines of code, starting from the
+	 * address
+	 *
+	 * @param address Address to read instructions from
+	 * @param lines Number of lines of code
 	 * @return A map of Instruction Addresses with corresponding mnemonic
 	 */
-	virtual std::map<Address, std::string> peek(uint32_t lines);
+	virtual std::map<Address, InstructionLine> peek(Address address, int lines);
 };
 
 } // namespace debugger
