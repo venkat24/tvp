@@ -91,10 +91,12 @@ std::unordered_set<ClockCycles> DebuggerCore::get_tick_breakpoints() {
 }
 
 void DebuggerCore::run() {
+	// Clear current break and continue execution
 	if (is_breaking) {
 		is_breaking = false;
 		tick();
 	}
+
 	bool is_breakpoint_hit;
 	bool is_ticks_breakpoint_hit;
 	bool is_cycles_breakpoint_hit;
@@ -110,16 +112,15 @@ void DebuggerCore::run() {
 		tick();
 	} while (!is_breakpoint_hit && !is_ticks_breakpoint_hit &&
 	         !is_cycles_breakpoint_hit);
+
 	is_breaking = true;
 }
 
 void DebuggerCore::step() { tick(); }
 
-std::map<Address, std::string> DebuggerCore::peek(uint32_t lines) {
-	auto pc_contents = gameboy->cpu->pc->get();
-	std::map<Address, std::string> code_map;
-	code_map.insert({0, "Peek Not Implemented!"});
-	return code_map;
+std::map<Address, InstructionLine> DebuggerCore::peek(Address address,
+                                                      int lines) {
+	return gameboy->cartridge->peek(address, lines);
 }
 
 } // namespace debugger

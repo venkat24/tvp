@@ -3,12 +3,14 @@
  * Declares the Cartridge class
  */
 
-#include "cartridge/meta_cartridge.h"
+#include "cartridge/cartridge_metadata.h"
 #include "memory/utils.h"
 
 #include "debugger/debugger.fwd.h"
+#include "instruction_parser.h"
 
 #include <cstdint>
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
@@ -17,6 +19,9 @@
 
 namespace cartridge {
 
+/**
+ * Holds the game ROM data
+ */
 class Cartridge {
   private:
 	/**
@@ -47,6 +52,14 @@ class Cartridge {
 	 * @param data Byte to write
 	 */
 	void write(Address address, uint8_t data);
+
+	/**
+	 * Peek a number of lines, starting from an address
+	 * @param start_addr Address to begin reading from
+	 * @param lines Number of lines to read
+	 * @return An ordered map of addresses, and parsed lines at those addresses
+	 */
+	map<Address, InstructionLine> peek(Address start_addr, int lines);
 
 	/**
 	 * Displays the cartridge metadata

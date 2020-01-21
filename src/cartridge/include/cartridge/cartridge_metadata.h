@@ -1,5 +1,5 @@
 /**
- * @file meta_cartridge.h
+ * @file cartridge_metadata.h
  * Declares the CartridgeMetadata class
  */
 

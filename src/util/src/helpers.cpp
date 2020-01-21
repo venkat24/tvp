@@ -31,6 +31,15 @@ Address string_to_address(string num) {
 	return strtoul(num.c_str(), nullptr, 16);
 }
 
+bool string_replace(std::string &str, const std::string &from,
+                    const std::string &to) {
+	auto start_pos = str.find(from);
+	if (start_pos == std::string::npos)
+		return false;
+	str.replace(start_pos, from.length(), to);
+	return true;
+}
+
 string get_mnemonic(uint8_t opcode) {
 	static const auto opcode_mnemonic = unordered_map<uint8_t, string>{
 	    {0x0, "NOP"},          {0x1, "LD BC, d16"},    {0x2, "LD (BC), A"},

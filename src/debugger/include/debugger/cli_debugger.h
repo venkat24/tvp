@@ -41,12 +41,6 @@ class CliDebugger : public IDebugger {
 	 */
 	bool run_command(int argc, char **argv);
 
-	/**
-	 * @brief Generates corresponding argc and argv for the given command
-	 * @param command: The user input
-	 */
-	std::tuple<int, char **> cmd_string_to_argv(std::string command);
-
 	CliDebugger(std::unique_ptr<DebuggerCore> debugger_core);
 };
 } // namespace debugger

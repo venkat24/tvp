@@ -4,7 +4,7 @@
  */
 #pragma once
 
-#include "cartridge/meta_cartridge.h"
+#include "cartridge/cartridge_metadata.h"
 #include "controller/controller_interface.h"
 #include "gpu/utils.h"
 #include "video/video_interface.h"
