@@ -6,6 +6,7 @@
 #pragma once
 
 #include "controller/controller.h"
+#include "controller/recording_controller.h"
 #include "cpu/cpu.h"
 #include "cpu/register/register.h"
 #include "gpu/gpu.h"
@@ -45,9 +46,9 @@ class Gameboy {
 	std::unique_ptr<Cartridge> cartridge;
 
 	/**
-	 * Controller instance
+	 * An Instance to Controller Interface
 	 */
-	std::unique_ptr<Controller> controller;
+	std::unique_ptr<ControllerInterface> controller;
 
 	/**
 	 * Video instance
@@ -68,6 +69,11 @@ class Gameboy {
 	 * GPU instance
 	 */
 	std::unique_ptr<GPU> gpu;
+
+	/**
+	 * Indicate whether the Recording Controller is running or not
+	 */
+	bool is_recording = false;
 
 	/**
 	 * Helper method to create a CPU object
@@ -94,6 +100,14 @@ class Gameboy {
 	 * @param rom_path Path to ROM File
 	 */
 	Gameboy(std::string rom_path);
+
+	/**
+	 * @brief Construct a new Gameboy object, use this only in case of a
+	 * debugger set true for recording the controls
+	 *
+	 * @param rom_path Path to ROM File
+	 */
+	Gameboy(std::string rom_path, bool is_recording);
 
 	/**
 	 * Runs one CPU tick and corresponding GPU tick

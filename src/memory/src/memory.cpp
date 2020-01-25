@@ -10,7 +10,7 @@
 namespace memory {
 
 Memory::Memory(cartridge::Cartridge *cartridge,
-               controller::Controller *controller)
+               controller::ControllerInterface *controller)
     : memory(std::array<uint8_t, 0x10000>()), cartridge(cartridge),
       controller(controller) {}
 

@@ -17,9 +17,25 @@ Gameboy::Gameboy(std::string rom_path) {
 	Log::info("GameBoy Start Successful!");
 }
 
+Gameboy::Gameboy(std::string rom_path, bool is_recording) {
+	cartridge = std::make_unique<Cartridge>(rom_path);
+	controller = std::make_unique<RecordingController>();
+	video = make_unique<Video>(controller.get(), cartridge->get_metadata());
+	memory = make_unique<Memory>(cartridge.get(), controller.get());
+	cpu = create_cpu(memory.get());
+	gpu = create_gpu(memory.get(), cpu.get(), video.get());
+
+	// Set pointers to instances of CPU, GPU, and timer in memory
+	memory->set_cpu(cpu.get());
+	memory->set_gpu(gpu.get());
+
+	Log::info("GameBoy Start Successful!");
+}
+
 void Gameboy::tick() {
 	auto cpu_cycles = cpu->tick();
 	gpu->tick(cpu_cycles);
+	controller->tick();
 }
 
 unique_ptr<CPU> Gameboy::create_cpu(Memory *memory_ptr) {

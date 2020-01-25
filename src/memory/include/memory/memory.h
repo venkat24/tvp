@@ -6,7 +6,7 @@
 #pragma once
 
 #include "cartridge/cartridge.h"
-#include "controller/controller.h"
+#include "controller/controller_interface.h"
 #include "cpu/cpu_interface.h"
 #include "gpu/gpu_interface.h"
 #include "memory/memory_interface.h"
@@ -57,7 +57,7 @@ class Memory : public MemoryInterface {
 	/**
 	 * Pointer to controller instance
 	 */
-	controller::Controller *controller;
+	controller::ControllerInterface *controller;
 
 	/**
 	 * Pointer to CPU instance
@@ -78,7 +78,8 @@ class Memory : public MemoryInterface {
 	/**
 	 * Default Constructor
 	 */
-	Memory(cartridge::Cartridge *cartridge, controller::Controller *controller);
+	Memory(cartridge::Cartridge *cartridge,
+	       controller::ControllerInterface *controller);
 
 	/**
 	 * @see MemoryInterface#read

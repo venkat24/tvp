@@ -1,18 +1,10 @@
-/**
- * @file controller.cpp
- * Defines the Controller class
- */
+#include "controller/recording_controller.h"
 
-#include "controller/controller.h"
+using namespace controller;
 
-#include <array>
-#include <bitset>
+RecordingController::RecordingController() { json_file.open("test.txt"); }
 
-namespace controller {
-
-Controller::Controller() : buttons(std::array<bool, 8>{}) {}
-
-int Controller::button_index(Button button) {
+int RecordingController::button_index(Button button) {
 	// Return the corresponding index
 	switch (button) {
 	case Button::RIGHT:
@@ -36,7 +28,7 @@ int Controller::button_index(Button button) {
 	return {};
 }
 
-void Controller::set_value(uint8_t value) {
+void RecordingController::set_value(uint8_t value) {
 	// The only settable values are the 4th and 5th bits
 	bool direction_bit = (1 << 4) & value;
 	bool button_bit = (1 << 5) & value;
@@ -46,7 +38,7 @@ void Controller::set_value(uint8_t value) {
 	button_flag = !button_bit;
 }
 
-uint8_t Controller::get_value() {
+uint8_t RecordingController::get_value() {
 	// The first 4 bits don't matter, and the next 4 bits are reversed
 	std::bitset<8> byte(0x0F);
 
@@ -65,15 +57,20 @@ uint8_t Controller::get_value() {
 	return static_cast<uint8_t>(byte.to_ulong());
 }
 
-void Controller::set_button(Button button, bool value) {
+void RecordingController::set_button(Button button, bool value) {
 	// This will be called by the input interface controller
 	buttons[button_index(button)] = value;
 }
 
-void Controller::press_button(Button button) { set_button(button, true); }
+void RecordingController::press_button(Button button) {
+	frame_button_value["frame"] = Json::Value::UInt64(ticks);
+	frame_button_value["button"] = Json::Value((int)button);
+	json_file << frame_button_value << std::endl;
+	set_button(button, true);
+}
 
-void Controller::release_button(Button button) { set_button(button, false); }
+void RecordingController::release_button(Button button) {
+	set_button(button, false);
+}
 
-void Controller::tick() {}
-
-} // namespace controller
+void RecordingController::tick() { ticks++; }

@@ -33,6 +33,8 @@ int main(int argc, char *argv[]) {
 			cxxopts::value<string>())
 		("d,debug", "Enable the debugger",
 			cxxopts::value<bool>()->default_value("false"))
+        ("i,record", "Record Control Inputs",
+            cxxopts::value<bool>()->default_value("false"))
 		("h,help", "Print this information");
 	// clang-format on
 
@@ -54,17 +56,20 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 
-	// Create main gameboy instance
-	auto gameboy = make_unique<Gameboy>(rom_path);
-
 	// Turn on debugging if needed
 	auto debugger_on = parsed_args["debug"].as<bool>();
 	if (not debugger_on) {
+		// Create main gameboy instance
+		auto gameboy = make_unique<Gameboy>(rom_path);
+
 		// Start GameBoy normally
 		for (auto i = 0; /*Infinite Loop*/; i++) {
 			gameboy->tick();
 		}
 	} else {
+		// Create main gameboy instance
+		auto gameboy = make_unique<Gameboy>(rom_path, true);
+
 		// Start GameBoy with DebuggerCore
 		auto debugger_core = std::make_unique<DebuggerCore>(std::move(gameboy));
 		auto cli_debugger =

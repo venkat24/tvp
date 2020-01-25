@@ -1,23 +1,15 @@
-/**
- * @file controller.h
- * Declares the Controller class representing the game controller
- */
-
 #include "controller/controller_interface.h"
-#include "controller/utils.h"
 
 #include <array>
-#include <cstdint>
-#include <memory>
+#include <bitset>
+#include <fstream>
+#include <jsoncpp/json/json.h>
+#include <jsoncpp/json/writer.h>
 
 #pragma once
 
 namespace controller {
-
-/**
- * Class representing the game joypad and buttons
- */
-class Controller : public ControllerInterface {
+class RecordingController : public ControllerInterface {
   private:
 	/**
 	 * Array of flags representing the state of each button
@@ -58,9 +50,19 @@ class Controller : public ControllerInterface {
 	 */
 	void set_button(Button button, bool value);
 
-  public:
-	Controller();
+	/**
+	 * Output Stream to write to Json File
+	 */
+	std::ofstream json_file;
 
+	/**
+	 * Stores the Json value to write to Json file
+	 */
+	Json::Value frame_button_value;
+
+	unsigned long long ticks = 0;
+
+  public:
 	/**
 	 * @see ControllerInterface#set_value
 	 */
@@ -73,6 +75,7 @@ class Controller : public ControllerInterface {
 
 	/**
 	 * @see ControllerInterface#press_button
+	 * Record JSON inputs here
 	 */
 	void press_button(Button button) override;
 
@@ -82,6 +85,7 @@ class Controller : public ControllerInterface {
 	void release_button(Button button) override;
 
 	void tick();
-};
 
+	RecordingController();
+};
 } // namespace controller
