@@ -54,6 +54,11 @@ class Controller : public ControllerInterface {
 	Controller();
 
 	/**
+	 * Keep a track a ticks
+	 */
+	unsigned long long ticks = 0;
+
+	/**
 	 * @see ControllerInterface#set_value
 	 */
 	void set_value(uint8_t value) override;
@@ -71,7 +76,7 @@ class Controller : public ControllerInterface {
 	/**
 	 * @see ControllerInterface#release_button
 	 */
-	void release_button(Button button) override;
+	virtual void release_button(Button button) override;
 
 	/**
 	 * @brief Set the button state for some button

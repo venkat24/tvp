@@ -74,6 +74,7 @@ add_executable(tvp src/main/main.cpp)
 
 # Add dependencies
 add_subdirectory(ext/cxxopts)
+add_subdirectory(ext/jsoncpp)
 
 # Link headers and libraries
 target_link_libraries(tvp cxxopts)

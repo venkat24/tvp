@@ -16,11 +16,6 @@ class RecordingController : public Controller {
 	std::ofstream json_file;
 
 	/**
-	 * Stores the Json value to write to Json file
-	 */
-	Json::Value frame_button_value;
-
-	/**
 	 * Keep a track a ticks
 	 */
 	unsigned long long ticks = 0;
@@ -33,9 +28,10 @@ class RecordingController : public Controller {
 	void press_button(Button button) override;
 
 	/**
-	 * Expose a tick function from GameBoy to keep a track of ticks
+	 * @see ControllerInterface#release_button
+	 * Record JSON inputs here
 	 */
-	void tick();
+	void release_button(Button button) override;
 
 	/**
 	 * Default Constructor

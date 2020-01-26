@@ -2,14 +2,14 @@
 
 namespace gameboy {
 
-Gameboy::Gameboy(std::string rom_path, bool is_recording,
-                 std::string json_file_name) {
-	cartridge = std::make_unique<Cartridge>(rom_path);
+Gameboy::Gameboy(DebugOptions debug_options) {
+	cartridge = std::make_unique<Cartridge>(debug_options.rom_path);
 
-	if (!is_recording)
-		controller = std::make_unique<Controller>();
+	if (debug_options.is_recording)
+		controller = std::make_unique<RecordingController>(
+		    debug_options.recording_output_json_filename);
 	else
-		controller = std::make_unique<RecordingController>(json_file_name);
+		controller = std::make_unique<Controller>();
 
 	video = make_unique<Video>(controller.get(), cartridge->get_metadata());
 	memory = make_unique<Memory>(cartridge.get(), controller.get());

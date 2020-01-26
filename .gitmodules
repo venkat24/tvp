@@ -7,3 +7,6 @@
 [submodule "ext/span"]
 	path = ext/span
 	url = https://github.com/tcbrindle/span
+[submodule "ext/jsoncpp"]
+	path = ext/jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp.git

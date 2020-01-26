@@ -36,6 +36,15 @@ using namespace controller;
 namespace gameboy {
 
 /**
+ * Specifies all the Debug configurations that should go into GameBoy
+ */
+struct DebugOptions {
+	std::string rom_path;
+	bool is_recording = false;
+	std::string recording_output_json_filename = "test.txt";
+};
+
+/**
  * Gameboy class that initializes and contains the complete application
  */
 class Gameboy {
@@ -46,7 +55,7 @@ class Gameboy {
 	std::unique_ptr<Cartridge> cartridge;
 
 	/**
-	 * An Instance to Controller Interface
+	 * Controller Instance
 	 */
 	std::unique_ptr<ControllerInterface> controller;
 
@@ -95,8 +104,7 @@ class Gameboy {
 	 *
 	 * @param rom_path Path to ROM File
 	 */
-	Gameboy(std::string rom_path, bool is_recording = false,
-	        std::string json_file_name = "test.txt");
+	Gameboy(DebugOptions debug_options);
 
 	/**
 	 * Runs one CPU tick and corresponding GPU tick
