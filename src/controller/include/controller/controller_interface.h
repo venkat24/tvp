@@ -40,6 +40,8 @@ class ControllerInterface {
 	 * @param button Button to release
 	 */
 	virtual void release_button(Button button) = 0;
+
+	virtual void tick() = 0;
 };
 
 } // namespace controller

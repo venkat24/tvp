@@ -33,10 +33,16 @@ int main(int argc, char *argv[]) {
 			cxxopts::value<string>())
 		("d,debug", "Enable the debugger",
 			cxxopts::value<bool>()->default_value("false"))
+		("i,record", "Record Control Inputs",
+			cxxopts::value<bool>()->default_value("false"))
+		("j,json_file_path", "Write to a custom txt file",
+			cxxopts::value<string>()->default_value("test.txt"))
 		("h,help", "Print this information");
 	// clang-format on
 
 	auto parsed_args = cmdline_args_parser.parse(argc, argv);
+
+	DebugOptions debug_options;
 
 	// Print help info if -h is passed
 	auto help = parsed_args["help"].as<bool>();
@@ -46,25 +52,31 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Get ROM path and fail with help message if arg not parsed
-	string rom_path = "";
 	try {
-		rom_path = parsed_args["rom"].as<string>();
+		debug_options.rom_path = parsed_args["rom"].as<string>();
 	} catch (exception &e) {
 		cout << cmdline_args_parser.help();
 		exit(1);
 	}
 
-	// Create main gameboy instance
-	auto gameboy = make_unique<Gameboy>(rom_path);
-
 	// Turn on debugging if needed
 	auto debugger_on = parsed_args["debug"].as<bool>();
 	if (not debugger_on) {
+		// Create main gameboy instance
+		auto gameboy = make_unique<Gameboy>(debug_options);
+
 		// Start GameBoy normally
 		for (auto i = 0; /*Infinite Loop*/; i++) {
 			gameboy->tick();
 		}
 	} else {
+		debug_options.is_recording = true;
+		debug_options.recording_output_json_filename =
+		    parsed_args["json_file_path"].as<string>();
+
+		// Create main gameboy instance
+		auto gameboy = make_unique<Gameboy>(debug_options);
+
 		// Start GameBoy with DebuggerCore
 		auto debugger_core = std::make_unique<DebuggerCore>(std::move(gameboy));
 		auto cli_debugger =

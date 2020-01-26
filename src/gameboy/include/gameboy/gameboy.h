@@ -6,6 +6,7 @@
 #pragma once
 
 #include "controller/controller.h"
+#include "controller/recording_controller.h"
 #include "cpu/cpu.h"
 #include "cpu/register/register.h"
 #include "gpu/gpu.h"
@@ -35,6 +36,15 @@ using namespace controller;
 namespace gameboy {
 
 /**
+ * Specifies all the Debug configurations that should go into GameBoy
+ */
+struct DebugOptions {
+	std::string rom_path;
+	bool is_recording = false;
+	std::string recording_output_json_filename = "test.txt";
+};
+
+/**
  * Gameboy class that initializes and contains the complete application
  */
 class Gameboy {
@@ -45,9 +55,9 @@ class Gameboy {
 	std::unique_ptr<Cartridge> cartridge;
 
 	/**
-	 * Controller instance
+	 * Controller Instance
 	 */
-	std::unique_ptr<Controller> controller;
+	std::unique_ptr<ControllerInterface> controller;
 
 	/**
 	 * Video instance
@@ -89,11 +99,12 @@ class Gameboy {
 	                                Video *video_ptr);
 
 	/**
-	 * @brief Construct a new Gameboy object
+	 * @brief Construct a new Gameboy object, use this only in case of a
+	 * debugger set true for recording the controls
 	 *
 	 * @param rom_path Path to ROM File
 	 */
-	Gameboy(std::string rom_path);
+	Gameboy(DebugOptions debug_options);
 
 	/**
 	 * Runs one CPU tick and corresponding GPU tick

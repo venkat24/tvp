@@ -2,9 +2,15 @@
 
 namespace gameboy {
 
-Gameboy::Gameboy(std::string rom_path) {
-	cartridge = std::make_unique<Cartridge>(rom_path);
-	controller = std::make_unique<Controller>();
+Gameboy::Gameboy(DebugOptions debug_options) {
+	cartridge = std::make_unique<Cartridge>(debug_options.rom_path);
+
+	if (debug_options.is_recording)
+		controller = std::make_unique<RecordingController>(
+		    debug_options.recording_output_json_filename);
+	else
+		controller = std::make_unique<Controller>();
+
 	video = make_unique<Video>(controller.get(), cartridge->get_metadata());
 	memory = make_unique<Memory>(cartridge.get(), controller.get());
 	cpu = create_cpu(memory.get());
@@ -20,6 +26,7 @@ Gameboy::Gameboy(std::string rom_path) {
 void Gameboy::tick() {
 	auto cpu_cycles = cpu->tick();
 	gpu->tick(cpu_cycles);
+	controller->tick();
 }
 
 unique_ptr<CPU> Gameboy::create_cpu(Memory *memory_ptr) {
