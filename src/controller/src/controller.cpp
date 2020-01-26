@@ -75,5 +75,4 @@ void Controller::press_button(Button button) { set_button(button, true); }
 void Controller::release_button(Button button) { set_button(button, false); }
 
 void Controller::tick() {}
-
 } // namespace controller

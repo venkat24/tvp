@@ -71,11 +71,6 @@ class Gameboy {
 	std::unique_ptr<GPU> gpu;
 
 	/**
-	 * Indicate whether the Recording Controller is running or not
-	 */
-	bool is_recording = false;
-
-	/**
 	 * Helper method to create a CPU object
 	 *
 	 * @param memory_ptr Pointer to memory instance
@@ -95,19 +90,13 @@ class Gameboy {
 	                                Video *video_ptr);
 
 	/**
-	 * @brief Construct a new Gameboy object
-	 *
-	 * @param rom_path Path to ROM File
-	 */
-	Gameboy(std::string rom_path);
-
-	/**
 	 * @brief Construct a new Gameboy object, use this only in case of a
 	 * debugger set true for recording the controls
 	 *
 	 * @param rom_path Path to ROM File
 	 */
-	Gameboy(std::string rom_path, bool is_recording);
+	Gameboy(std::string rom_path, bool is_recording = false,
+	        std::string json_file_name = "test.txt");
 
 	/**
 	 * Runs one CPU tick and corresponding GPU tick

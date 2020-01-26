@@ -35,6 +35,8 @@ int main(int argc, char *argv[]) {
 			cxxopts::value<bool>()->default_value("false"))
         ("i,record", "Record Control Inputs",
             cxxopts::value<bool>()->default_value("false"))
+        ("j,json_file_path", "Write to a custom txt file",
+            cxxopts::value<string>()->default_value("test.txt"))
 		("h,help", "Print this information");
 	// clang-format on
 
@@ -68,7 +70,8 @@ int main(int argc, char *argv[]) {
 		}
 	} else {
 		// Create main gameboy instance
-		auto gameboy = make_unique<Gameboy>(rom_path, true);
+		auto gameboy = make_unique<Gameboy>(
+		    rom_path, true, parsed_args["json_file_path"].as<string>());
 
 		// Start GameBoy with DebuggerCore
 		auto debugger_core = std::make_unique<DebuggerCore>(std::move(gameboy));

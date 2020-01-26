@@ -50,14 +50,6 @@ class Controller : public ControllerInterface {
 	 */
 	int button_index(Button button);
 
-	/**
-	 * @brief Set the button state for some button
-	 *
-	 * @param button Button to set
-	 * @param value Value to set
-	 */
-	void set_button(Button button, bool value);
-
   public:
 	Controller();
 
@@ -74,14 +66,22 @@ class Controller : public ControllerInterface {
 	/**
 	 * @see ControllerInterface#press_button
 	 */
-	void press_button(Button button) override;
+	virtual void press_button(Button button) override;
 
 	/**
 	 * @see ControllerInterface#release_button
 	 */
 	void release_button(Button button) override;
 
-	void tick();
+	/**
+	 * @brief Set the button state for some button
+	 *
+	 * @param button Button to set
+	 * @param value Value to set
+	 */
+	void set_button(Button button, bool value);
+
+	void tick() override;
 };
 
 } // namespace controller
